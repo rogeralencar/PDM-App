@@ -1,0 +1,15 @@
+{
+    "app_name" : "SmartTour",
+    
+    "Onboard_title1" : "Bem-vindo ao SmartTour",
+    "Onboard_sub_title1" : "Um app para deixar suas férias ainda melhores!",
+    "Onboard_title2" : "Começe agora!",
+    "Onboard_sub_title2" : "Leva apenas alguns minutos, será feito um questionário para que a gente possa te conhecer melhor",
+    "Onboard_title3" : "Tenha um app adaptado para você!",
+    "Onboard_sub_title3" : "Crie seu perfil para sempre nos adaptarmos a suas mudanças. Esperamos que você ame nosso app!",
+
+    "Skip" : "Pular",
+    "Next" : "Proximo",
+    "Done" : "pronto",
+    "Back": "Voltar"
+}
