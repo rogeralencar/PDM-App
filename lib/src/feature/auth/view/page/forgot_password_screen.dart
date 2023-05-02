@@ -8,7 +8,6 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class ForgotPasswordState extends State<ForgotPassword> {
-  late String _email;
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -90,7 +89,6 @@ class ForgotPasswordState extends State<ForgotPassword> {
                               maxLines: 1,
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
-                              onSaved: (email) => _email = email ?? '',
                               validator: (email) {
                                 if (email!.isEmpty) {
                                   return 'Por favor, insira o e-mail';
