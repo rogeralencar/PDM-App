@@ -1,0 +1,15 @@
+{
+    "app_name" : "Smart Tour",
+
+    "Onboard_title1" : "Welcome to Smart Tour",
+    "Onboard_sub_title1" : "An app to make your vacation even better!",
+    "Onboard_title2" : "Have an app tailored for you!",
+    "Onboard_sub_title2" : "Create your profile so we can always adapt to your changes. We hope you love our app!",
+    "Onboard_title3" : "Start now!",
+    "Onboard_sub_title3" : "It only takes a few minutes, a questionnaire will be made so that we can get to know you better",
+
+    "Skip" : "Skip",
+    "Next" : "Next",
+    "Done" : "Done",
+    "Back": "Back"
+}
