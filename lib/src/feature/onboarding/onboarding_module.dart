@@ -3,7 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'view/page/onboarding_screen.dart';
 import '../home/home_module.dart';
 import '../auth/auth_module.dart';
-import '../auth/viewmodule/signup_module.dart';
+import '../auth/viewmodel/signup_module.dart';
 
 class OnBoardingModule extends Module {
   @override
