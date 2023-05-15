@@ -47,7 +47,7 @@ SnapStore
 # 🔨 Project Features
 
 - `Feature 1`: icon image
-- `Feature 2`: split screen
+- `Feature 2`: splash screen
 - `Feature 3`: compatible for both devices IOS and Android
 - `Feature 4`: onboarding screen
 - `Feature 5`: form using drag and drog system
