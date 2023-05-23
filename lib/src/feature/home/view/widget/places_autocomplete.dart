@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 @immutable
@@ -28,7 +30,7 @@ class Places {
 }
 
 class AutocompletePlaces extends StatelessWidget {
-  final List user_interests;
+  final List<String> user_interests;
 
   const AutocompletePlaces({super.key, required this.user_interests});
 

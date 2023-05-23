@@ -10,7 +10,7 @@ class LocationInput extends StatefulWidget {
   final Function onSelectPosition;
   final Map<String, Object> formData;
 
-  LocationInput(this.onSelectPosition, this.formData, {Key? key})
+  const LocationInput(this.onSelectPosition, this.formData, {Key? key})
       : super(key: key);
 
   @override

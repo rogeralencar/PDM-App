@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:localization/localization.dart';
 
 import '../../../../common/pages/onboarding_details_screen.dart';
 import '../../../../common/utils/app_routes.dart';
@@ -17,11 +14,6 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   void initState() {
     super.initState();
-    initialization();
-  }
-
-  void initialization() async {
-    FlutterNativeSplash.remove();
   }
 
   int _currentPage = 0;

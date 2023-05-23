@@ -17,7 +17,6 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final msg = ScaffoldMessenger.of(context);
     bool startsWithFile =
         product.image.toString().toLowerCase().startsWith('https://');
     return ListTile(

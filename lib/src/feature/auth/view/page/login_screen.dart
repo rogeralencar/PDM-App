@@ -14,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
   final Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -43,8 +42,6 @@ class LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
-
     _formKey.currentState?.save();
     Auth auth = Provider.of(context, listen: false);
 
@@ -53,14 +50,13 @@ class LoginScreenState extends State<LoginScreen> {
         _authData['email']!,
         _authData['password']!,
       );
-      Navigator.of(context).pushNamed(AppRoutes.productsOverview);
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
       _showErrorDialog('Ocorreu um erro inesperado!');
+    } finally {
+      Navigator.of(context).pushNamed(AppRoutes.productsOverview);
     }
-
-    setState(() => _isLoading = false);
   }
 
   @override

@@ -17,7 +17,6 @@ class SignupScreenState extends State<SignupScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
   final Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -58,8 +57,6 @@ class SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
-
     _formKey.currentState?.save();
     Auth auth = Provider.of(context, listen: false);
 
@@ -68,14 +65,13 @@ class SignupScreenState extends State<SignupScreen> {
         _authData['email']!,
         _authData['password']!,
       );
-      Navigator.of(context).pushNamed(AppRoutes.productsOverview);
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
       _showErrorDialog('Ocorreu um erro inesperado!');
+    } finally {
+      Navigator.of(context).pushNamed(AppRoutes.productsOverview);
     }
-
-    setState(() => _isLoading = false);
   }
 
   @override

@@ -28,7 +28,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _isImageUrl = false;
 
   void _selectImage(File pickedImage) {
@@ -168,8 +168,8 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         FocusScope.of(context).requestFocus(_priceFocus);
                       },
                       onSaved: (name) => _formData['name'] = name ?? '',
-                      validator: (_name) {
-                        final name = _name ?? '';
+                      validator: (userName) {
+                        final name = userName ?? '';
                         if (name.trim().isEmpty) {
                           return 'Nome é obrigatório.';
                         }
@@ -193,8 +193,8 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                       },
                       onSaved: (price) =>
                           _formData['price'] = double.parse(price ?? '0'),
-                      validator: (_price) {
-                        final priceString = _price ?? '';
+                      validator: (userPrice) {
+                        final priceString = userPrice ?? '';
                         final price = double.tryParse(priceString) ?? -1;
 
                         if (price <= 0) {
@@ -212,8 +212,8 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                       maxLines: 3,
                       onSaved: (description) =>
                           _formData['description'] = description ?? '',
-                      validator: (_description) {
-                        final description = _description ?? '';
+                      validator: (userDescription) {
+                        final description = userDescription ?? '';
 
                         if (description.trim().isEmpty) {
                           return 'Descrição é obrigatória.';
@@ -246,8 +246,8 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                               onFieldSubmitted: (_) => _submitForm(),
                               onSaved: (imageUrl) =>
                                   _formData['imageUrl'] = imageUrl ?? '',
-                              validator: (_imageUrl) {
-                                final imageUrl = _imageUrl ?? '';
+                              validator: (userImageUrl) {
+                                final imageUrl = userImageUrl ?? '';
 
                                 if (!isValidImageUrl(imageUrl)) {
                                   return 'Informe uma Url válida!';

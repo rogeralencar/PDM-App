@@ -7,7 +7,7 @@ class MapScreen extends StatefulWidget {
   final PlaceLocation initialLocation;
   final bool isReadOnly;
 
-  MapScreen(
+  const MapScreen(
       {this.initialLocation = const PlaceLocation(
         latitude: 37.419857,
         longitude: -122.078827,
@@ -57,7 +57,7 @@ class _MapScreenState extends State<MapScreen> {
         onTap: widget.isReadOnly ? null : _selectPosition,
         markers: {
           Marker(
-            markerId: MarkerId('p1'),
+            markerId: const MarkerId('p1'),
             position: _pickedPosition ?? widget.initialLocation.toLatLng(),
           )
         },
