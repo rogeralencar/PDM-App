@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_slider/carousel_slider.dart';
 
 import 'promotions.dart';
+import 'product_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -10,12 +12,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  List<String> products = [
+    'celular',
+    'camisa',
+    'panela',
+    'lenço',
+    'geladeira',
+    'skate',
+    'ps5',
+    'porshe',
+    'paracetamol',
+    'mouse',
+    'fone de ouvido',
+    'perfume',
+  ];
+  bool isLoading = false;
+  int currentItemCount = 6;
+
   final List<Promotions> items = [
-    Promotions(
-        title: 'Page 3',
-        subTitle: 'Show More 3',
-        image:
-            'https://casaeconstrucao.org/wp-content/uploads/2022/07/2-modelo-de-frase-para-loja-de-roupas.png'),
     Promotions(
         title: 'Page 1',
         subTitle: 'Show More 1',
@@ -31,53 +45,62 @@ class HomeScreenState extends State<HomeScreen> {
         subTitle: 'Show More 3',
         image:
             'https://casaeconstrucao.org/wp-content/uploads/2022/07/2-modelo-de-frase-para-loja-de-roupas.png'),
-    Promotions(
-        title: 'Page 1',
-        subTitle: 'Show More 1',
-        image:
-            'https://casaeconstrucao.org/wp-content/uploads/2022/07/2-modelo-de-frase-para-loja-de-roupas.png'),
   ];
-  int _currentPage = 1;
-  late PageController _pageController;
+  int _currentPage = 0;
+  late CarouselSliderController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _currentPage);
-    _pageController.addListener(_pageListener);
+    loadProducts();
+    _pageController = CarouselSliderController();
   }
 
-  void _pageListener() {
-    if (_pageController.page! > items.length - 1.01) {
-      _pageController.jumpToPage(1);
-    } else if (_pageController.page! < 0.01) {
-      _pageController.jumpToPage(items.length - 2);
-    }
-
+  void loadProducts() {
     setState(() {
-      _currentPage = _pageController.page!.toInt();
+      isLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+        for (int i = 0; i < 6; i++) {
+          products.add('Produto ${products.length + 1}');
+        }
+      });
     });
   }
 
-  void _scrollToNext() {
-    _pageController.animateToPage(
-      _currentPage + 1,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.ease,
-    );
+  void loadMoreProducts() {
+    // Simulando o carregamento de mais produtos
+    setState(() {
+      isLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+        for (int i = 0; i < 6; i++) {
+          products.add('Produto ${products.length + 1}');
+        }
+      });
+    });
   }
 
-  void _scrollToPrevious() {
-    _pageController.animateToPage(
-      _currentPage - 1,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.ease,
+  Widget buildProductItem(String product) {
+    return ProductCard(
+      imageUrl:
+          'https://www.vejalimpeza.com.br/produtos/_jcr_content/root/lowerContentArea/table/header4.coreimg.png/1629750054912/imagem-produto-veja-limpeza-pesada-original-1l.png',
+      name: product,
+      price: 100.00,
+      isFavorite: false,
+      onFavoritePressed: () {},
     );
   }
 
   List<Widget> _buildPageIndicator() {
-    return List.generate(items.length - 2, (index) {
-      return _indicator(index == _currentPage - 1);
+    return List.generate(items.length, (index) {
+      return _indicator(index == _currentPage);
     });
   }
 
@@ -127,10 +150,6 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: _buildPageIndicator(),
             ),
             Container(
               alignment: Alignment.center,
@@ -215,10 +234,10 @@ class HomeScreenState extends State<HomeScreen> {
       _buildCategoryItem('Commerce', Icons.store),
       _buildCategoryItem('Computers', Icons.computer),
       _buildCategoryItem('Tickets', Icons.event),
-      _buildCategoryItem('Instruments', Icons.music_note),
+      _buildCategoryItem('Music', Icons.music_note),
       _buildCategoryItem('Jewelry', Icons.watch),
       _buildCategoryItem('Books', Icons.menu_book),
-      _buildCategoryItem('Music', Icons.music_note),
+      _buildCategoryItem('Movies', Icons.movie),
       _buildCategoryItem('Health', Icons.favorite),
     ];
   }
@@ -230,59 +249,56 @@ class HomeScreenState extends State<HomeScreen> {
     return MaterialApp(
       home: Scaffold(
         body: SingleChildScrollView(
+          padding: const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Material(
-                      elevation: 4,
-                      shape: const CircleBorder(),
-                      child: Ink(
-                        decoration: const ShapeDecoration(
-                          color: Colors.transparent,
-                          shape: CircleBorder(),
-                        ),
-                        child: InkWell(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20)),
-                          onTap: () {
-                            debugPrint('Perfil');
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.person_outlined),
-                          ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Material(
+                    elevation: 4,
+                    shape: const CircleBorder(),
+                    child: Ink(
+                      decoration: const ShapeDecoration(
+                        color: Colors.transparent,
+                        shape: CircleBorder(),
+                      ),
+                      child: InkWell(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        onTap: () {
+                          debugPrint('Perfil');
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.person_outlined),
                         ),
                       ),
                     ),
-                    Material(
-                      elevation: 4,
-                      shape: const CircleBorder(),
-                      child: Ink(
-                        decoration: const ShapeDecoration(
-                          color: Colors.transparent,
-                          shape: CircleBorder(),
-                        ),
-                        child: InkWell(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20)),
-                          onTap: () {
-                            debugPrint('Carrinho');
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.shopping_cart_outlined),
-                          ),
+                  ),
+                  Material(
+                    elevation: 4,
+                    shape: const CircleBorder(),
+                    child: Ink(
+                      decoration: const ShapeDecoration(
+                        color: Colors.transparent,
+                        shape: CircleBorder(),
+                      ),
+                      child: InkWell(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        onTap: () {
+                          debugPrint('Carrinho');
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.shopping_cart_outlined),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20.0),
               Padding(
@@ -310,21 +326,28 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Material(
-                elevation: 4,
-                child: Container(
-                  height: size.height / 5,
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: PageView.builder(
+              Container(
+                height: size.height / 5,
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Material(
+                  elevation: 4,
+                  borderRadius: BorderRadius.circular(10),
+                  child: CarouselSlider.builder(
                     controller: _pageController,
+                    unlimitedMode: true,
                     itemCount: items.length,
-                    itemBuilder: (BuildContext context, int index) {
+                    slideBuilder: (index) {
                       final promotions = items[index];
                       return buildPromotionsContainer(promotions);
                     },
+                    enableAutoSlider: true,
+                    slideTransform: const CubeTransform(),
+                    slideIndicator: CircularWaveSlideIndicator(
+                      padding: const EdgeInsets.only(bottom: 12, right: 36),
+                    ),
                   ),
                 ),
               ),
@@ -370,7 +393,44 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // Add your product recommendation widgets here
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: size.height / 5 * currentItemCount,
+                      child: Column(
+                        children: List.generate(
+                          (currentItemCount ~/ 2),
+                          (index) {
+                            final int startIndex = index * 2;
+                            return Row(
+                              children: [
+                                buildProductItem(products[startIndex]),
+                                buildProductItem(products[startIndex + 1]),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                        child: const Text('Show More'),
+                        onPressed: () {
+                          setState(() {
+                            currentItemCount += 6;
+                          });
+                          loadMoreProducts();
+                        },
+                      ),
+                    ),
             ],
           ),
         ),
