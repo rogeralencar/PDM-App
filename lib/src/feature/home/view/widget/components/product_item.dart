@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../common/utils/app_routes.dart';
 import '../models/product.dart';
 import '../models/product_list.dart';
-import '../utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;

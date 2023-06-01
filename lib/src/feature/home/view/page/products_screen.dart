@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/components/app_drawer.dart';
-import '../../../../common/components/product_item.dart';
-import '../../../../common/models/product_list.dart';
+import '../widget/models/product_list.dart';
 import '../../../../common/utils/app_routes.dart';
+import '../widget/components/app_drawer.dart';
+import '../widget/components/product_item.dart';
 
 class ProductsScreen extends StatelessWidget {
   const ProductsScreen({Key? key}) : super(key: key);

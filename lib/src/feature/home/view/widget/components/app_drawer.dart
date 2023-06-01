@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/auth.dart';
-import '../utils/app_routes.dart';
+import '../../../../../common/utils/app_routes.dart';
+import '../../../../auth/view/widget/auth.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});

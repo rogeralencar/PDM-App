@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/components/app_drawer.dart';
-import '../../../../common/components/product_grid.dart';
-import '../../../../common/models/cart.dart';
+import '../widget/models/cart.dart';
+import '../widget/models/product_list.dart';
 import '../../../../common/utils/app_routes.dart';
-import '../../../../common/components/badge.dart' as bad;
+import '../widget/components/badge.dart' as bad;
+import '../widget/components/app_drawer.dart';
+import '../widget/components/product_grid.dart';
 
 enum FilterOptions {
   favorite,
@@ -21,13 +22,34 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showFavoriteOnly = false;
+  bool _isLoading = true;
+
+  Future<void> _refreshProducts(BuildContext context) {
+    return Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Snap'),
         centerTitle: true,
+        title: const Text('Snap'),
         actions: [
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
@@ -65,7 +87,12 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ),
         ],
       ),
-      body: ProductGrid(_showFavoriteOnly),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: () => _refreshProducts(context),
+              child: ProductGrid(_showFavoriteOnly),
+            ),
       drawer: const AppDrawer(),
     );
   }

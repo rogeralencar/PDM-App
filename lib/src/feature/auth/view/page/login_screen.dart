@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/exceptions/auth_exception.dart';
-import '../../../../common/models/auth.dart';
+import '../widget/auth.dart';
 import '../../../../common/utils/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,6 +14,8 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
   final Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -42,6 +44,8 @@ class LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    setState(() => _isLoading = true);
+
     _formKey.currentState?.save();
     Auth auth = Provider.of(context, listen: false);
 
@@ -50,13 +54,14 @@ class LoginScreenState extends State<LoginScreen> {
         _authData['email']!,
         _authData['password']!,
       );
+      Navigator.of(context).pushNamed(AppRoutes.productsOverview);
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
       _showErrorDialog('Ocorreu um erro inesperado!');
-    } finally {
-      Navigator.of(context).pushNamed(AppRoutes.productsOverview);
     }
+
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -185,27 +190,29 @@ class LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF9626C),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 60,
-                          vertical: 6,
-                        ),
-                        elevation: 20,
-                      ),
-                      child: const Text(
-                        "LOG IN",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    _isLoading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: _submit,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFF9626C),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 60,
+                                vertical: 6,
+                              ),
+                              elevation: 20,
+                            ),
+                            child: const Text(
+                              "LOG IN",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                     const SizedBox(height: 180),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

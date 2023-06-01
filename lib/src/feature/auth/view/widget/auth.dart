@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../../feature/auth/repository/user_store.dart';
-import '../exceptions/auth_exception.dart';
-import '../utils/constants.dart';
+import '../../repository/user_store.dart';
+import '../../../../common/exceptions/auth_exception.dart';
+import '../../../../common/utils/constants.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
   String? _email;
-  String? _name;
   String? _userId;
   DateTime? _expiryDate;
   Timer? _logoutTimer;
@@ -26,10 +25,6 @@ class Auth with ChangeNotifier {
 
   String? get email {
     return isAuth ? _email : null;
-  }
-
-  String? get name {
-    return isAuth ? _name : null;
   }
 
   String? get userId {

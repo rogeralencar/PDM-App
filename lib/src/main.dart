@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'common/models/auth.dart';
-import 'common/models/cart.dart';
-import 'common/models/order_list.dart';
-import 'common/models/product_list.dart';
+import 'feature/auth/view/widget/auth.dart';
+import 'feature/home/view/widget/models/cart.dart';
+import 'feature/home/view/widget/models/order_list.dart';
+import 'feature/home/view/widget/models/product_list.dart';
 import 'common/utils/app_routes.dart';
-import 'common/utils/custom_route.dart';
 import 'auth_or_home_screen.dart';
 import 'feature/auth/view/page/forgot_password_screen.dart';
 import 'feature/auth/view/page/login_screen.dart';
@@ -23,93 +22,7 @@ import 'feature/onboarding/view/page/onboarding_screen.dart';
 import 'feature/developing/home_screen.dart';
 
 void main() {
-  runApp(const HomeScreen());
-}
-
-class CircularItemList extends StatefulWidget {
-  const CircularItemList({Key? key}) : super(key: key);
-
-  @override
-  CircularItemListState createState() => CircularItemListState();
-}
-
-class CircularItemListState extends State<CircularItemList> {
-  List<String> items = ['', 'item 1', 'item 2', 'item 3', ''];
-  late PageController _pageController;
-  int _currentPage = 1;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: _currentPage);
-    _pageController.addListener(_pageListener);
-  }
-
-  void _pageListener() {
-    if (_pageController.page! > items.length - 1.5) {
-      _pageController.jumpToPage(1);
-    } else if (_pageController.page! < 0.5) {
-      _pageController.jumpToPage(items.length - 2);
-    }
-    setState(() {
-      _currentPage = _pageController.page!.toInt();
-    });
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _scrollToNext() {
-    _pageController.animateToPage(
-      _currentPage + 1,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.ease,
-    );
-  }
-
-  void _scrollToPrevious() {
-    _pageController.animateToPage(
-      _currentPage - 1,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.ease,
-    );
-  }
-
-  Widget _buildItem(String item) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Text(item),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: GestureDetector(
-          onHorizontalDragEnd: (details) {
-            if (details.velocity.pixelsPerSecond.dx > 0) {
-              _scrollToPrevious();
-            } else if (details.velocity.pixelsPerSecond.dx < 0) {
-              _scrollToNext();
-            }
-          },
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: items.length + 2,
-            itemBuilder: (context, index) {
-              return _buildItem(items[index]);
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -125,13 +38,21 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList(),
           update: (ctx, auth, previous) {
-            return ProductList();
+            return ProductList(
+              auth.token ?? '',
+              auth.userId ?? '',
+              previous?.items ?? [],
+            );
           },
         ),
         ChangeNotifierProxyProvider<Auth, OrderList>(
           create: (_) => OrderList(),
           update: (ctx, auth, previous) {
-            return OrderList();
+            return OrderList(
+              auth.token ?? '',
+              auth.userId ?? '',
+              previous?.items ?? [],
+            );
           },
         ),
         ChangeNotifierProvider(
@@ -145,12 +66,6 @@ class MyApp extends StatelessWidget {
             secondary: Colors.deepOrange,
           ),
           fontFamily: 'Lato',
-          pageTransitionsTheme: PageTransitionsTheme(
-            builders: {
-              TargetPlatform.iOS: CustomScreenTransictionBuilder(),
-              TargetPlatform.android: CustomScreenTransictionBuilder(),
-            },
-          ),
         ),
         routes: {
           AppRoutes.authOrHome: (ctx) => const AuthOrHomeScreen(),

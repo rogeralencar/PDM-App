@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 
-class OnBoardingDetailsScreen extends StatefulWidget {
+class OnBoardingDetails extends StatefulWidget {
   final String title;
   final String subtitle;
   final String imagePath;
   final bool isTitle;
 
-  const OnBoardingDetailsScreen({
+  const OnBoardingDetails({
     super.key,
     required this.title,
     required this.subtitle,
@@ -16,11 +16,10 @@ class OnBoardingDetailsScreen extends StatefulWidget {
   });
 
   @override
-  State<OnBoardingDetailsScreen> createState() =>
-      OnBoardingDetailsScreenState();
+  State<OnBoardingDetails> createState() => OnBoardingDetailsState();
 }
 
-class OnBoardingDetailsScreenState extends State<OnBoardingDetailsScreen>
+class OnBoardingDetailsState extends State<OnBoardingDetails>
     with TickerProviderStateMixin {
   late GifController _controller;
 

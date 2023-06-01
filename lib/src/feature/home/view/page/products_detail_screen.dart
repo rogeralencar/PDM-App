@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../../../common/models/product.dart';
-import '../../../../common/pages/map_screen.dart';
+import '../widget/models/product.dart';
+import '../../../../common/map_screen.dart';
 
 class ProductsDetailScreen extends StatelessWidget {
   const ProductsDetailScreen({super.key});

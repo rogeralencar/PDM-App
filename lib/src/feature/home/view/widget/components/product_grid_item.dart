@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../common/utils/app_routes.dart';
+import '../../../../auth/view/widget/auth.dart';
 import '../models/cart.dart';
 import '../models/product.dart';
-import '../utils/app_routes.dart';
 
 class ProductGridItem extends StatelessWidget {
   const ProductGridItem({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class ProductGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
     bool startsWithFile =
         product.image.toString().toLowerCase().startsWith('https://');
 
@@ -25,7 +27,10 @@ class ProductGridItem extends StatelessWidget {
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
               onPressed: () {
-                product.toggleFavorite();
+                product.toggleFavorite(
+                  auth.token ?? '',
+                  auth.userId ?? '',
+                );
               },
               icon: Icon(
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -63,13 +68,13 @@ class ProductGridItem extends StatelessWidget {
             child: startsWithFile
                 ? FadeInImage(
                     placeholder: const AssetImage(
-                        'assets/images/product-placeholder.png'),
+                        'lib/assets/images/product-placeholder.png'),
                     image: NetworkImage(product.image),
                     fit: BoxFit.cover,
                   )
                 : FadeInImage(
                     placeholder: const AssetImage(
-                        'assets/images/product-placeholder.png'),
+                        'lib/assets/images/product-placeholder.png'),
                     image: FileImage(File(product.image)),
                     fit: BoxFit.cover,
                   ),

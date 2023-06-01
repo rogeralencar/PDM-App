@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../common/pages/onboarding_details_screen.dart';
+import '../widget/onboarding_details.dart';
 import '../../../../common/utils/app_routes.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -20,20 +20,20 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
 
   final PageController _pageController = PageController(initialPage: 0);
   final List<Widget> _pages = const [
-    OnBoardingDetailsScreen(
+    OnBoardingDetails(
       title: 'Bem-vindo a loja Snap',
       subtitle: 'A melhor loja virtual que você vai conhecer!',
       imagePath: 'lib/assets/images/snap_LOGO_GIF.gif',
       isTitle: true,
     ),
-    OnBoardingDetailsScreen(
+    OnBoardingDetails(
       title: 'Tenha um app feito para você',
       subtitle:
           'Aqui no snap você tem variás opções para compras, onde uma dessas opções pode até ser sua!',
       imagePath: 'lib/assets/images/snap_CARRINHO_GIF.gif',
       isTitle: false,
     ),
-    OnBoardingDetailsScreen(
+    OnBoardingDetails(
       title: 'Começe agora!',
       subtitle:
           'Crie seu perfil e comece a fazer suas compras ou vendas, o aplicativo snap é todo feito para e pelos nossos usuários',

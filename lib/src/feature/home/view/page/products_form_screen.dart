@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/models/product.dart';
-import '../../../../common/models/product_list.dart';
+import '../widget/models/product.dart';
+import '../widget/models/product_list.dart';
 import '../../../../common/utils/location_util.dart';
-import '../../../../common/widgets/image_input.dart';
-import '../../../../common/widgets/location_input.dart';
+import '../widget/image_input.dart';
+import '../widget/components/location_input.dart';
 
 class ProductsFormScreen extends StatefulWidget {
   const ProductsFormScreen({super.key});
