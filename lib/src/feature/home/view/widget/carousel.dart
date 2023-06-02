@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 
-import 'promotions.dart';
+import '../../repository/promotions.dart';
 
 class Carousel extends StatefulWidget {
   const Carousel({super.key});

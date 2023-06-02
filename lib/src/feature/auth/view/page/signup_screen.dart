@@ -69,7 +69,7 @@ class SignupScreenState extends State<SignupScreen> {
         _authData['email']!,
         _authData['password']!,
       );
-      Navigator.of(context).pushNamed(AppRoutes.productsOverview);
+      Navigator.of(context).pushNamed(AppRoutes.home);
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {

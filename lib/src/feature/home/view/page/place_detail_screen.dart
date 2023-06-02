@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../widget/models/product.dart';
-import '../../../../common/map_screen.dart';
+import '../../repository/product.dart';
+import 'map_screen.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
   const PlaceDetailScreen({Key? key}) : super(key: key);

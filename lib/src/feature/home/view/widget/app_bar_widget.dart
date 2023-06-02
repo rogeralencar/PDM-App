@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../common/utils/app_routes.dart';
+import 'badge.dart' as bad;
+import '../../repository/cart.dart';
 
 class AppBarWidget extends StatelessWidget {
   const AppBarWidget({super.key});
@@ -21,7 +26,8 @@ class AppBarWidget extends StatelessWidget {
               child: InkWell(
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 onTap: () {
-                  debugPrint('Perfil');
+                  Navigator.of(context)
+                      .pushReplacementNamed(AppRoutes.navegator);
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -33,20 +39,26 @@ class AppBarWidget extends StatelessWidget {
           Material(
             elevation: 4,
             shape: const CircleBorder(),
-            child: Ink(
-              decoration: const ShapeDecoration(
-                color: Colors.transparent,
-                shape: CircleBorder(),
-              ),
-              child: InkWell(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                onTap: () {
-                  debugPrint('Carrinho');
-                },
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(Icons.shopping_cart_outlined),
+            child: Consumer<Cart>(
+              child: Ink(
+                decoration: const ShapeDecoration(
+                  color: Colors.transparent,
+                  shape: CircleBorder(),
                 ),
+                child: InkWell(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(AppRoutes.cart);
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.shopping_cart_outlined),
+                  ),
+                ),
+              ),
+              builder: (ctx, cart, child) => bad.Badge(
+                value: cart.itemsCount.toString(),
+                child: child!,
               ),
             ),
           ),

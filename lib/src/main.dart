@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'feature/auth/view/widget/auth.dart';
-import 'feature/home/view/widget/models/cart.dart';
-import 'feature/home/view/widget/models/order_list.dart';
-import 'feature/home/view/widget/models/product_list.dart';
+import 'feature/home/repository/cart.dart';
+import 'feature/home/repository/order_list.dart';
+import 'feature/home/repository/product_list.dart';
 import 'common/utils/app_routes.dart';
 import 'auth_or_home_screen.dart';
 import 'feature/auth/view/page/forgot_password_screen.dart';
 import 'feature/auth/view/page/login_screen.dart';
 import 'feature/auth/view/page/signup_screen.dart';
 import 'feature/home/view/page/cart_screen.dart';
+import 'feature/home/view/page/home_screen.dart';
+import 'feature/home/view/page/navegation_screen.dart';
 import 'feature/home/view/page/orders_screen.dart';
 import 'feature/home/view/page/place_detail_screen.dart';
 import 'feature/home/view/page/products_detail_screen.dart';
 import 'feature/home/view/page/products_form_screen.dart';
 import 'feature/home/view/page/products_screen.dart';
-import 'feature/home/view/page/products_overview_screen.dart';
 import 'feature/onboarding/view/page/onboarding_screen.dart';
-
-import 'feature/developing/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -62,24 +61,25 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: Colors.purple,
-            secondary: Colors.deepOrange,
+            primary: const Color(0xFF35034F),
+            secondary: const Color(0xFFF9626C),
           ),
           fontFamily: 'Lato',
         ),
         routes: {
           AppRoutes.authOrHome: (ctx) => const AuthOrHomeScreen(),
-          AppRoutes.login: (ctx) => const LoginScreen(),
-          AppRoutes.signup: (ctx) => const SignupScreen(),
-          AppRoutes.forgotPassword: (ctx) => const ForgotPassword(),
-          AppRoutes.productsDetail: (ctx) => const ProductsDetailScreen(),
-          AppRoutes.onBoarding: (ctx) => const OnBoardingScreen(),
           AppRoutes.cart: (ctx) => const CartScreen(),
+          AppRoutes.forgotPassword: (ctx) => const ForgotPassword(),
+          AppRoutes.home: (ctx) => const HomeScreen(),
+          AppRoutes.login: (ctx) => const LoginScreen(),
+          AppRoutes.onBoarding: (ctx) => const OnBoardingScreen(),
           AppRoutes.orders: (ctx) => const OrdersScreen(),
-          AppRoutes.products: (ctx) => const ProductsScreen(),
-          AppRoutes.productsOverview: (ctx) => const ProductsOverviewScreen(),
-          AppRoutes.productsForm: (ctx) => const ProductsFormScreen(),
           AppRoutes.placeDetail: (ctx) => const PlaceDetailScreen(),
+          AppRoutes.products: (ctx) => const ProductsScreen(),
+          AppRoutes.productsDetail: (ctx) => const ProductsDetailScreen(),
+          AppRoutes.productsForm: (ctx) => const ProductsFormScreen(),
+          AppRoutes.navegator: (ctx) => const NavigationScreen(),
+          AppRoutes.signup: (ctx) => const SignupScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),

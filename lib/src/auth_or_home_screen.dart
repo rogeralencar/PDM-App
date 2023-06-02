@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'feature/auth/view/widget/auth.dart';
-import 'feature/home/view/page/products_overview_screen.dart';
+import 'feature/home/view/page/home_screen.dart';
 import 'feature/onboarding/view/page/onboarding_screen.dart';
 
 class AuthOrHomeScreen extends StatelessWidget {
@@ -21,9 +21,7 @@ class AuthOrHomeScreen extends StatelessWidget {
             child: Text('Ocorreu um erro!'),
           );
         } else {
-          return auth.isAuth
-              ? const ProductsOverviewScreen()
-              : const OnBoardingScreen();
+          return auth.isAuth ? const HomeScreen() : const OnBoardingScreen();
         }
       },
     );

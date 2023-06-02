@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../common/utils/app_routes.dart';
-import '../../../../auth/view/widget/auth.dart';
-import '../models/cart.dart';
-import '../models/product.dart';
+import '../../../../common/utils/app_routes.dart';
+import '../../../auth/view/widget/auth.dart';
+import '../../repository/cart.dart';
+import '../../repository/product.dart';
 
-class ProductGridItem extends StatelessWidget {
-  const ProductGridItem({Key? key}) : super(key: key);
+class ProductGrid extends StatelessWidget {
+  const ProductGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

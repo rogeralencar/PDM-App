@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'product.dart';
-import '../../../../../common/exceptions/http_exception.dart';
-import '../../../../../common/utils/constants.dart';
+import '../../../common/exceptions/http_exception.dart';
+import '../../../common/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
   final String _token;
@@ -45,6 +45,10 @@ class ProductList with ChangeNotifier {
 
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
+      final categoryValue = productData['category'];
+      final categoriesList = categoryValue is List<dynamic>
+          ? List<String>.from(categoryValue)
+          : [categoryValue.toString()];
       final isFavorite = favData[productId] ?? false;
       _items.add(
         Product(
@@ -52,6 +56,7 @@ class ProductList with ChangeNotifier {
           id: productId,
           name: productData['name'],
           description: productData['description'],
+          category: categoriesList,
           price: productData['price'],
           image: productData['image'],
           isFavorite: isFavorite,
@@ -74,6 +79,7 @@ class ProductList with ChangeNotifier {
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       name: data['name'] as String,
       description: data['description'] as String,
+      category: data['category'] as List<String>,
       price: data['price'] as double,
       image: data['image'],
       location: PlaceLocation(
@@ -112,6 +118,7 @@ class ProductList with ChangeNotifier {
           "userId": product.userId,
           "name": product.name,
           "description": product.description,
+          "category": product.category,
           "price": product.price,
           "image": image,
           "latitude": product.location.latitude,
@@ -127,6 +134,7 @@ class ProductList with ChangeNotifier {
       id: id,
       name: product.name,
       description: product.description,
+      category: product.category,
       price: product.price,
       image: image,
       location: PlaceLocation(
@@ -150,6 +158,7 @@ class ProductList with ChangeNotifier {
             "userId": product.userId,
             "name": product.name,
             "description": product.description,
+            "category": product.category,
             "price": product.price,
             "image": product.image,
             "latitude": product.location.latitude,

@@ -15,12 +15,12 @@ class Badge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: Alignment.center,
+      clipBehavior: Clip.none,
       children: [
         child,
         Positioned(
-          right: 8,
-          top: 8,
+          top: -4,
+          right: -4,
           child: Container(
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
