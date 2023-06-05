@@ -1,91 +1,33 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/utils/app_routes.dart';
-import '../../../auth/view/widget/auth.dart';
-import '../../repository/cart.dart';
+import 'product_grid_item.dart';
 import '../../repository/product.dart';
+import '../../repository/product_list.dart';
 
 class ProductGrid extends StatelessWidget {
-  const ProductGrid({Key? key}) : super(key: key);
+  final bool showFavoriteOnly;
+
+  const ProductGrid(this.showFavoriteOnly, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context, listen: false);
-    final cart = Provider.of<Cart>(context, listen: false);
-    final auth = Provider.of<Auth>(context, listen: false);
-    bool startsWithFile =
-        product.image.toString().toLowerCase().startsWith('https://');
+    final provider = Provider.of<ProductList>(context);
+    final List<Product> loadedProducts =
+        showFavoriteOnly ? provider.favoriteItems : provider.items;
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: GridTile(
-        footer: GridTileBar(
-          backgroundColor: Colors.black87,
-          leading: Consumer<Product>(
-            builder: (ctx, product, _) => IconButton(
-              onPressed: () {
-                product.toggleFavorite(
-                  auth.token ?? '',
-                  auth.userId ?? '',
-                );
-              },
-              icon: Icon(
-                  product.isFavorite ? Icons.favorite : Icons.favorite_border),
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-          title: Text(
-            product.name,
-            textAlign: TextAlign.center,
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            color: Theme.of(context).colorScheme.secondary,
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Produto adicionado com sucesso!'),
-                  duration: const Duration(seconds: 2),
-                  action: SnackBarAction(
-                    label: 'DESFAZER',
-                    onPressed: () {
-                      cart.removeSingleItem(product.id);
-                    },
-                  ),
-                ),
-              );
-              cart.addItem(product);
-            },
-          ),
-        ),
-        child: GestureDetector(
-          child: Hero(
-            tag: product.id,
-            child: startsWithFile
-                ? FadeInImage(
-                    placeholder: const AssetImage(
-                        'lib/assets/images/product-placeholder.png'),
-                    image: NetworkImage(product.image),
-                    fit: BoxFit.cover,
-                  )
-                : FadeInImage(
-                    placeholder: const AssetImage(
-                        'lib/assets/images/product-placeholder.png'),
-                    image: FileImage(File(product.image)),
-                    fit: BoxFit.cover,
-                  ),
-          ),
-          onTap: () {
-            Navigator.of(context).pushNamed(
-              AppRoutes.productsDetail,
-              arguments: product,
-            );
-          },
-        ),
+    return GridView.builder(
+      padding: const EdgeInsets.all(10),
+      itemCount: loadedProducts.length,
+      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+        value: loadedProducts[i],
+        child: const ProductGridItem(),
+      ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 3 / 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
       ),
     );
   }

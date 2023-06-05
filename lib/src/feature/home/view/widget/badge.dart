@@ -4,11 +4,13 @@ class Badge extends StatelessWidget {
   final Widget child;
   final String value;
   final Color? color;
+  final double spacing;
 
   const Badge({
     Key? key,
     required this.child,
     required this.value,
+    this.spacing = -4,
     this.color,
   }) : super(key: key);
 
@@ -19,8 +21,8 @@ class Badge extends StatelessWidget {
       children: [
         child,
         Positioned(
-          top: -4,
-          right: -4,
+          top: spacing,
+          right: spacing,
           child: Container(
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(

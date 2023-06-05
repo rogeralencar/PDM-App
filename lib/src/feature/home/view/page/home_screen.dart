@@ -6,6 +6,7 @@ import '../widget/app_bar_widget.dart';
 import '../widget/carousel.dart';
 import '../widget/product_categories.dart';
 import '../widget/product_recommendation.dart';
+import '../widget/search_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -45,35 +46,12 @@ class HomeScreenState extends State<HomeScreen> {
           : RefreshIndicator(
               onRefresh: () => _refreshProducts(context),
               child: ListView(
-                children: [
-                  const AppBarWidget(),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Material(
-                      elevation: 4,
-                      borderRadius: BorderRadius.circular(18.0),
-                      child: TextField(
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          suffixIcon: const Icon(
-                            Icons.search,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          debugPrint(value);
-                        },
-                      ),
-                    ),
-                  ),
-                  const Carousel(),
-                  const ProductCategories(),
-                  const ProductRecommendation(),
+                children: const [
+                  AppBarWidget(),
+                  SearchWidget(),
+                  Carousel(),
+                  ProductCategories(),
+                  ProductRecommendation(),
                 ],
               ),
             ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/utils/app_routes.dart';
 import '../../repository/product.dart';
 import '../../repository/product_list.dart';
-import 'product_grid.dart';
+import 'product_grid_item.dart';
 
 class ProductRecommendation extends StatefulWidget {
   const ProductRecommendation({super.key});
@@ -13,19 +14,30 @@ class ProductRecommendation extends StatefulWidget {
 }
 
 class _ProductRecommendationState extends State<ProductRecommendation> {
-  late List<Product> loadedProducts;
+  List<Product> loadedProducts = [];
   int currentItemCount = 6;
   bool haveMoreProducts = true;
+  bool isLoading = false;
 
   void loadMoreProducts() {
+    if (isLoading || !haveMoreProducts) {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         currentItemCount += 6;
 
-        if (currentItemCount > loadedProducts.length) {
+        if (currentItemCount >= loadedProducts.length) {
           currentItemCount = loadedProducts.length;
           haveMoreProducts = false;
         }
+
+        isLoading = false;
       });
     });
   }
@@ -52,7 +64,7 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
               ),
               TextButton(
                 onPressed: () {
-                  debugPrint('Ver todos os produtos');
+                  Navigator.of(context).pushNamed(AppRoutes.productsOverview);
                 },
                 child: const Text(
                   'See all',
@@ -62,23 +74,31 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
             ],
           ),
         ),
-        LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return GridView.builder(
-              padding: const EdgeInsets.all(10),
-              itemCount: currentItemCount,
-              itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                value: loadedProducts[i],
-                child: const ProductGrid(),
-              ),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-            );
-          },
+        const Divider(),
+        SizedBox(
+          height: 410,
+          width: double.infinity,
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(10),
+                      itemCount: currentItemCount,
+                      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                        value: loadedProducts[i],
+                        child: const ProductGridItem(),
+                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 3 / 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                    );
+                  },
+                ),
         ),
         haveMoreProducts
             ? Padding(

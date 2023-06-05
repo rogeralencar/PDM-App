@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'common/utils/app_routes.dart';
+import 'auth_or_home_screen.dart';
 import 'feature/auth/view/widget/auth.dart';
 import 'feature/home/repository/cart.dart';
 import 'feature/home/repository/order_list.dart';
 import 'feature/home/repository/product_list.dart';
-import 'common/utils/app_routes.dart';
-import 'auth_or_home_screen.dart';
+import 'feature/home/view/page/products_overview_screen.dart';
 import 'feature/auth/view/page/forgot_password_screen.dart';
 import 'feature/auth/view/page/login_screen.dart';
 import 'feature/auth/view/page/signup_screen.dart';
@@ -78,6 +79,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.products: (ctx) => const ProductsScreen(),
           AppRoutes.productsDetail: (ctx) => const ProductsDetailScreen(),
           AppRoutes.productsForm: (ctx) => const ProductsFormScreen(),
+          AppRoutes.productsOverview: (ctx) => const ProductsOverviewScreen(),
           AppRoutes.navegator: (ctx) => const NavigationScreen(),
           AppRoutes.signup: (ctx) => const SignupScreen(),
         },

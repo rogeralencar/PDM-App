@@ -104,6 +104,7 @@ class ProductCategories extends StatelessWidget {
             ],
           ),
         ),
+        const Divider(),
         Padding(
           padding: const EdgeInsets.all(6.0),
           child: SizedBox(
