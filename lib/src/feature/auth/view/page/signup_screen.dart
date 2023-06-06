@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/exceptions/auth_exception.dart';
+import '../../../../main.dart';
+import '../../repository/user_model.dart';
 import '../widget/auth.dart';
 import '../../../../common/utils/app_routes.dart';
 
@@ -14,6 +16,9 @@ class SignupScreen extends StatefulWidget {
 
 class SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -23,6 +28,14 @@ class SignupScreenState extends State<SignupScreen> {
     'email': '',
     'password': '',
   };
+
+  @override
+  void dispose() {
+    _nameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   bool isValidEmail(String email) {
     RegExp emailRegExp = RegExp(
@@ -69,7 +82,16 @@ class SignupScreenState extends State<SignupScreen> {
         _authData['email']!,
         _authData['password']!,
       );
-      Navigator.of(context).pushNamed(AppRoutes.home);
+
+      User user = User(
+        name: _nameController.text,
+        userId: auth.userId!,
+        email: _emailController.text,
+      );
+
+      user.saveUserInfo(auth.token!);
+
+      navigatorKey.currentState?.pushNamed(AppRoutes.home);
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
@@ -83,8 +105,8 @@ class SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF35034F),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -141,8 +163,14 @@ class SignupScreenState extends State<SignupScreen> {
                               ),
                               maxLines: 1,
                               keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              focusNode: _nameFocusNode,
                               controller: _nameController,
                               onSaved: (name) => _authData['name'] = name ?? '',
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context)
+                                    .requestFocus(_emailFocusNode);
+                              },
                               validator: (name) {
                                 if (name!.isEmpty) {
                                   return 'Por favor, insira seu nome';
@@ -180,7 +208,13 @@ class SignupScreenState extends State<SignupScreen> {
                               ),
                               maxLines: 1,
                               keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              focusNode: _emailFocusNode,
                               controller: _emailController,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context)
+                                    .requestFocus(_passwordFocusNode);
+                              },
                               onSaved: (email) =>
                                   _authData['email'] = email ?? '',
                               validator: (email) {
@@ -217,9 +251,14 @@ class SignupScreenState extends State<SignupScreen> {
                                 ),
                               ),
                               obscureText: true,
+                              textInputAction: TextInputAction.done,
+                              focusNode: _passwordFocusNode,
                               controller: _passwordController,
                               onSaved: (password) =>
                                   _authData['password'] = password ?? '',
+                              onFieldSubmitted: (_) {
+                                _submit();
+                              },
                               validator: (password) {
                                 if (password!.isEmpty) {
                                   return 'Por favor, insira a senha';
@@ -235,11 +274,14 @@ class SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 40),
                     _isLoading
-                        ? const CircularProgressIndicator()
+                        ? CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.secondary,
+                          )
                         : ElevatedButton(
                             onPressed: _submit,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF9626C),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -270,7 +312,8 @@ class SignupScreenState extends State<SignupScreen> {
                             Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF9626C),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),

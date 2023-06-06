@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'common/utils/app_routes.dart';
 import 'auth_or_home_screen.dart';
+import 'feature/auth/repository/user_provider.dart';
 import 'feature/auth/view/widget/auth.dart';
 import 'feature/home/repository/cart.dart';
 import 'feature/home/repository/order_list.dart';
@@ -25,6 +26,8 @@ void main() {
   runApp(const MyApp());
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -35,6 +38,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => Auth(),
         ),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList(),
           update: (ctx, auth, previous) {
@@ -67,6 +71,7 @@ class MyApp extends StatelessWidget {
           ),
           fontFamily: 'Lato',
         ),
+        navigatorKey: navigatorKey,
         routes: {
           AppRoutes.authOrHome: (ctx) => const AuthOrHomeScreen(),
           AppRoutes.cart: (ctx) => const CartScreen(),

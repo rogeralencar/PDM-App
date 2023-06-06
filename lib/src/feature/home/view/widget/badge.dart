@@ -10,7 +10,7 @@ class Badge extends StatelessWidget {
     Key? key,
     required this.child,
     required this.value,
-    this.spacing = -4,
+    this.spacing = 0,
     this.color,
   }) : super(key: key);
 

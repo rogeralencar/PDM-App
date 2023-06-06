@@ -28,7 +28,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_localizations:
     sdk: flutter
-  realm: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +38,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
+  remove_alpha_ios: true
   image_path: "lib/assets/images/SNAP_LOGO.PNG.png"
   adaptive_icon_background: "#000000"
   adaptive_icon_foreground: "lib/assets/images/SNAP_LOGO.PNG.png"

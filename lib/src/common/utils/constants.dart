@@ -1,4 +1,6 @@
 class Constants {
+  static const userInfo =
+      'https://snap-8966f-default-rtdb.firebaseio.com/userInfo';
   static const userFavoritesUrl =
       'https://snap-8966f-default-rtdb.firebaseio.com/userFavorites';
   static const productBaseUrl =

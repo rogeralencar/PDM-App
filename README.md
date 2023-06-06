@@ -1,6 +1,18 @@
 SnapStore
 ====
 ## A Flutter Project for PDM
+User {
+  nome
+  nome social
+  idade
+  cpf
+  genero
+  bio
+  userid
+  email
+  numero de telefone
+  cep
+}
 
 <p float="middle">
   <img src="lib/assets/images/snap_CARRINHO_GIF.gif" width="32%" /><img src="lib/assets/images/SNAP_LOGO.PNG.png" width="32%" /><img src="lib/assets/images/snap_MAO.SELL.BUY_GIF.gif" width="32%" />

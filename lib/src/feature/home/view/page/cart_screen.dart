@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../repository/cart.dart';
 import '../../repository/order_list.dart';
 import '../widget/cart_item.dart';
+import '../widget/cep_widget.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -20,10 +21,13 @@ class CartScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: CepWidget(),
+          ),
           Card(
             margin: const EdgeInsets.symmetric(
               horizontal: 15,
-              vertical: 25,
             ),
             child: Padding(
               padding: const EdgeInsets.all(10),

@@ -4,10 +4,16 @@ import 'package:provider/provider.dart';
 import '../../../../common/utils/app_routes.dart';
 import 'badge.dart' as bad;
 import '../../repository/cart.dart';
+import 'cep_widget.dart';
 
-class AppBarWidget extends StatelessWidget {
+class AppBarWidget extends StatefulWidget {
   const AppBarWidget({super.key});
 
+  @override
+  AppBarWidgetState createState() => AppBarWidgetState();
+}
+
+class AppBarWidgetState extends State<AppBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -36,6 +42,7 @@ class AppBarWidget extends StatelessWidget {
               ),
             ),
           ),
+          const CepWidget(),
           Material(
             elevation: 4,
             shape: const CircleBorder(),
@@ -56,9 +63,13 @@ class AppBarWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              builder: (ctx, cart, child) => bad.Badge(
-                value: cart.itemsCount.toString(),
-                child: child!,
+              builder: (ctx, cart, child) => Stack(
+                children: [
+                  bad.Badge(
+                    value: cart.itemsCount.toString(),
+                    child: child!,
+                  ),
+                ],
               ),
             ),
           ),
