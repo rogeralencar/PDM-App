@@ -33,7 +33,8 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Selecione...'),
+        title: const Text('Selecione'),
+        centerTitle: true,
         actions: [
           if (!widget.isReadOnly)
             IconButton(

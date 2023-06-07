@@ -265,7 +265,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                               ),
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: Colors.grey,
+                                  color: Theme.of(context).colorScheme.outline,
                                   width: 1,
                                 ),
                               ),

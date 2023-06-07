@@ -127,6 +127,7 @@ class _CepWidgetState extends State<CepWidget> {
   }
 
   void fetchCepData(String value) async {
+    if (value.isEmpty) return;
     try {
       final response =
           await http.get(Uri.parse('https://viacep.com.br/ws/$value/json/'));

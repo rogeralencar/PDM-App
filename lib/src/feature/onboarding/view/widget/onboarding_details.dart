@@ -35,6 +35,8 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
     super.dispose();
   }
 
+  void loadGifs() {}
+
   @override
   Widget build(BuildContext context) {
     GifController controller = GifController(vsync: this);
@@ -44,11 +46,11 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
       children: [
         const SizedBox(height: 50),
         widget.isTitle
-            ? const Text(
+            ? Text(
                 'Snap',
                 style: TextStyle(
                   fontSize: 40,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.tertiary,
                 ),
                 textAlign: TextAlign.center,
               )
@@ -56,19 +58,19 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
                 children: [
                   Text(
                     widget.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.tertiary,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
                   Text(
                     widget.subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.tertiary,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -79,11 +81,8 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
           controller: controller,
           autostart: Autostart.loop,
           duration: const Duration(seconds: 3),
-          placeholder: (context) => const Text(
-            'Loading...',
-            style: TextStyle(
-              color: Colors.white,
-            ),
+          placeholder: (context) => CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.outline,
           ),
           onFetchCompleted: () {
             controller.reset();
@@ -98,19 +97,19 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
             children: [
               Text(
                 widget.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.background,
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               Text(
                 widget.subtitle,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.outline,
                 ),
                 textAlign: TextAlign.center,
               ),

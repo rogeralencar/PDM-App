@@ -43,8 +43,7 @@ class _CarouselState extends State<Carousel> {
         debugPrint(promotion.title);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -83,7 +82,8 @@ class _CarouselState extends State<Carousel> {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 2),
+                border: Border.all(
+                    color: Theme.of(context).colorScheme.outline, width: 2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Image.network(

@@ -66,9 +66,11 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRoutes.productsOverview);
                 },
-                child: const Text(
+                child: Text(
                   'See all',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
               ),
             ],
@@ -79,9 +81,9 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
           height: 410,
           width: double.infinity,
           child: isLoading
-              ? const Center(
+              ? Center(
                   child: CircularProgressIndicator(
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.outline,
                 ))
               : LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {

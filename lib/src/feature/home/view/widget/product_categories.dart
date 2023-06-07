@@ -96,9 +96,10 @@ class ProductCategories extends StatelessWidget {
                 onPressed: () {
                   debugPrint('Ver todas as categorias');
                 },
-                child: const Text(
+                child: Text(
                   'See all',
-                  style: TextStyle(color: Colors.grey),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.outline),
                 ),
               ),
             ],

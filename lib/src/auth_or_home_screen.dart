@@ -18,8 +18,10 @@ class AuthOrHomeScreen extends StatelessWidget {
       future: auth.tryAutoLogin(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator(color: Colors.grey));
+          return Center(
+              child: CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.outline,
+          ));
         } else if (snapshot.error != null) {
           return const Center(
             child: Text('Ocorreu um erro!'),
@@ -30,8 +32,10 @@ class AuthOrHomeScreen extends StatelessWidget {
               future: userProvider.loadUser(),
               builder: (ctx, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                      child: CircularProgressIndicator(color: Colors.grey));
+                  return Center(
+                      child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.outline,
+                  ));
                 } else if (snapshot.error != null) {
                   return const Center(
                     child: Text('Ocorreu um erro ao carregar o usuário!'),

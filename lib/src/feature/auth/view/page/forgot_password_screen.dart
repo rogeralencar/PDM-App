@@ -48,12 +48,12 @@ class ForgotPasswordState extends State<ForgotPassword> {
                       'lib/assets/images/SNAP_LOGO.PNG.png',
                       height: 170,
                     ),
-                    const Text(
+                    Text(
                       'Reset Password',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -73,14 +73,16 @@ class ForgotPasswordState extends State<ForgotPassword> {
                                 contentPadding:
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 filled: true,
-                                fillColor: Colors.white,
+                                fillColor:
+                                    Theme.of(context).colorScheme.tertiary,
                                 labelText: '\t\t\t\t\t\tEnter your E-mail',
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                    color: Colors.grey,
+                                  borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
                                     width: 1.0,
                                   ),
                                 ),

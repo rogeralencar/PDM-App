@@ -60,8 +60,8 @@ class ProductsDetailScreen extends StatelessWidget {
                 Text(
                   'R\$ ${product.price}',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.outline,
                     fontSize: 20,
                   ),
                 ),

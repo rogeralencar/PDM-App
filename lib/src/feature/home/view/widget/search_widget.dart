@@ -23,9 +23,6 @@ class SearchWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(18.0),
             ),
           ),
-          onChanged: (value) {
-            debugPrint(value);
-          },
         ),
       ),
     );

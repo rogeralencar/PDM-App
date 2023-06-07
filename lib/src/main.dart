@@ -69,6 +69,8 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSwatch().copyWith(
               primary: const Color(0xFF35034F),
               secondary: const Color(0xFFF9626C),
+              tertiary: Colors.white,
+              outline: Colors.grey,
             )),
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,

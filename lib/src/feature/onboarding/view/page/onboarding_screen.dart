@@ -56,7 +56,9 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
       height: 8.0,
       width: isActive ? 16.0 : 10.0,
       decoration: BoxDecoration(
-        color: isActive ? const Color(0xFFF9626C) : Colors.white,
+        color: isActive
+            ? Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.tertiary,
         borderRadius: BorderRadius.circular(12),
       ),
     );
@@ -66,8 +68,8 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF35034F),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,7 +100,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF9626C),
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -111,18 +113,19 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             curve: Curves.easeInOut);
                       }
                     },
-                    child: const Text(
+                    child: Text(
                       'Back',
                       style: TextStyle(
                         fontSize: 22,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
                   ),
                   _currentPage != 2
                       ? ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF9626C),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -131,18 +134,18 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                           onPressed: () {
                             Navigator.of(context).pushNamed(AppRoutes.login);
                           },
-                          child: const Text(
+                          child: Text(
                             'Skip',
                             style: TextStyle(
                               fontSize: 22,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.tertiary,
                             ),
                           ),
                         )
                       : const Text(''),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF9626C),
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -159,9 +162,9 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                     },
                     child: Text(
                       _currentPage == _pages.length - 1 ? 'Done' : 'Next',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 22,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
                   ),

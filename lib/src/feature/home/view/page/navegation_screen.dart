@@ -87,21 +87,21 @@ class NavigationScreenState extends State<NavigationScreen> {
               onPressed: () => _onItemTapped(0),
               color: _selectedIndex == 0
                   ? Theme.of(context).colorScheme.secondary
-                  : Colors.white,
+                  : Theme.of(context).colorScheme.tertiary,
             ),
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () => _onItemTapped(1),
               color: _selectedIndex == 1
                   ? Theme.of(context).colorScheme.secondary
-                  : Colors.white,
+                  : Theme.of(context).colorScheme.tertiary,
             ),
             IconButton(
               icon: const Icon(Icons.payment),
               onPressed: () => _onItemTapped(2),
               color: _selectedIndex == 2
                   ? Theme.of(context).colorScheme.secondary
-                  : Colors.white,
+                  : Theme.of(context).colorScheme.tertiary,
             ),
           ],
         ),

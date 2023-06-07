@@ -106,12 +106,12 @@ class LoginScreenState extends State<LoginScreen> {
                       'lib/assets/images/SNAP_LOGO.PNG.png',
                       height: 170,
                     ),
-                    const Text(
+                    Text(
                       'Login Account',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -135,14 +135,17 @@ class LoginScreenState extends State<LoginScreen> {
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 10),
                                     filled: true,
-                                    fillColor: Colors.white,
+                                    fillColor:
+                                        Theme.of(context).colorScheme.tertiary,
                                     labelText: '\t\t\t\t\t\tEnter your E-mail',
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.never,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
-                                      borderSide: const BorderSide(
-                                        color: Colors.grey,
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline,
                                         width: 1.0,
                                       ),
                                     ),
@@ -180,11 +183,14 @@ class LoginScreenState extends State<LoginScreen> {
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.never,
                                     filled: true,
-                                    fillColor: Colors.white,
+                                    fillColor:
+                                        Theme.of(context).colorScheme.tertiary,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
-                                      borderSide: const BorderSide(
-                                        color: Colors.grey,
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline,
                                         width: 1.0,
                                       ),
                                     ),
@@ -212,10 +218,11 @@ class LoginScreenState extends State<LoginScreen> {
                                 },
                                 style: const ButtonStyle(
                                     alignment: Alignment.centerRight),
-                                child: const Text(
+                                child: Text(
                                   'Forgot Password ?',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -228,7 +235,7 @@ class LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
                     _isLoading
                         ? CircularProgressIndicator(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.outline,
                           )
                         : ElevatedButton(
                             onPressed: _submit,
@@ -256,9 +263,12 @@ class LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'Don\'t have an account ? ',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.tertiary,
+                            fontSize: 16,
+                          ),
                         ),
                         ElevatedButton(
                           onPressed: () {

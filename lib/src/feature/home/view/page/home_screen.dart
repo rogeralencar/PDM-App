@@ -42,13 +42,13 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _isLoading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
-              color: Colors.grey,
+              color: Theme.of(context).colorScheme.outline,
             ))
           : RefreshIndicator(
               onRefresh: () => _refreshProducts(context),
-              color: Colors.grey,
+              color: Theme.of(context).colorScheme.outline,
               child: ListView(
                 children: const [
                   AppBarWidget(),

@@ -85,7 +85,10 @@ class _ImageInputState extends State<ImageInput> {
               width: 180,
               height: 100,
               decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Colors.grey),
+                border: Border.all(
+                  width: 1,
+                  color: Theme.of(context).colorScheme.outline,
+                ),
               ),
               alignment: Alignment.center,
               child: widget.image != null

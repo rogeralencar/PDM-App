@@ -46,9 +46,9 @@ class ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 8),
           Text(
             user.email ?? '',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
-              color: Colors.grey,
+              color: Theme.of(context).colorScheme.tertiary,
             ),
           ),
           const SizedBox(height: 16),
@@ -64,9 +64,9 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget buildLoadingScreen() {
-    return const Center(
+    return Center(
       child: CircularProgressIndicator(
-        color: Colors.grey,
+        color: Theme.of(context).colorScheme.outline,
       ),
     );
   }

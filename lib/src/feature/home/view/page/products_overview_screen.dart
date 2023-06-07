@@ -82,7 +82,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () => _refreshProducts(context),
-        color: Colors.grey,
+        color: Theme.of(context).colorScheme.outline,
         child: Column(
           children: [
             const Padding(
