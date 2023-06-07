@@ -65,13 +65,13 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: const Color(0xFF35034F),
-            secondary: const Color(0xFFF9626C),
-          ),
-          fontFamily: 'Lato',
-        ),
+            fontFamily: 'Lato',
+            colorScheme: ColorScheme.fromSwatch().copyWith(
+              primary: const Color(0xFF35034F),
+              secondary: const Color(0xFFF9626C),
+            )),
         navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
         routes: {
           AppRoutes.authOrHome: (ctx) => const AuthOrHomeScreen(),
           AppRoutes.cart: (ctx) => const CartScreen(),
@@ -88,7 +88,6 @@ class MyApp extends StatelessWidget {
           AppRoutes.navegator: (ctx) => const NavigationScreen(),
           AppRoutes.signup: (ctx) => const SignupScreen(),
         },
-        debugShowCheckedModeBanner: false,
       ),
     );
   }

@@ -79,7 +79,10 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
           height: 410,
           width: double.infinity,
           child: isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(
+                  child: CircularProgressIndicator(
+                  color: Colors.grey,
+                ))
               : LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                     return GridView.builder(

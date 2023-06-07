@@ -3,8 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'dart:convert';
 
+import '../../../auth/repository/user_model.dart';
+import '../../../auth/repository/user_provider.dart';
+import 'package:provider/provider.dart';
+
 class CepWidget extends StatefulWidget {
-  const CepWidget({super.key});
+  const CepWidget({Key? key}) : super(key: key);
 
   @override
   State<CepWidget> createState() => _CepWidgetState();
@@ -12,21 +16,49 @@ class CepWidget extends StatefulWidget {
 
 class _CepWidgetState extends State<CepWidget> {
   TextEditingController cepController = TextEditingController();
-  String cep = '';
-  String city = '';
-  String cepNumber = '';
+  late String cep;
+  late String city;
+  late String cepNumber;
+  late UserProvider userProvider;
+  late User user;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    cep = '';
+    city = '';
+    cepNumber = '';
+    fetchUserCep();
+  }
+
+  void fetchUserCep() {
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+    user = userProvider.user!;
+
+    cep = user.cep ?? '';
+
+    setState(() {
+      isLoading = true;
+    });
+
+    fetchCepData(cep);
+  }
 
   void saveCep(String value) async {
     try {
       final response =
           await http.get(Uri.parse('https://viacep.com.br/ws/$value/json/'));
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          cep = value;
-          city = data['localidade'];
-          cepNumber = data['cep'];
-        });
+        final user = userProvider.user;
+
+        if (user != null) {
+          setState(() {
+            user.cep = value;
+          });
+          await userProvider.saveUserInfo(user);
+          fetchCepData(value);
+        }
       } else {
         _showErrorDialog();
       }
@@ -94,11 +126,36 @@ class _CepWidgetState extends State<CepWidget> {
     );
   }
 
+  void fetchCepData(String value) async {
+    try {
+      final response =
+          await http.get(Uri.parse('https://viacep.com.br/ws/$value/json/'));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          city = data['localidade'];
+          cepNumber = data['cep'];
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        _showErrorDialog();
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      _showErrorDialog();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (cep.isEmpty)
+        if (isLoading || cep.isEmpty)
           InkWell(
             onTap: () {
               openCepDialog();
@@ -123,7 +180,7 @@ class _CepWidgetState extends State<CepWidget> {
               ),
             ),
           ),
-        if (cep.isNotEmpty)
+        if (!isLoading && cep.isNotEmpty)
           InkWell(
             onTap: () {
               openCepDialog();
