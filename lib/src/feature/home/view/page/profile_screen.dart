@@ -48,7 +48,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             user.email ?? '',
             style: TextStyle(
               fontSize: 16,
-              color: Theme.of(context).colorScheme.tertiary,
+              color: Theme.of(context).colorScheme.outline,
             ),
           ),
           const SizedBox(height: 16),
