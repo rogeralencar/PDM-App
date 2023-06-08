@@ -100,7 +100,7 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.background,
+                  color: Theme.of(context).colorScheme.tertiary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -109,7 +109,7 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
                 widget.subtitle,
                 style: TextStyle(
                   fontSize: 18,
-                  color: Theme.of(context).colorScheme.outline,
+                  color: Theme.of(context).colorScheme.tertiary,
                 ),
                 textAlign: TextAlign.center,
               ),
