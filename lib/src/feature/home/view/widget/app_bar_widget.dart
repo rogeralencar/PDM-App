@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/utils/app_routes.dart';
 import 'badge.dart' as bad;
 import '../../repository/cart.dart';
 import 'cep_widget.dart';
@@ -32,8 +31,7 @@ class AppBarWidgetState extends State<AppBarWidget> {
               child: InkWell(
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 onTap: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(AppRoutes.navegator);
+                  //Navigator.of(context).pushReplacementNamed(AppRoutes.navegator);
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -55,7 +53,7 @@ class AppBarWidgetState extends State<AppBarWidget> {
                 child: InkWell(
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.cart);
+                    //Navigator.of(context).pushNamed(AppRoutes.cart);
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),

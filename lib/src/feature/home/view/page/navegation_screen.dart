@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/src/feature/home/view/page/products_form_screen.dart';
 
-import '../../../../common/utils/app_routes.dart';
 import '../../../auth/view/widget/auth.dart';
 import 'orders_screen.dart';
 import 'products_screen.dart';
@@ -44,7 +45,7 @@ class NavigationScreenState extends State<NavigationScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+            Navigator.pop(context);
           },
         ),
         actions: [
@@ -55,14 +56,18 @@ class NavigationScreenState extends State<NavigationScreen> {
                 context,
                 listen: false,
               ).logout();
-              Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+              //Navigator.of(context).pushReplacementNamed(AppRoutes.login);
             },
           ),
           if (_selectedIndex == 1)
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.productsForm);
+                Modular.to.push(
+                  MaterialPageRoute(
+                    builder: (_) => const ProductsFormScreen(),
+                  ),
+                );
               },
             ),
         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../widget/onboarding_details.dart';
-import '../../../../common/utils/app_routes.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
@@ -132,7 +132,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             elevation: 20,
                           ),
                           onPressed: () {
-                            Navigator.of(context).pushNamed(AppRoutes.login);
+                            Modular.to.pushNamed('/auth/');
                           },
                           child: Text(
                             'Skip',
@@ -157,7 +157,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut);
                       } else {
-                        Navigator.of(context).pushNamed(AppRoutes.login);
+                        Modular.to.pushNamed('/auth/');
                       }
                     },
                     child: Text(

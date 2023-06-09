@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/utils/app_routes.dart';
 import '../../repository/product.dart';
 import '../../repository/product_list.dart';
 
@@ -36,10 +35,7 @@ class ProductItem extends StatelessWidget {
               icon: const Icon(Icons.edit),
               color: Theme.of(context).colorScheme.primary,
               onPressed: () {
-                Navigator.of(context).pushNamed(
-                  AppRoutes.productsForm,
-                  arguments: product,
-                );
+                //Navigator.of(context).pushNamed(AppRoutes.productsForm,arguments: product,);
               },
             ),
             IconButton(

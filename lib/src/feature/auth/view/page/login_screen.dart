@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/src/feature/auth/view/page/signup_screen.dart';
 import 'dart:async';
 
 import '../../../../common/exceptions/auth_exception.dart';
-import '../../../../main.dart';
 import '../widget/auth.dart';
-import '../../../../common/utils/app_routes.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -68,7 +69,7 @@ class LoginScreenState extends State<LoginScreen> {
         _authData['password']!,
       );
 
-      navigatorKey.currentState?.pushNamed(AppRoutes.home);
+      Modular.to.pushNamed('/home/');
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error, stackTrace) {
@@ -208,8 +209,12 @@ class LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 8),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .pushNamed(AppRoutes.forgotPassword);
+                                  Modular.to.push(
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const ForgotPasswordScreen(),
+                                    ),
+                                  );
                                 },
                                 style: const ButtonStyle(
                                     alignment: Alignment.centerRight),
@@ -267,7 +272,11 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).pushNamed(AppRoutes.signup);
+                            Modular.to.push(
+                              MaterialPageRoute(
+                                builder: (_) => const SignupScreen(),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/utils/app_routes.dart';
 import '../../../auth/view/widget/auth.dart';
 import '../../repository/product_list.dart';
 import '../widget/product_item.dart';
@@ -30,8 +29,7 @@ class ProductsScreen extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-                onPressed: () => AppRoutes.productsForm,
-                child: const Text('Adicionar produto'))
+                onPressed: () {}, child: const Text('Adicionar produto'))
           ],
         ),
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/utils/app_routes.dart';
 import '../../repository/product.dart';
 import '../../repository/product_list.dart';
 import 'product_grid_item.dart';
@@ -64,7 +63,7 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.productsOverview);
+                  //Navigator.of(context).pushNamed(AppRoutes.productsOverview);
                 },
                 child: Text(
                   'See all',

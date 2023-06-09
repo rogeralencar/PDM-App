@@ -1,7 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../auth_or_home_screen.dart';
-import 'viewmodel/signup_module.dart';
+import 'view/page/login_screen.dart';
 import '../home/home_module.dart';
 
 class AuthModule extends Module {
@@ -10,9 +9,7 @@ class AuthModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute('/', child: (_, __) => const AuthOrHomeScreen()),
-        ModuleRoute('/signup/', module: SignupModule()),
-        ModuleRoute('/form/', module: SignupModule()),
+        ChildRoute('/', child: (_, __) => const LoginScreen()),
         ModuleRoute('/home/', module: HomeModule()),
       ];
 }

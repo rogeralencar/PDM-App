@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../common/exceptions/http_exception.dart';
 import '../../../common/utils/constants.dart';
-import '../../../main.dart';
 import '../view/widget/auth.dart';
 import 'user_model.dart';
 
@@ -14,16 +14,13 @@ class UserProvider with ChangeNotifier {
   User? _user;
   User? get user => _user;
 
-  final BuildContext? context = navigatorKey.currentContext;
-
   void setUser(User user) {
     _user = user;
     notifyListeners();
   }
 
   Future<void> saveUserInfo(User user) async {
-    final BuildContext? context = navigatorKey.currentContext;
-    Auth auth = Provider.of<Auth>(context!, listen: false);
+    Auth auth = Provider.of<Auth>(context as BuildContext, listen: false);
     try {
       final response = await http.put(
         Uri.parse(
@@ -47,8 +44,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> loadUser() async {
-    final BuildContext? context = navigatorKey.currentContext;
-    Auth auth = Provider.of<Auth>(context!, listen: false);
+    Auth auth = Provider.of<Auth>(context as BuildContext, listen: false);
 
     try {
       final response = await http.get(Uri.parse(

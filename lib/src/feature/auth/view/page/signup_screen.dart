@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/exceptions/auth_exception.dart';
-import '../../../../main.dart';
 import '../../repository/user_model.dart';
 import '../../repository/user_provider.dart';
 import '../widget/auth.dart';
-import '../../../../common/utils/app_routes.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -92,7 +91,7 @@ class SignupScreenState extends State<SignupScreen> {
 
       await userProvider.saveUserInfo(user);
 
-      navigatorKey.currentState?.pushNamed(AppRoutes.home);
+      Modular.to.pushNamed('/home/');
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {

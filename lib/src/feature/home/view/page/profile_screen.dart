@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/utils/app_routes.dart';
 import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
 
@@ -52,7 +51,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.profileForm);
+              //Navigator.of(context).pushNamed(AppRoutes.profileForm);
             },
             child: const Text('Editar Perfil'),
           ),

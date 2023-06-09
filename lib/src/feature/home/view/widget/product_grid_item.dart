@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/utils/app_routes.dart';
 import '../../../auth/view/widget/auth.dart';
 import '../../repository/cart.dart';
 import '../../repository/product.dart';
@@ -80,10 +79,7 @@ class ProductGridItem extends StatelessWidget {
                       ),
               ),
               onTap: () {
-                Navigator.of(context).pushNamed(
-                  AppRoutes.productsDetail,
-                  arguments: product,
-                );
+                //Navigator.of(context).pushNamed(AppRoutes.productsDetail, arguments: product);
               },
             ),
           ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'feature/auth/view/widget/auth.dart';
-import 'feature/home/view/page/home_screen.dart';
-import 'feature/onboarding/view/page/onboarding_screen.dart';
+import '../../auth/view/widget/auth.dart';
+import '../../home/view/page/home_screen.dart';
+import '../view/page/onboarding_screen.dart';
 
 class AuthOrHomeScreen extends StatelessWidget {
   const AuthOrHomeScreen({Key? key}) : super(key: key);
