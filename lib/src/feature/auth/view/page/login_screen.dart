@@ -4,7 +4,6 @@ import 'dart:async';
 
 import '../../../../common/exceptions/auth_exception.dart';
 import '../../../../main.dart';
-import '../../repository/user_provider.dart';
 import '../widget/auth.dart';
 import '../../../../common/utils/app_routes.dart';
 
@@ -63,15 +62,11 @@ class LoginScreenState extends State<LoginScreen> {
 
     Auth auth = Provider.of(context, listen: false);
 
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-
     try {
       await auth.login(
         _authData['email']!,
         _authData['password']!,
       );
-
-      await userProvider.loadUser();
 
       navigatorKey.currentState?.pushNamed(AppRoutes.home);
     } on AuthException catch (error) {

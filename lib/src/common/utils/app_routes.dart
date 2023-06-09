@@ -13,5 +13,6 @@ class AppRoutes {
   static const productsForm = '/products-form';
   static const productsOverview = '/product-overview';
   static const productProvider = '/product-provider';
+  static const profileForm = '/profile-form';
   static const signup = '/signup';
 }

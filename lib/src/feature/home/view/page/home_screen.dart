@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../auth/repository/user_provider.dart';
 import '../../repository/product_list.dart';
 import '../widget/app_bar_widget.dart';
 import '../widget/carousel.dart';
@@ -31,9 +32,14 @@ class HomeScreenState extends State<HomeScreen> {
     Provider.of<ProductList>(
       context,
       listen: false,
-    ).loadProducts().then((value) {
-      setState(() {
-        _isLoading = false;
+    ).loadProducts().then((_) {
+      Provider.of<UserProvider>(
+        context,
+        listen: false,
+      ).loadUser().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
       });
     });
   }

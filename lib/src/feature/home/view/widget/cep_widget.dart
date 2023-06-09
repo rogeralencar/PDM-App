@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'dart:convert';
 
 import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
-import 'package:provider/provider.dart';
 
 class CepWidget extends StatefulWidget {
   const CepWidget({Key? key}) : super(key: key);
@@ -18,17 +19,14 @@ class _CepWidgetState extends State<CepWidget> {
   TextEditingController cepController = TextEditingController();
   late String cep;
   late String city;
-  late String cepNumber;
   late UserProvider userProvider;
   late User user;
-  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     cep = '';
     city = '';
-    cepNumber = '';
     fetchUserCep();
   }
 
@@ -37,12 +35,7 @@ class _CepWidgetState extends State<CepWidget> {
     user = userProvider.user!;
 
     cep = user.cep ?? '';
-
-    setState(() {
-      isLoading = true;
-    });
-
-    fetchCepData(cep);
+    city = user.city ?? '';
   }
 
   void saveCep(String value) async {
@@ -50,15 +43,9 @@ class _CepWidgetState extends State<CepWidget> {
       final response =
           await http.get(Uri.parse('https://viacep.com.br/ws/$value/json/'));
       if (response.statusCode == 200) {
-        final user = userProvider.user;
+        fetchCepData(value, user);
 
-        if (user != null) {
-          setState(() {
-            user.cep = value;
-          });
-          await userProvider.saveUserInfo(user);
-          fetchCepData(value);
-        }
+        await userProvider.saveUserInfo(user);
       } else {
         _showErrorDialog();
       }
@@ -93,13 +80,16 @@ class _CepWidgetState extends State<CepWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           title: const Text('Informe seu CEP'),
           content: TextField(
             controller: cepController,
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
-              CepInputFormatter(),
+              MaskTextInputFormatter(mask: '#####-###'),
             ],
             decoration: const InputDecoration(
               hintText: 'Digite seu CEP',
@@ -126,7 +116,7 @@ class _CepWidgetState extends State<CepWidget> {
     );
   }
 
-  void fetchCepData(String value) async {
+  void fetchCepData(String value, User user) async {
     if (value.isEmpty) return;
     try {
       final response =
@@ -134,20 +124,13 @@ class _CepWidgetState extends State<CepWidget> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          city = data['localidade'];
-          cepNumber = data['cep'];
-          isLoading = false;
+          user.cep = value;
+          user.city = data['localidade'];
         });
       } else {
-        setState(() {
-          isLoading = false;
-        });
         _showErrorDialog();
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
       _showErrorDialog();
     }
   }
@@ -156,7 +139,7 @@ class _CepWidgetState extends State<CepWidget> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (isLoading || cep.isEmpty)
+        if (city.isEmpty)
           InkWell(
             onTap: () {
               openCepDialog();
@@ -181,7 +164,7 @@ class _CepWidgetState extends State<CepWidget> {
               ),
             ),
           ),
-        if (!isLoading && cep.isNotEmpty)
+        if (city.isNotEmpty)
           InkWell(
             onTap: () {
               openCepDialog();
@@ -205,7 +188,7 @@ class _CepWidgetState extends State<CepWidget> {
                         ),
                       ),
                       Text(
-                        '$city, $cepNumber',
+                        '$city, $cep',
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -220,32 +203,5 @@ class _CepWidgetState extends State<CepWidget> {
           ),
       ],
     );
-  }
-}
-
-class CepInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    if (newValue.text.isEmpty) {
-      return newValue;
-    }
-
-    final cepRegex = RegExp(r'^(\d{0,5})-?(\d{0,3})$');
-    final match = cepRegex.firstMatch(newValue.text);
-
-    if (match != null) {
-      final formattedText =
-          '${match.group(1)}${match.group(2)!.isNotEmpty ? '-' : ''}${match.group(2)}';
-
-      return TextEditingValue(
-        text: formattedText,
-        selection: TextSelection.collapsed(offset: formattedText.length),
-      );
-    }
-
-    return oldValue;
   }
 }

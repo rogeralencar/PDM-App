@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/utils/app_routes.dart';
 import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
 
@@ -17,14 +18,11 @@ class ProfileScreenState extends State<ProfileScreen> {
     final userProvider = Provider.of<UserProvider>(context);
     final User? user = userProvider.user;
 
-    return user != null ? buildUserProfile(user) : buildLoadingScreen();
-  }
-
-  Widget buildUserProfile(User user) {
+    final String? name =
+        user!.socialName!.isEmpty ? user.name : user.socialName;
     final String? image = user.image!.isEmpty
         ? 'lib/assets/images/profile_image.png'
         : user.image;
-    final String? name = user.socialName!.isEmpty ? user.name : user.socialName;
 
     return Center(
       child: Column(
@@ -54,19 +52,11 @@ class ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              debugPrint('Editar Perfil');
+              Navigator.of(context).pushNamed(AppRoutes.profileForm);
             },
             child: const Text('Editar Perfil'),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget buildLoadingScreen() {
-    return Center(
-      child: CircularProgressIndicator(
-        color: Theme.of(context).colorScheme.outline,
       ),
     );
   }

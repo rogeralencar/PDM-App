@@ -2,6 +2,7 @@ class User {
   int? age;
   String? bio;
   String? cep;
+  String? city;
   String? cpf;
   String? email;
   String? gender;
@@ -14,6 +15,7 @@ class User {
     this.age,
     this.bio,
     this.cep,
+    this.city,
     this.cpf,
     this.email,
     this.gender,
@@ -28,6 +30,7 @@ class User {
       'age': age ?? 0,
       'bio': bio ?? '',
       'cep': cep ?? '',
+      'city': city ?? '',
       'cpf': cpf ?? '',
       'email': email ?? '',
       'gender': gender ?? '',

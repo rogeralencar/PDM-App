@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/utils/app_routes.dart';
+import '../../../auth/view/widget/auth.dart';
 import '../../repository/product_list.dart';
 import '../widget/product_item.dart';
 
@@ -9,31 +11,29 @@ class ProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Auth auth = Provider.of(context, listen: false);
     final ProductList products = Provider.of(context);
-    final bool withoutProducts = products.items.isEmpty;
 
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: withoutProducts
-            ? const Center(
-                child: Text(
-                  'Você ainda não realizou nenhuma compra!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 28,
-                  ),
-                ),
-              )
-            : ListView.builder(
-                itemCount: products.itemsCount,
-                itemBuilder: (ctx, i) => Column(
-                  children: [
+        child: Column(
+          children: [
+            ListView.builder(
+              itemCount: products.itemsCount,
+              itemBuilder: (ctx, i) => Column(
+                children: [
+                  if (products.items[i].userId == auth.userId)
                     ProductItem(products.items[i]),
-                    const Divider(),
-                  ],
-                ),
+                  if (products.items[i].userId == auth.userId) const Divider(),
+                ],
               ),
+            ),
+            ElevatedButton(
+                onPressed: () => AppRoutes.productsForm,
+                child: const Text('Adicionar produto'))
+          ],
+        ),
       ),
     );
   }

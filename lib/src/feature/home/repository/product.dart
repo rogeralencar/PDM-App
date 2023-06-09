@@ -22,26 +22,28 @@ class PlaceLocation {
 }
 
 class Product with ChangeNotifier {
-  final String userId;
-  final String id;
-  final String name;
-  final String description;
-  final List<String> category;
-  final double price;
-  late final dynamic image;
-  final PlaceLocation location;
   bool isFavorite;
+  final int orders;
+  final List<String> category;
+  final String description;
+  final String id;
+  final dynamic image;
+  final PlaceLocation location;
+  final String name;
+  final double price;
+  final String userId;
 
   Product({
-    required this.userId,
-    required this.id,
-    required this.name,
-    required this.description,
+    this.isFavorite = false,
+    this.orders = 0,
     required this.category,
-    required this.price,
+    required this.description,
+    required this.id,
     required this.image,
     required this.location,
-    this.isFavorite = false,
+    required this.name,
+    required this.price,
+    required this.userId,
   });
 
   void _toggleFavorite() {

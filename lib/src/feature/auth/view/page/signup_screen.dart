@@ -80,13 +80,10 @@ class SignupScreenState extends State<SignupScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      debugPrint('1');
       await auth.signup(
         _authData['email']!,
         _authData['password']!,
       );
-
-      debugPrint('2');
 
       User user = User(
         name: _nameController.text,

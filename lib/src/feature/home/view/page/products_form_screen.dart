@@ -71,7 +71,9 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
         _formData['id'] = product.id;
         _formData['name'] = product.name;
         _formData['price'] = product.price;
+        _formData['orders'] = product.orders;
         _formData['description'] = product.description;
+        _formData['category'] = product.category;
         _formData['image'] = product.image;
         _formData['latitude'] = product.location.latitude;
         _formData['longitude'] = product.location.longitude;

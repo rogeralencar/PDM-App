@@ -58,6 +58,7 @@ class ProductList with ChangeNotifier {
           description: productData['description'],
           category: categoriesList,
           price: productData['price'],
+          orders: productData['orders'],
           image: productData['image'],
           isFavorite: isFavorite,
           location: PlaceLocation(
@@ -81,6 +82,7 @@ class ProductList with ChangeNotifier {
       description: data['description'] as String,
       category: data['category'] as List<String>,
       price: data['price'] as double,
+      orders: 0,
       image: data['image'],
       location: PlaceLocation(
         latitude: data['latitude'] as double,
@@ -115,15 +117,16 @@ class ProductList with ChangeNotifier {
       Uri.parse('${Constants.productBaseUrl}.json?auth=$_token'),
       body: jsonEncode(
         {
-          "userId": product.userId,
-          "name": product.name,
-          "description": product.description,
+          "address": product.location.address,
           "category": product.category,
-          "price": product.price,
+          "description": product.description,
           "image": image,
           "latitude": product.location.latitude,
           "longitude": product.location.longitude,
-          "address": product.location.address,
+          "name": product.name,
+          "orders": 0,
+          "price": product.price,
+          "userId": product.userId,
         },
       ),
     );
@@ -136,6 +139,7 @@ class ProductList with ChangeNotifier {
       description: product.description,
       category: product.category,
       price: product.price,
+      orders: 0,
       image: image,
       location: PlaceLocation(
         latitude: product.location.latitude,
@@ -160,6 +164,7 @@ class ProductList with ChangeNotifier {
             "description": product.description,
             "category": product.category,
             "price": product.price,
+            "orders": product.orders,
             "image": product.image,
             "latitude": product.location.latitude,
             "longitude": product.location.longitude,

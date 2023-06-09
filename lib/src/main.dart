@@ -20,6 +20,7 @@ import 'feature/home/view/page/place_detail_screen.dart';
 import 'feature/home/view/page/products_detail_screen.dart';
 import 'feature/home/view/page/products_form_screen.dart';
 import 'feature/home/view/page/products_screen.dart';
+import 'feature/home/view/page/profile_form_screen.dart';
 import 'feature/onboarding/view/page/onboarding_screen.dart';
 
 void main() {
@@ -87,6 +88,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.productsDetail: (ctx) => const ProductsDetailScreen(),
           AppRoutes.productsForm: (ctx) => const ProductsFormScreen(),
           AppRoutes.productsOverview: (ctx) => const ProductsOverviewScreen(),
+          AppRoutes.profileForm: (ctx) => const ProfileFormScreen(),
           AppRoutes.navegator: (ctx) => const NavigationScreen(),
           AppRoutes.signup: (ctx) => const SignupScreen(),
         },

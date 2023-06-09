@@ -67,6 +67,7 @@ class UserProvider with ChangeNotifier {
           age: jsonData['age'] ?? 0,
           bio: jsonData['bio'] ?? '',
           cep: jsonData['cep'] ?? '',
+          city: jsonData['city'] ?? '',
           cpf: jsonData['cpf'] ?? '',
           email: jsonData['email'] ?? '',
           gender: jsonData['gender'] ?? '',
