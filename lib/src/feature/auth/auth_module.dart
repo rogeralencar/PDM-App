@@ -17,12 +17,12 @@ class AuthModule extends Module {
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/signup',
+          '/signup/',
           child: (_, __) => const SignupScreen(),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/forgotPassword',
+          '/forgotPassword/',
           child: (_, __) => const ForgotPasswordScreen(),
           transition: TransitionType.fadeIn,
         ),

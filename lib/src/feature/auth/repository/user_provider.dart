@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../common/exceptions/http_exception.dart';
@@ -20,7 +19,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> saveUserInfo(User user) async {
-    Auth auth = Provider.of<Auth>(context as BuildContext, listen: false);
+    final Auth auth = Modular.get<Auth>();
     try {
       final response = await http.put(
         Uri.parse(
@@ -44,8 +43,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> loadUser() async {
-    Auth auth = Provider.of<Auth>(context as BuildContext, listen: false);
-
+    final Auth auth = Modular.get<Auth>();
     try {
       final response = await http.get(Uri.parse(
           '${Constants.userInfo}/${auth.userId}.json?auth=${auth.token}'));

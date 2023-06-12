@@ -11,8 +11,8 @@ class OnBoardingModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ModuleRoute('/', module: HomeModule(), guards: [OnboardingGuard()]),
-        ModuleRoute('/auth', module: AuthModule(), guards: [OnboardingGuard()]),
-        ChildRoute('/onboarding', child: (_, __) => const OnBoardingScreen()),
+        ChildRoute('/', child: (_, __) => const OnBoardingScreen()),
+        ModuleRoute('/home/', module: HomeModule(), guards: [OnboardingGuard()]),
+        ModuleRoute('/auth/', module: AuthModule(), guards: [OnboardingGuard()]),
       ];
 }

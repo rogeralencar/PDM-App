@@ -68,11 +68,11 @@ class AppWidget extends StatelessWidget {
           LocalJsonLocalization.delegate
         ],
         supportedLocales: const [
-          Locale('pt', 'BR'),
-          Locale('en', 'US'),
-        ],
-        routeInformationParser: Modular.routeInformationParser,
-        routerDelegate: Modular.routerDelegate,
+        Locale('pt', 'BR'),
+        Locale('en', 'US'),
+      ],
+      routeInformationParser: Modular.routeInformationParser,
+      routerDelegate: Modular.routerDelegate,
       ),
     );
   }

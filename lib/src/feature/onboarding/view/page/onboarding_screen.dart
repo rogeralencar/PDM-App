@@ -51,7 +51,6 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   void initState() {
     super.initState();
-    checkOnboardingStatus(context);
   }
 
   Widget _indicator(bool isActive) {

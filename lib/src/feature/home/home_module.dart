@@ -1,5 +1,4 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:shop/src/feature/auth/auth_module.dart';
 
 import 'view/page/home_screen.dart';
 import 'viewmodel/navegation_module.dart';
@@ -14,10 +13,6 @@ class HomeModule extends Module {
           '/',
           child: (_, __) => const HomeScreen(),
           transition: TransitionType.fadeIn,
-        ),
-        ModuleRoute(
-          '/auth/',
-          module: AuthModule(),
         ),
         ModuleRoute(
           '/navegation/',

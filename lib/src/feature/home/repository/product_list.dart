@@ -42,14 +42,17 @@ class ProductList with ChangeNotifier {
 
     Map<String, dynamic> favData =
         favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
+    
 
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
+      debugPrint(productData['category']);
       final categoryValue = productData['category'];
       final categoriesList = categoryValue is List<dynamic>
           ? List<String>.from(categoryValue)
           : [categoryValue.toString()];
       final isFavorite = favData[productId] ?? false;
+      debugPrint(favData.toString());
       _items.add(
         Product(
           userId: productData['userId'],
