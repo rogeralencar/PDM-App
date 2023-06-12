@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/components/custom_text_field.dart';
 import '../../repository/product.dart';
 import '../../repository/product_list.dart';
 import '../../../../common/utils/location_util.dart';
@@ -19,10 +20,13 @@ class ProductsFormScreen extends StatefulWidget {
 class _ProductsFormScreenState extends State<ProductsFormScreen> {
   File? _pickedImage;
 
+  final _nameFocus = FocusNode();
   final _priceFocus = FocusNode();
   final _descriptionFocus = FocusNode();
-
   final _imageUrlFocus = FocusNode();
+  final _nameController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _descriptionController = TextEditingController();
   final _imageUrlController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -31,26 +35,14 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
   final bool _isLoading = false;
   bool _isImageUrl = false;
 
-  void _selectImage(File pickedImage) {
-    setState(() {
-      _pickedImage = pickedImage;
-      _formData['image'] = pickedImage;
-    });
-  }
-
-  void _selectPosition(LatLng position) async {
-    final address = await LocationUtil.getAddressFrom(position);
-    setState(() {
-      _formData['latitude'] = position.latitude;
-      _formData['longitude'] = position.longitude;
-      _formData['address'] = address;
-    });
-  }
-
-  void _changeTypeImage() {
-    setState(() {
-      _isImageUrl = !_isImageUrl;
-    });
+  @override
+  void dispose() {
+    _nameFocus.dispose();
+    _priceFocus.dispose();
+    _descriptionFocus.dispose();
+    _imageUrlFocus.removeListener(updateImage);
+    _imageUrlFocus.dispose();
+    super.dispose();
   }
 
   @override
@@ -90,14 +82,26 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _priceFocus.dispose();
-    _descriptionFocus.dispose();
+  void _selectImage(File pickedImage) {
+    setState(() {
+      _pickedImage = pickedImage;
+      _formData['image'] = pickedImage;
+    });
+  }
 
-    _imageUrlFocus.removeListener(updateImage);
-    _imageUrlFocus.dispose();
+  void _selectPosition(LatLng position) async {
+    final address = await LocationUtil.getAddressFrom(position);
+    setState(() {
+      _formData['latitude'] = position.latitude;
+      _formData['longitude'] = position.longitude;
+      _formData['address'] = address;
+    });
+  }
+
+  void _changeTypeImage() {
+    setState(() {
+      _isImageUrl = !_isImageUrl;
+    });
   }
 
   void updateImage() {
@@ -162,9 +166,11 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                 key: _formKey,
                 child: ListView(
                   children: [
-                    TextFormField(
+                    CustomTextField(
+                      labelText: 'Name',
+                      controller: _nameController,
+                      focusNode: _nameFocus,
                       initialValue: _formData['name']?.toString(),
-                      decoration: const InputDecoration(labelText: 'Nome'),
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) {
                         FocusScope.of(context).requestFocus(_priceFocus);
@@ -181,11 +187,12 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         return null;
                       },
                     ),
-                    TextFormField(
-                      initialValue: _formData['price']?.toString(),
-                      decoration: const InputDecoration(labelText: 'Preço'),
-                      textInputAction: TextInputAction.next,
+                    CustomTextField(
+                      labelText: 'Preço',
                       focusNode: _priceFocus,
+                      controller: _priceController,
+                      initialValue: _formData['price']?.toString(),
+                      textInputAction: TextInputAction.next,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                         signed: true,
@@ -206,10 +213,11 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         return null;
                       },
                     ),
-                    TextFormField(
-                      initialValue: _formData['description']?.toString(),
-                      decoration: const InputDecoration(labelText: 'Descrição'),
+                    CustomTextField(
+                      labelText: 'Descrição',
                       focusNode: _descriptionFocus,
+                      controller: _descriptionController,
+                      initialValue: _formData['description']?.toString(),
                       keyboardType: TextInputType.multiline,
                       maxLines: 3,
                       onSaved: (description) =>
@@ -238,13 +246,12 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Expanded(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  labelText: 'Url da Imagem'),
-                              keyboardType: TextInputType.url,
-                              textInputAction: TextInputAction.done,
+                            child: CustomTextField(
+                              labelText: 'Url da Imagem',
                               focusNode: _imageUrlFocus,
                               controller: _imageUrlController,
+                              keyboardType: TextInputType.url,
+                              textInputAction: TextInputAction.done,
                               onFieldSubmitted: (_) => _submitForm(),
                               onSaved: (imageUrl) =>
                                   _formData['imageUrl'] = imageUrl ?? '',

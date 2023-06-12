@@ -16,7 +16,7 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class NavigationScreenState extends State<NavigationScreen> {
-  int _selectedIndex = 0;
+  final pageViewController = PageController();
 
   final List<String> _titles = [
     'Perfil',
@@ -30,17 +30,17 @@ class NavigationScreenState extends State<NavigationScreen> {
     OrdersScreen(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void dispose() {
+    super.dispose();
+    pageViewController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_selectedIndex]),
+        title: Text(_titles[pageViewController.page?.round() ?? 0]),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -56,10 +56,10 @@ class NavigationScreenState extends State<NavigationScreen> {
                 context,
                 listen: false,
               ).logout();
-              //Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+              Modular.to.pushNamed('/auth/');
             },
           ),
-          if (_selectedIndex == 1)
+          if (pageViewController.page?.round() == 1)
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
@@ -72,44 +72,33 @@ class NavigationScreenState extends State<NavigationScreen> {
             ),
         ],
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
+      body: PageView(
+        controller: pageViewController,
         children: _screens,
       ),
-      bottomNavigationBar: Container(
-        height: 60,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(20),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.person),
-              onPressed: () => _onItemTapped(0),
-              color: _selectedIndex == 0
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.tertiary,
-            ),
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () => _onItemTapped(1),
-              color: _selectedIndex == 1
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.tertiary,
-            ),
-            IconButton(
-              icon: const Icon(Icons.payment),
-              onPressed: () => _onItemTapped(2),
-              color: _selectedIndex == 2
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.tertiary,
-            ),
-          ],
-        ),
+      bottomNavigationBar: AnimatedBuilder(
+        animation: pageViewController,
+        builder: (context, snapshot) {
+          return BottomNavigationBar(
+            currentIndex: pageViewController.page?.round() ?? 0,
+            onTap: (index) {
+              pageViewController.jumpToPage(index);
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.edit),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.payment),
+              ),
+            ],
+            selectedItemColor: Theme.of(context).colorScheme.secondary,
+            unselectedItemColor: Theme.of(context).colorScheme.tertiary,
+          );
+        },
       ),
     );
   }

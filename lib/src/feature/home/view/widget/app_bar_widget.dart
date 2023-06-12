@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
 import 'badge.dart' as bad;
@@ -31,7 +32,7 @@ class AppBarWidgetState extends State<AppBarWidget> {
               child: InkWell(
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 onTap: () {
-                  //Navigator.of(context).pushReplacementNamed(AppRoutes.navegator);
+                  Modular.to.pushNamed('/navegation/');
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),

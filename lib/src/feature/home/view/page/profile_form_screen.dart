@@ -5,8 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
-import '../widget/custom_text_field.dart';
+import '../../../../common/components/custom_text_field.dart';
 import '../widget/image_input.dart';
 
 class ProfileFormScreen extends StatefulWidget {
@@ -22,12 +23,26 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _bioController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _cpfController = TextEditingController();
+  final _nameFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  final _phoneNumberFocus = FocusNode();
+  final _ageFocus = FocusNode();
+  final _bioFocus = FocusNode();
+  final _cpfFocus = FocusNode();
+  final _otherGenderFocus = FocusNode();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _bioController = TextEditingController();
+  final _cpfController = TextEditingController();
+  final _otherGenderController = TextEditingController();
+
+  String _selectedGender = '';
+  bool _showOtherGenderInput = false;
+
+  late UserProvider userProvider;
+  late User? user;
 
   static const List<String> _genderOptions = [
     'Masculino',
@@ -35,9 +50,46 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     'Não-binário',
     'Outro',
   ];
-  String _selectedGender = '';
-  bool _showOtherGenderInput = false;
-  final TextEditingController _otherGenderController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    _loadUser();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _nameFocus.dispose();
+    _emailFocus.dispose();
+    _phoneNumberFocus.dispose();
+    _ageFocus.dispose();
+    _bioFocus.dispose();
+    _cpfFocus.dispose();
+    _otherGenderFocus.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    _ageController.dispose();
+    _bioController.dispose();
+    _cpfController.dispose();
+    _otherGenderController.dispose();
+  }
+
+  void _loadUser() {
+    userProvider = Provider.of<UserProvider>(context);
+    user = userProvider.user;
+
+    if (user?.gender != '') {
+      if (_genderOptions.contains(user?.gender)) {
+        _selectedGender = user!.gender!;
+      } else {
+        _selectedGender = 'Outro';
+        _otherGenderController.text = user!.gender!;
+      }
+    }
+  }
 
   void _handleGenderOptionChange(String? value) {
     if (_selectedGender == value) {
@@ -66,14 +118,6 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    _formData.clear();
-    _phoneNumberController.dispose();
-    _cpfController.dispose();
-    super.dispose();
-  }
-
   void _selectImage(File pickedImage) {
     setState(() {
       _pickedImage = pickedImage;
@@ -84,8 +128,19 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final user = userProvider.user;
+
+      user!.name = _nameController.text;
+      user!.email = _emailController.text;
+      user!.phoneNumber = _phoneNumberController.text;
+      user!.age = _ageController.text as int?;
+      user!.bio = _bioController.text;
+      user!.cpf = _cpfController.text;
+
+      if (_selectedGender == 'Outro') {
+        user!.gender = _otherGenderController.text;
+      } else {
+        user!.gender = _selectedGender;
+      }
       await userProvider.saveUserInfo(user!);
     }
   }
@@ -95,6 +150,16 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
       final age = int.tryParse(value);
       if (age == null || age <= 0 || age > 120) {
         return 'Por favor, insira uma idade válida.';
+      }
+    }
+    return null;
+  }
+
+  String? _validatePhoneNumber(String? value) {
+    if (value != null && value.isNotEmpty) {
+      final phoneNumberRegex = RegExp(r'^\(\d{2}\)\d{4,5}-\d{4}$');
+      if (!phoneNumberRegex.hasMatch(value)) {
+        return 'Por favor, insira um número de telefone válido (formato: (XX)XXXXX-XXXX).';
       }
     }
     return null;
@@ -114,16 +179,6 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
       final cpfRegex = RegExp(r'^\d{3}\.\d{3}\.\d{3}-\d{2}$');
       if (!cpfRegex.hasMatch(value)) {
         return 'Por favor, insira um CPF válido (formato: XXX.XXX.XXX-XX).';
-      }
-    }
-    return null;
-  }
-
-  String? _validatePhoneNumber(String? value) {
-    if (value != null && value.isNotEmpty) {
-      final phoneNumberRegex = RegExp(r'^\(\d{2}\)\d{4,5}-\d{4}$');
-      if (!phoneNumberRegex.hasMatch(value)) {
-        return 'Por favor, insira um número de telefone válido (formato: (XX)XXXXX-XXXX).';
       }
     }
     return null;
@@ -154,41 +209,83 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
               ),
               const Divider(),
               CustomTextField(
+                labelText: 'Name',
+                focusNode: _nameFocus,
+                controller: _nameController,
+                initialValue: user?.name,
+                textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value!.trim().isEmpty) {
+                    return 'Nome é obrigatório.';
+                  }
+                  if (value.trim().length < 3) {
+                    return 'Nome precisa ter no mínimo 3 letras.';
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(_emailFocus);
+                },
+              ),
+              CustomTextField(
+                labelText: 'E-mail',
+                focusNode: _emailFocus,
+                controller: _emailController,
+                initialValue: user?.email,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'O e-mail é obrigatório';
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(_phoneNumberFocus);
+                },
+              ),
+              const Divider(),
+              CustomTextField(
+                labelText: 'Number',
+                focusNode: _phoneNumberFocus,
+                controller: _phoneNumberController,
+                initialValue: user?.phoneNumber ?? '',
+                keyboardType: TextInputType.phone,
+                validator: _validatePhoneNumber,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  MaskTextInputFormatter(mask: '(##) #####-####'),
+                ],
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(_ageFocus);
+                },
+              ),
+              const Divider(),
+              CustomTextField(
                 labelText: 'Age',
+                focusNode: _ageFocus,
                 controller: _ageController,
+                initialValue: user?.age.toString() ?? '',
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 validator: _validateAge,
-                onSaved: (value) {
-                  _formData['age'] = value!;
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(_bioFocus);
                 },
               ),
               const Divider(),
               CustomTextField(
                 labelText: 'Bio',
+                focusNode: _bioFocus,
                 controller: _bioController,
-                keyboardType: TextInputType.multiline,
+                initialValue: user?.bio ?? '',
                 maxLines: 3,
+                keyboardType: TextInputType.multiline,
                 textInputAction: TextInputAction.next,
                 validator: _validateBio,
-                onSaved: (value) {
-                  _formData['bio'] = value!;
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(_cpfFocus);
                 },
-              ),
-              const Divider(),
-              CustomTextField(
-                labelText: 'CPF',
-                controller: _cpfController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                validator: _validateCpf,
-                onSaved: (value) {
-                  _formData['cpf'] = value!;
-                },
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  MaskTextInputFormatter(mask: '###.###.###-##'),
-                ],
               ),
               const Divider(),
               const Padding(
@@ -227,85 +324,48 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: SizedBox(
-                    width: 200,
-                    child: TextField(
-                      controller: _otherGenderController,
-                      enabled: _showOtherGenderInput,
-                      decoration: InputDecoration(
-                        labelText: 'Digite seu gênero',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                            width: 1.0,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary,
-                            width: 2.0,
-                          ),
-                        ),
-                        filled: true,
-                        fillColor: Theme.of(context).colorScheme.tertiary,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 12.0),
+                  width: 200,
+                  child: TextField(
+                    focusNode: _otherGenderFocus,
+                    controller: _otherGenderController,
+                    enabled: _showOtherGenderInput,
+                    decoration: InputDecoration(
+                      labelText: 'Digite seu gênero',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      onChanged: _handleOtherGenderInputChange,
-                    )),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
+                          width: 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.secondary,
+                          width: 2.0,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.tertiary,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 12.0),
+                    ),
+                    onChanged: _handleOtherGenderInputChange,
+                  ),
+                ),
               ),
-              const Divider(),
               CustomTextField(
-                labelText: 'Name',
-                controller: _nameController,
+                labelText: 'CPF',
+                focusNode: _cpfFocus,
+                controller: _cpfController,
                 keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value!.trim().isEmpty) {
-                    return 'Nome é obrigatório.';
-                  }
-                  if (value.trim().length < 3) {
-                    return 'Nome precisa ter no mínimo 3 letras.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _formData['name'] = value!;
-                },
-              ),
-              const Divider(),
-              CustomTextField(
-                labelText: 'E-mail',
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'O e-mail é obrigatório';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _formData['email'] = value!;
-                },
-              ),
-              const Divider(),
-              CustomTextField(
-                labelText: 'Number',
-                controller: _phoneNumberController,
-                keyboardType: TextInputType.phone,
-                textInputAction: TextInputAction.done,
-                validator: _validatePhoneNumber,
-                onSaved: (value) {
-                  _formData['phoneNumber'] = value!;
-                },
+                validator: _validateCpf,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
-                  MaskTextInputFormatter(mask: '(##) #####-####'),
+                  MaskTextInputFormatter(mask: '###.###.###-##'),
                 ],
               ),
             ],

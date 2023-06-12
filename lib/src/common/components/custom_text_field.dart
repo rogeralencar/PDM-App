@@ -2,30 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
+  final bool obscureText;
   final int maxLines;
   final String labelText;
+  final String? initialValue;
+  final FocusNode focusNode;
   final TextEditingController controller;
+  final List<TextInputFormatter>? inputFormatters;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
-  final List<TextInputFormatter>? inputFormatters;
+  final void Function(String)? onFieldSubmitted;
 
-  const CustomTextField({
-    super.key,
+  CustomTextField({
+    Key? key,
     required this.labelText,
+    required this.focusNode,
     required this.controller,
-    required this.keyboardType,
-    required this.textInputAction,
     this.maxLines = 1,
+    this.obscureText = false,
+    this.initialValue = '',
+    this.keyboardType = TextInputType.text,
+    this.textInputAction = TextInputAction.done,
+    this.inputFormatters,
     this.validator,
     this.onSaved,
-    this.inputFormatters,
-  });
+    this.onFieldSubmitted,
+  }) : super(key: key) {
+    controller.text = initialValue!;
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
       controller: controller,
       decoration: InputDecoration(
         labelText: labelText,
@@ -54,11 +65,13 @@ class CustomTextField extends StatelessWidget {
         ),
       ),
       maxLines: maxLines,
+      obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
+      inputFormatters: inputFormatters,
       validator: validator,
       onSaved: onSaved,
-      inputFormatters: inputFormatters,
+      onFieldSubmitted: onFieldSubmitted,
     );
   }
 }

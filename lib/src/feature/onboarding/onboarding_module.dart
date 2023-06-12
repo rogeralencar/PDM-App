@@ -1,8 +1,9 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
-import 'view/page/onboarding_screen.dart';
-import '../home/home_module.dart';
 import '../auth/auth_module.dart';
+import '../home/home_module.dart';
+import 'view/page/onboarding_screen.dart';
+import 'viewmodel/onboarding_guard.dart';
 
 class OnBoardingModule extends Module {
   @override
@@ -10,8 +11,8 @@ class OnBoardingModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute('/', child: (_, __) => const OnBoardingScreen()),
-        ModuleRoute('/auth/', module: AuthModule()),
-        ModuleRoute('/home/', module: HomeModule()),
+        ModuleRoute('/', module: HomeModule(), guards: [OnboardingGuard()]),
+        ModuleRoute('/auth', module: AuthModule(), guards: [OnboardingGuard()]),
+        ChildRoute('/onboarding', child: (_, __) => const OnBoardingScreen()),
       ];
 }

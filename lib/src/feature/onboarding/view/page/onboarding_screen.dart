@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../auth/view/widget/auth.dart';
 import '../widget/onboarding_details.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -11,11 +13,7 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class OnBoardingScreenState extends State<OnBoardingScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  final Auth auth = Modular.get<Auth>();
   int _currentPage = 0;
 
   final PageController _pageController = PageController(initialPage: 0);
@@ -50,6 +48,12 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
     return list;
   }
 
+  @override
+  void initState() {
+    super.initState();
+    checkOnboardingStatus(context);
+  }
+
   Widget _indicator(bool isActive) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -62,6 +66,19 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
     );
+  }
+
+  Future<void> checkOnboardingStatus(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool onboardingCompleted = prefs.getBool('onboardingCompleted') ?? false;
+
+    if (onboardingCompleted) {
+      if (auth.isAuth) {
+        Modular.to.pushReplacementNamed('/home/');
+      } else {
+        Modular.to.pushReplacementNamed('/auth/');
+      }
+    }
   }
 
   @override

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../common/components/custom_button.dart';
+import '../../../../common/components/custom_text_field.dart';
+
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
 
@@ -8,6 +11,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final _emailFocus = FocusNode();
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -24,6 +28,13 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     RegExp emailRegExp = RegExp(
         r'^[a-zA-Z0-9.!#$%&*+\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$');
     return emailRegExp.hasMatch(email);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailFocus.dispose();
+    _emailController.dispose();
   }
 
   @override
@@ -63,68 +74,27 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Card(
-                            elevation: 20,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                filled: true,
-                                fillColor:
-                                    Theme.of(context).colorScheme.tertiary,
-                                labelText: '\t\t\t\t\t\tEnter your E-mail',
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.outline,
-                                    width: 1.0,
-                                  ),
-                                ),
-                                alignLabelWithHint: false,
-                              ),
-                              maxLines: 1,
-                              controller: _emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              validator: (email) {
-                                if (email!.isEmpty) {
-                                  return 'Por favor, insira o e-mail';
-                                } else if (!isValidEmail(email)) {
-                                  return 'Insira um e-mail válido';
-                                }
-                                return null;
-                              },
-                            ),
+                          CustomTextField(
+                            labelText: 'Enter your E-mail',
+                            focusNode: _emailFocus,
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (email) {
+                              if (email!.isEmpty) {
+                                return 'Por favor, insira o e-mail';
+                              } else if (!isValidEmail(email)) {
+                                return 'Insira um e-mail válido';
+                              }
+                              return null;
+                            },
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 30),
-                    ElevatedButton(
+                    CustomButton(
                       onPressed: _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF9626C),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 60,
-                          vertical: 6,
-                        ),
-                        elevation: 20,
-                      ),
-                      child: const Text(
-                        "ENVIAR",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      buttonText: 'SEND',
                     ),
                   ],
                 ),

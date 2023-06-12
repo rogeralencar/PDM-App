@@ -28,8 +28,12 @@ class ProductsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
             ElevatedButton(
-                onPressed: () {}, child: const Text('Adicionar produto'))
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/productForm/');
+                },
+                child: const Text('Adicionar produto'))
           ],
         ),
       ),

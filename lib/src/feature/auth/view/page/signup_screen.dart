@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/components/custom_button.dart';
+import '../../../../common/components/custom_text_field.dart';
 import '../../../../common/exceptions/auth_exception.dart';
 import '../../repository/user_model.dart';
 import '../../repository/user_provider.dart';
@@ -16,12 +18,14 @@ class SignupScreen extends StatefulWidget {
 
 class SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameFocusNode = FocusNode();
-  final _emailFocusNode = FocusNode();
-  final _passwordFocusNode = FocusNode();
+  final _nameFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+  final _confirmPasswordFocus = FocusNode();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   bool _isLoading = false;
   final Map<String, String> _authData = {
@@ -31,10 +35,15 @@ class SignupScreenState extends State<SignupScreen> {
 
   @override
   void dispose() {
-    _nameFocusNode.dispose();
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
     super.dispose();
+    _nameFocus.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _confirmPasswordFocus.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
   }
 
   bool isValidEmail(String email) {
@@ -47,22 +56,6 @@ class SignupScreenState extends State<SignupScreen> {
     RegExp passwordRegExp =
         RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
     return passwordRegExp.hasMatch(password);
-  }
-
-  void _showErrorDialog(String msg) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Ocorreo um Erro'),
-        content: Text(msg),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Fechar'),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _submit() async {
@@ -99,6 +92,22 @@ class SignupScreenState extends State<SignupScreen> {
     }
 
     setState(() => _isLoading = false);
+  }
+
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Ocorreo um Erro'),
+        content: Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -138,142 +147,81 @@ class SignupScreenState extends State<SignupScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Card(
-                            elevation: 20,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                filled: true,
-                                fillColor:
-                                    Theme.of(context).colorScheme.tertiary,
-                                labelText: '\t\t\t\t\t\tEnter your name',
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.outline,
-                                    width: 1.0,
-                                  ),
-                                ),
-                                alignLabelWithHint: false,
-                              ),
-                              maxLines: 1,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              focusNode: _nameFocusNode,
-                              controller: _nameController,
-                              onSaved: (name) => _authData['name'] = name ?? '',
-                              onFieldSubmitted: (_) {
-                                FocusScope.of(context)
-                                    .requestFocus(_emailFocusNode);
-                              },
-                              validator: (name) {
-                                if (name!.isEmpty) {
-                                  return 'Por favor, insira seu nome';
-                                }
-                                if (name.length < 3) {
-                                  return 'Seu nome deve ter pelo menos 3 caracteres';
-                                }
-                                return null;
-                              },
-                            ),
+                          CustomTextField(
+                            labelText: 'Enter your name',
+                            focusNode: _nameFocus,
+                            controller: _nameController,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            onSaved: (name) => _authData['name'] = name ?? '',
+                            validator: (name) {
+                              if (name!.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              if (name.length < 3) {
+                                return 'Your name must have at least 3 characters';
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context).requestFocus(_emailFocus);
+                            },
                           ),
                           const SizedBox(height: 16),
-                          Card(
-                            elevation: 20,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                filled: true,
-                                fillColor:
-                                    Theme.of(context).colorScheme.tertiary,
-                                labelText: '\t\t\t\t\t\tEnter your E-mail',
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.outline,
-                                    width: 1.0,
-                                  ),
-                                ),
-                                alignLabelWithHint: false,
-                              ),
-                              maxLines: 1,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              focusNode: _emailFocusNode,
-                              controller: _emailController,
-                              onFieldSubmitted: (_) {
-                                FocusScope.of(context)
-                                    .requestFocus(_passwordFocusNode);
-                              },
-                              onSaved: (email) =>
-                                  _authData['email'] = email ?? '',
-                              validator: (email) {
-                                if (email!.isEmpty) {
-                                  return 'Por favor, insira o e-mail';
-                                } else if (!isValidEmail(email)) {
-                                  return 'Insira um e-mail válido';
-                                }
-                                return null;
-                              },
-                            ),
+                          CustomTextField(
+                            labelText: 'Enter your E-mail',
+                            focusNode: _emailFocus,
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            onSaved: (email) =>
+                                _authData['email'] = email ?? '',
+                            validator: (email) {
+                              if (email!.isEmpty) {
+                                return 'Please enter the email';
+                              } else if (!isValidEmail(email)) {
+                                return 'Please enter a valid email';
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context)
+                                  .requestFocus(_passwordFocus);
+                            },
                           ),
                           const SizedBox(height: 16),
-                          Card(
-                            elevation: 20,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                labelText: '\t\t\t\t\t\tEnter Password',
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                filled: true,
-                                fillColor:
-                                    Theme.of(context).colorScheme.tertiary,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.outline,
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                              obscureText: true,
-                              textInputAction: TextInputAction.done,
-                              focusNode: _passwordFocusNode,
-                              controller: _passwordController,
-                              onSaved: (password) =>
-                                  _authData['password'] = password ?? '',
-                              onFieldSubmitted: (_) {
-                                _submit();
-                              },
-                              validator: (password) {
-                                if (password!.isEmpty) {
-                                  return 'Por favor, insira a senha';
-                                } else if (!isValidPassword(password)) {
-                                  return 'Insira uma senha válida (mínimo de 8 caracteres com pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial)';
-                                }
-                                return null;
-                              },
-                            ),
+                          CustomTextField(
+                            labelText: 'Enter Password',
+                            focusNode: _passwordFocus,
+                            controller: _passwordController,
+                            obscureText: true,
+                            textInputAction: TextInputAction.next,
+                            onSaved: (password) =>
+                                _authData['password'] = password ?? '',
+                            validator: (password) {
+                              if (password!.isEmpty) {
+                                return 'Please enter the password';
+                              } else if (!isValidPassword(password)) {
+                                return 'Please enter a valid password (minimum 8 characters with at least one uppercase letter, one lowercase letter, one number, and one special character)';
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context)
+                                  .requestFocus(_confirmPasswordFocus);
+                            },
+                          ),
+                          CustomTextField(
+                            labelText: 'Confirm Password',
+                            focusNode: _confirmPasswordFocus,
+                            controller: _confirmPasswordController,
+                            obscureText: true,
+                            validator: (password) {
+                              if (password != _authData['password']) {
+                                return 'Senhas informadas não conferem.';
+                              }
+                              return null;
+                            },
                           ),
                         ],
                       ),
@@ -283,62 +231,27 @@ class SignupScreenState extends State<SignupScreen> {
                         ? CircularProgressIndicator(
                             color: Theme.of(context).colorScheme.outline,
                           )
-                        : ElevatedButton(
+                        : CustomButton(
                             onPressed: _submit,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 56,
-                                vertical: 6,
-                              ),
-                              elevation: 20,
-                            ),
-                            child: const Text(
-                              "SIGN IN",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            buttonText: "SIGN IN",
                           ),
                     const SizedBox(height: 80),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Don\'t have an account ? ',
+                          'Already have an account ? ',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
                             fontSize: 16,
                           ),
                         ),
-                        ElevatedButton(
+                        CustomButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 4,
-                            ),
-                            elevation: 20,
-                          ),
-                          child: const Text(
-                            "LOG IN",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          buttonText: "LOG IN",
+                          fontSize: 14,
                         ),
                       ],
                     ),

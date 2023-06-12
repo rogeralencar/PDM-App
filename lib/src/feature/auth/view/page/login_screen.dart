@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/src/feature/auth/view/page/signup_screen.dart';
 import 'dart:async';
 
+import '../../../../common/components/custom_button.dart';
+import '../../../../common/components/custom_text_field.dart';
 import '../../../../common/exceptions/auth_exception.dart';
 import '../widget/auth.dart';
-import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,10 +16,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  final StreamController<FocusNode?> _focusNodeController =
-      StreamController<FocusNode?>();
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -30,7 +30,10 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _focusNodeController.close();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -38,7 +41,7 @@ class LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Ocorreo um Erro'),
+        title: const Text('Ocorreu um Erro'),
         content: Text(msg),
         actions: [
           TextButton(
@@ -114,122 +117,71 @@ class LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 60),
                     Form(
                       key: _formKey,
-                      child: StreamBuilder<FocusNode?>(
-                        stream: _focusNodeController.stream,
-                        builder: (context, snapshot) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Card(
-                                elevation: 20,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: TextFormField(
-                                  focusNode: _emailFocusNode,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    filled: true,
-                                    fillColor:
-                                        Theme.of(context).colorScheme.tertiary,
-                                    labelText: '\t\t\t\t\t\tEnter your E-mail',
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.never,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .outline,
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    alignLabelWithHint: false,
-                                  ),
-                                  maxLines: 1,
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Por favor, insira o e-mail';
-                                    }
-                                    return null;
-                                  },
-                                  textInputAction: TextInputAction.next,
-                                  onFieldSubmitted: (_) {
-                                    _focusNodeController
-                                        .add(_passwordFocusNode);
-                                  },
-                                  onSaved: (email) =>
-                                      _authData['email'] = email ?? '',
-                                ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Card(
+                            elevation: 20,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: CustomTextField(
+                              labelText: 'Enter your E-mail',
+                              focusNode: _emailFocus,
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Por favor, insira o e-mail';
+                                }
+                                return null;
+                              },
+                              onSaved: (email) =>
+                                  _authData['email'] = email ?? '',
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context)
+                                    .requestFocus(_passwordFocus);
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Card(
+                            elevation: 20,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: CustomTextField(
+                              labelText: 'Enter Password',
+                              focusNode: _passwordFocus,
+                              controller: _passwordController,
+                              obscureText: true,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Por favor, insira a senha';
+                                }
+                                return null;
+                              },
+                              onSaved: (password) =>
+                                  _authData['password'] = password ?? '',
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextButton(
+                            onPressed: () {
+                              Modular.to.navigate('/forgotPassword');
+                            },
+                            style: const ButtonStyle(
+                                alignment: Alignment.centerRight),
+                            child: Text(
+                              'Forgot Password ?',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontSize: 16,
                               ),
-                              const SizedBox(height: 16),
-                              Card(
-                                elevation: 20,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: TextFormField(
-                                  focusNode: _passwordFocusNode,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    labelText: '\t\t\t\t\t\tEnter Password',
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.never,
-                                    filled: true,
-                                    fillColor:
-                                        Theme.of(context).colorScheme.tertiary,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .outline,
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                  ),
-                                  obscureText: true,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Por favor, insira a senha';
-                                    }
-                                    return null;
-                                  },
-                                  textInputAction: TextInputAction.done,
-                                  onFieldSubmitted: (_) {
-                                    _submit();
-                                  },
-                                  onSaved: (password) =>
-                                      _authData['password'] = password ?? '',
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              TextButton(
-                                onPressed: () {
-                                  Modular.to.push(
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const ForgotPasswordScreen(),
-                                    ),
-                                  );
-                                },
-                                style: const ButtonStyle(
-                                    alignment: Alignment.centerRight),
-                                child: Text(
-                                  'Forgot Password ?',
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.tertiary,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -237,27 +189,9 @@ class LoginScreenState extends State<LoginScreen> {
                         ? CircularProgressIndicator(
                             color: Theme.of(context).colorScheme.outline,
                           )
-                        : ElevatedButton(
+                        : CustomButton(
+                            buttonText: 'LOG IN',
                             onPressed: _submit,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 60,
-                                vertical: 6,
-                              ),
-                              elevation: 20,
-                            ),
-                            child: const Text(
-                              "LOG IN",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                           ),
                     const SizedBox(height: 180),
                     Row(
@@ -270,33 +204,12 @@ class LoginScreenState extends State<LoginScreen> {
                             fontSize: 16,
                           ),
                         ),
-                        ElevatedButton(
+                        CustomButton(
+                          buttonText: 'SIGN UP',
                           onPressed: () {
-                            Modular.to.push(
-                              MaterialPageRoute(
-                                builder: (_) => const SignupScreen(),
-                              ),
-                            );
+                            Modular.to.navigate('/signup');
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 4,
-                            ),
-                            elevation: 20,
-                          ),
-                          child: const Text(
-                            "SIGN UP",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          fontSize: 14,
                         ),
                       ],
                     ),
