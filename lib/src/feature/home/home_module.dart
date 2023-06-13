@@ -15,7 +15,7 @@ class HomeModule extends Module {
           transition: TransitionType.fadeIn,
         ),
         ModuleRoute(
-          '/navegation/',
+          '/navegation',
           module: NavegationModule(),
         ),
       ];

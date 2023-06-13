@@ -12,20 +12,20 @@ class AuthModule extends Module {
   @override
   List<ModularRoute> get routes => [
         ChildRoute(
-          Modular.initialRoute,
+          '/',
           child: (_, __) => const LoginScreen(),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/signup/',
+          '/signup',
           child: (_, __) => const SignupScreen(),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/forgotPassword/',
+          '/forgotPassword',
           child: (_, __) => const ForgotPasswordScreen(),
           transition: TransitionType.fadeIn,
         ),
-        ModuleRoute('/home/', module: HomeModule()),
+        ModuleRoute('/home', module: HomeModule()),
       ];
 }

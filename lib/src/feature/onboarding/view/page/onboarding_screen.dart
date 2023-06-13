@@ -14,6 +14,7 @@ class OnBoardingScreen extends StatefulWidget {
 
 class OnBoardingScreenState extends State<OnBoardingScreen> {
   final Auth auth = Modular.get<Auth>();
+  late SharedPreferences prefs;
   int _currentPage = 0;
 
   final PageController _pageController = PageController(initialPage: 0);
@@ -51,6 +52,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   void initState() {
     super.initState();
+    checkOnboardingStatus(context);
   }
 
   Widget _indicator(bool isActive) {
@@ -68,10 +70,11 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 
   Future<void> checkOnboardingStatus(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     bool onboardingCompleted = prefs.getBool('onboardingCompleted') ?? false;
 
     if (onboardingCompleted) {
+      await auth.tryAutoLogin();
       if (auth.isAuth) {
         Modular.to.pushReplacementNamed('/home/');
       } else {
@@ -148,6 +151,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             elevation: 20,
                           ),
                           onPressed: () {
+                            prefs.setBool('onboardingCompleted', true);
                             Modular.to.pushNamed('/auth/');
                           },
                           child: Text(
@@ -173,6 +177,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut);
                       } else {
+                        prefs.setBool('onboardingCompleted', true);
                         Modular.to.pushNamed('/auth/');
                       }
                     },

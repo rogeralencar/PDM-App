@@ -7,7 +7,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
-import '../../../../common/components/custom_text_field.dart';
+import '../../../../common/widgets/custom_text_field.dart';
 import '../widget/image_input.dart';
 
 class ProfileFormScreen extends StatefulWidget {

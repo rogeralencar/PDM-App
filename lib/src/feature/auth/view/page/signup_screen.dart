@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/components/custom_button.dart';
-import '../../../../common/components/custom_text_field.dart';
+import '../../../../common/widgets/custom_button.dart';
+import '../../../../common/widgets/custom_text_field.dart';
 import '../../../../common/exceptions/auth_exception.dart';
 import '../../repository/user_model.dart';
 import '../../repository/user_provider.dart';
@@ -18,14 +18,8 @@ class SignupScreen extends StatefulWidget {
 
 class SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameFocus = FocusNode();
-  final _emailFocus = FocusNode();
-  final _passwordFocus = FocusNode();
-  final _confirmPasswordFocus = FocusNode();
   final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
 
   bool _isLoading = false;
   final Map<String, String> _authData = {
@@ -36,14 +30,8 @@ class SignupScreenState extends State<SignupScreen> {
   @override
   void dispose() {
     super.dispose();
-    _nameFocus.dispose();
-    _emailFocus.dispose();
-    _passwordFocus.dispose();
-    _confirmPasswordFocus.dispose();
     _nameController.dispose();
-    _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
   }
 
   bool isValidEmail(String email) {
@@ -79,7 +67,7 @@ class SignupScreenState extends State<SignupScreen> {
 
       User user = User(
         name: _nameController.text,
-        email: _emailController.text,
+        email: _authData['email']!,
       );
 
       await userProvider.saveUserInfo(user);
@@ -112,6 +100,8 @@ class SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -120,8 +110,8 @@ class SignupScreenState extends State<SignupScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
+              padding: EdgeInsets.symmetric(
+                horizontal: screenSize.width * 0.1,
               ),
               child: SizedBox(
                 width: double.infinity,
@@ -130,18 +120,18 @@ class SignupScreenState extends State<SignupScreen> {
                   children: [
                     Image.asset(
                       'lib/assets/images/SNAP_LOGO.PNG.png',
-                      height: 170,
+                      height: screenSize.height * 0.15,
                     ),
                     Text(
                       'Create Account',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: screenSize.width * 0.06,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 60),
+                    SizedBox(height: screenSize.height * 0.06),
                     Form(
                       key: _formKey,
                       child: Column(
@@ -149,9 +139,8 @@ class SignupScreenState extends State<SignupScreen> {
                         children: [
                           CustomTextField(
                             labelText: 'Enter your name',
-                            focusNode: _nameFocus,
-                            controller: _nameController,
                             keyboardType: TextInputType.emailAddress,
+                            controller: _nameController,
                             textInputAction: TextInputAction.next,
                             onSaved: (name) => _authData['name'] = name ?? '',
                             validator: (name) {
@@ -163,15 +152,10 @@ class SignupScreenState extends State<SignupScreen> {
                               }
                               return null;
                             },
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context).requestFocus(_emailFocus);
-                            },
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
                             labelText: 'Enter your E-mail',
-                            focusNode: _emailFocus,
-                            controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             onSaved: (email) =>
@@ -184,17 +168,12 @@ class SignupScreenState extends State<SignupScreen> {
                               }
                               return null;
                             },
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context)
-                                  .requestFocus(_passwordFocus);
-                            },
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
                             labelText: 'Enter Password',
-                            focusNode: _passwordFocus,
-                            controller: _passwordController,
                             obscureText: true,
+                            controller: _passwordController,
                             textInputAction: TextInputAction.next,
                             onSaved: (password) =>
                                 _authData['password'] = password ?? '',
@@ -206,27 +185,26 @@ class SignupScreenState extends State<SignupScreen> {
                               }
                               return null;
                             },
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context)
-                                  .requestFocus(_confirmPasswordFocus);
-                            },
                           ),
+                          SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
                             labelText: 'Confirm Password',
-                            focusNode: _confirmPasswordFocus,
-                            controller: _confirmPasswordController,
                             obscureText: true,
                             validator: (password) {
-                              if (password != _authData['password']) {
+                              if (password != _passwordController.text) {
                                 return 'Senhas informadas não conferem.';
                               }
                               return null;
+                            },
+                            onFieldSubmitted: (_) {
+                              _submit();
                             },
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    SizedBox(
+                        height: screenSize.height * 0.04), // Tamanho responsivo
                     _isLoading
                         ? CircularProgressIndicator(
                             color: Theme.of(context).colorScheme.outline,
@@ -235,7 +213,8 @@ class SignupScreenState extends State<SignupScreen> {
                             onPressed: _submit,
                             buttonText: "SIGN IN",
                           ),
-                    const SizedBox(height: 80),
+                    SizedBox(
+                        height: screenSize.height * 0.08), // Tamanho responsivo
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -243,19 +222,20 @@ class SignupScreenState extends State<SignupScreen> {
                           'Already have an account ? ',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
-                            fontSize: 16,
+                            fontSize:
+                                screenSize.width * 0.04, // Tamanho responsivo
                           ),
                         ),
                         CustomButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Modular.to.navigate('/auth/');
                           },
                           buttonText: "LOG IN",
-                          fontSize: 14,
+                          isBig: false,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: screenSize.height * 0.02),
                   ],
                 ),
               ),

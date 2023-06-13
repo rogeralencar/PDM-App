@@ -3,8 +3,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
-import '../../../../common/components/custom_button.dart';
-import '../../../../common/components/custom_text_field.dart';
+import '../../../../common/widgets/custom_button.dart';
+import '../../../../common/widgets/custom_text_field.dart';
 import '../../../../common/exceptions/auth_exception.dart';
 import '../widget/auth.dart';
 
@@ -72,7 +72,7 @@ class LoginScreenState extends State<LoginScreen> {
         _authData['password']!,
       );
 
-      Modular.to.pushNamed('/home/');
+      Modular.to.pushNamed('/home');
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error, stackTrace) {
@@ -85,6 +85,8 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -93,8 +95,8 @@ class LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
+              padding: EdgeInsets.symmetric(
+                horizontal: screenSize.width * 0.1,
               ),
               child: SizedBox(
                 width: double.infinity,
@@ -103,18 +105,18 @@ class LoginScreenState extends State<LoginScreen> {
                   children: [
                     Image.asset(
                       'lib/assets/images/SNAP_LOGO.PNG.png',
-                      height: 170,
+                      height: screenSize.height * 0.15,
                     ),
                     Text(
                       'Login Account',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: screenSize.width * 0.06,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 60),
+                    SizedBox(height: screenSize.height * 0.06),
                     Form(
                       key: _formKey,
                       child: Column(
@@ -139,13 +141,9 @@ class LoginScreenState extends State<LoginScreen> {
                               },
                               onSaved: (email) =>
                                   _authData['email'] = email ?? '',
-                              onFieldSubmitted: (_) {
-                                FocusScope.of(context)
-                                    .requestFocus(_passwordFocus);
-                              },
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: screenSize.height * 0.016),
                           Card(
                             elevation: 20,
                             shape: RoundedRectangleBorder(
@@ -164,27 +162,31 @@ class LoginScreenState extends State<LoginScreen> {
                               },
                               onSaved: (password) =>
                                   _authData['password'] = password ?? '',
+                              onFieldSubmitted: (_) {
+                                _submit();
+                              },
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: screenSize.height * 0.008),
                           TextButton(
                             onPressed: () {
-                              Modular.to.navigate('/forgotPassword');
+                              Modular.to.navigate('/auth/forgotPassword');
                             },
                             style: const ButtonStyle(
-                                alignment: Alignment.centerRight),
+                              alignment: Alignment.centerRight,
+                            ),
                             child: Text(
                               'Forgot Password ?',
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.tertiary,
-                                fontSize: 16,
+                                fontSize: screenSize.width * 0.04,
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: screenSize.height * 0.04),
                     _isLoading
                         ? CircularProgressIndicator(
                             color: Theme.of(context).colorScheme.outline,
@@ -193,7 +195,7 @@ class LoginScreenState extends State<LoginScreen> {
                             buttonText: 'LOG IN',
                             onPressed: _submit,
                           ),
-                    const SizedBox(height: 180),
+                    SizedBox(height: screenSize.height * 0.12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -201,19 +203,19 @@ class LoginScreenState extends State<LoginScreen> {
                           'Don\'t have an account ? ',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
-                            fontSize: 16,
+                            fontSize: screenSize.width * 0.04,
                           ),
                         ),
                         CustomButton(
                           buttonText: 'SIGN UP',
                           onPressed: () {
-                            Modular.to.navigate('/signup');
+                            Modular.to.navigate('/auth/signup');
                           },
-                          fontSize: 14,
+                          isBig: false,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: screenSize.height * 0.04),
                   ],
                 ),
               ),

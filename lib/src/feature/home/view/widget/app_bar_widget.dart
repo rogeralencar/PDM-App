@@ -32,7 +32,7 @@ class AppBarWidgetState extends State<AppBarWidget> {
               child: InkWell(
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 onTap: () {
-                  Modular.to.pushNamed('/navegation/');
+                  Modular.to.pushNamed('/navegation');
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),

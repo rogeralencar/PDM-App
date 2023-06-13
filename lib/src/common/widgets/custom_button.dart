@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  final double fontSize;
+  final bool isBig;
   final String buttonText;
   final VoidCallback onPressed;
 
   const CustomButton({
     super.key,
-    this.fontSize = 20,
+    this.isBig = true,
     required this.buttonText,
     required this.onPressed,
   });
@@ -21,16 +21,16 @@ class CustomButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 60,
-          vertical: 6,
+        padding: EdgeInsets.symmetric(
+          horizontal: isBig ? 60 : 15,
+          vertical: isBig ? 6 : 4,
         ),
         elevation: 20,
       ),
       child: Text(
         buttonText,
         style: TextStyle(
-          fontSize: fontSize,
+          fontSize: isBig ? 20 : 14,
           fontWeight: FontWeight.bold,
         ),
       ),

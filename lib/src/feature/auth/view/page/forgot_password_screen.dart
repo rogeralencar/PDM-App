@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../../common/components/custom_button.dart';
-import '../../../../common/components/custom_text_field.dart';
+import '../../../../common/widgets/custom_button.dart';
+import '../../../../common/widgets/custom_text_field.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -11,7 +12,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final _emailFocus = FocusNode();
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -21,7 +21,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (!isValid) {
       return;
     }
-    Navigator.pop(context);
+    Modular.to.navigate('/auth/');
   }
 
   bool isValidEmail(String email) {
@@ -33,12 +33,13 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   void dispose() {
     super.dispose();
-    _emailFocus.dispose();
     _emailController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -47,28 +48,27 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
+              padding: EdgeInsets.symmetric(
+                horizontal: screenSize.width * 0.1,
               ),
               child: SizedBox(
                 width: double.infinity,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Image.asset(
                       'lib/assets/images/SNAP_LOGO.PNG.png',
-                      height: 170,
+                      height: screenSize.height * 0.2,
                     ),
                     Text(
                       'Reset Password',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: screenSize.width * 0.05,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 60),
+                    SizedBox(height: screenSize.height * 0.06),
                     Form(
                       key: _formKey,
                       child: Column(
@@ -76,7 +76,6 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         children: [
                           CustomTextField(
                             labelText: 'Enter your E-mail',
-                            focusNode: _emailFocus,
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             validator: (email) {
@@ -87,14 +86,22 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               }
                               return null;
                             },
+                            onFieldSubmitted: (_) {
+                              _submit();
+                            },
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: screenSize.height * 0.06),
                     CustomButton(
                       onPressed: _submit,
                       buttonText: 'SEND',
+                    ),
+                    SizedBox(height: screenSize.height * 0.12),
+                    CustomButton(
+                      onPressed: (() => Modular.to.navigate('/auth/')),
+                      buttonText: 'BACK',
                     ),
                   ],
                 ),

@@ -6,8 +6,8 @@ class CustomTextField extends StatelessWidget {
   final int maxLines;
   final String labelText;
   final String? initialValue;
-  final FocusNode focusNode;
-  final TextEditingController controller;
+  final FocusNode? focusNode;
+  final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
@@ -18,8 +18,8 @@ class CustomTextField extends StatelessWidget {
   CustomTextField({
     Key? key,
     required this.labelText,
-    required this.focusNode,
-    required this.controller,
+    this.focusNode,
+    this.controller,
     this.maxLines = 1,
     this.obscureText = false,
     this.initialValue = '',
@@ -30,7 +30,7 @@ class CustomTextField extends StatelessWidget {
     this.onSaved,
     this.onFieldSubmitted,
   }) : super(key: key) {
-    controller.text = initialValue!;
+    controller?.text = initialValue!;
   }
 
   @override
