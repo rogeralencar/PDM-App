@@ -34,6 +34,11 @@ class SignupScreenState extends State<SignupScreen> {
     _passwordController.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   bool isValidEmail(String email) {
     RegExp emailRegExp = RegExp(
         r'^[a-zA-Z0-9.!#$%&*+\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$');
@@ -57,7 +62,6 @@ class SignupScreenState extends State<SignupScreen> {
 
     _formKey.currentState?.save();
     Auth auth = Provider.of(context, listen: false);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
       await auth.signup(
@@ -70,13 +74,16 @@ class SignupScreenState extends State<SignupScreen> {
         email: _authData['email']!,
       );
 
-      await userProvider.saveUserInfo(user);
+      await Provider.of<UserProvider>(
+        context,
+        listen: false,
+      ).saveUserInfo(user);
 
-      Modular.to.pushNamed('/home/');
+      Modular.to.navigate('/home/');
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
-      _showErrorDialog('Ocorreu um erro inesperado!');
+      _showErrorDialog(error.toString());
     }
 
     setState(() => _isLoading = false);
@@ -120,7 +127,7 @@ class SignupScreenState extends State<SignupScreen> {
                   children: [
                     Image.asset(
                       'lib/assets/images/SNAP_LOGO.PNG.png',
-                      height: screenSize.height * 0.15,
+                      height: screenSize.height * 0.2,
                     ),
                     Text(
                       'Create Account',
@@ -203,8 +210,7 @@ class SignupScreenState extends State<SignupScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                        height: screenSize.height * 0.04), // Tamanho responsivo
+                    SizedBox(height: screenSize.height * 0.04),
                     _isLoading
                         ? CircularProgressIndicator(
                             color: Theme.of(context).colorScheme.outline,
@@ -213,8 +219,7 @@ class SignupScreenState extends State<SignupScreen> {
                             onPressed: _submit,
                             buttonText: "SIGN IN",
                           ),
-                    SizedBox(
-                        height: screenSize.height * 0.08), // Tamanho responsivo
+                    SizedBox(height: screenSize.height * 0.08),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -222,13 +227,12 @@ class SignupScreenState extends State<SignupScreen> {
                           'Already have an account ? ',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
-                            fontSize:
-                                screenSize.width * 0.04, // Tamanho responsivo
+                            fontSize: screenSize.width * 0.04,
                           ),
                         ),
                         CustomButton(
                           onPressed: () {
-                            Modular.to.navigate('/auth/');
+                            Modular.to.pop();
                           },
                           buttonText: "LOG IN",
                           isBig: false,

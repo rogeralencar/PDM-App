@@ -1,17 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../common/exceptions/http_exception.dart';
 import '../../../common/utils/constants.dart';
-import '../view/widget/auth.dart';
 import 'user_model.dart';
 
 class UserProvider with ChangeNotifier {
+  final String _token;
+  final String _userId;
   User? _user;
   User? get user => _user;
+
+  UserProvider([
+    this._token = '',
+    this._userId = '',
+    this._user,
+  ]);
 
   void setUser(User user) {
     _user = user;
@@ -19,14 +25,11 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> saveUserInfo(User user) async {
-    final Auth auth = Modular.get<Auth>();
     try {
       final response = await http.put(
-        Uri.parse(
-            '${Constants.userInfo}/${auth.userId}.json?auth=${auth.token}'),
+        Uri.parse('${Constants.userInfo}/$_userId.json?auth=$_token'),
         body: jsonEncode(user.toJson()),
       );
-      setUser(user);
 
       if (response.statusCode >= 400) {
         throw HttpException(
@@ -43,10 +46,9 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> loadUser() async {
-    final Auth auth = Modular.get<Auth>();
     try {
-      final response = await http.get(Uri.parse(
-          '${Constants.userInfo}/${auth.userId}.json?auth=${auth.token}'));
+      final response = await http
+          .get(Uri.parse('${Constants.userInfo}/$_userId.json?auth=$_token'));
 
       if (response.statusCode == 200) {
         final String responseData = response.body;

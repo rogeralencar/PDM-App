@@ -6,7 +6,7 @@ import '../view/page/navegation_screen.dart';
 
 class NavegationModule extends Module {
   @override
-  List<Bind<Object>> get binds => [];
+  List<Bind> get binds => [];
 
   @override
   List<ModularRoute> get routes => [
@@ -16,12 +16,12 @@ class NavegationModule extends Module {
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/profile/',
+          '/profile',
           child: (_, __) => const ProfileFormScreen(),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/products/',
+          '/products',
           child: (_, __) => const ProductsFormScreen(),
           transition: TransitionType.fadeIn,
         ),

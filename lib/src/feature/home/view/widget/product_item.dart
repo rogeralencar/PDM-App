@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/product.dart';
@@ -35,7 +36,7 @@ class ProductItem extends StatelessWidget {
               icon: const Icon(Icons.edit),
               color: Theme.of(context).colorScheme.primary,
               onPressed: () {
-                //Navigator.of(context).pushNamed(AppRoutes.productsForm,arguments: product,);
+                Modular.to.pushNamed('products', arguments: product);
               },
             ),
             IconButton(

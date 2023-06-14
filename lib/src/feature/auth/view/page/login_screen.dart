@@ -16,8 +16,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  final FocusNode _emailFocus = FocusNode();
-  final FocusNode _passwordFocus = FocusNode();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -30,8 +28,6 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _emailFocus.dispose();
-    _passwordFocus.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -72,7 +68,7 @@ class LoginScreenState extends State<LoginScreen> {
         _authData['password']!,
       );
 
-      Modular.to.pushNamed('/home');
+      Modular.to.navigate('/home/');
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error, stackTrace) {
@@ -105,7 +101,7 @@ class LoginScreenState extends State<LoginScreen> {
                   children: [
                     Image.asset(
                       'lib/assets/images/SNAP_LOGO.PNG.png',
-                      height: screenSize.height * 0.15,
+                      height: screenSize.height * 0.2,
                     ),
                     Text(
                       'Login Account',
@@ -129,7 +125,6 @@ class LoginScreenState extends State<LoginScreen> {
                             ),
                             child: CustomTextField(
                               labelText: 'Enter your E-mail',
-                              focusNode: _emailFocus,
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
@@ -151,7 +146,6 @@ class LoginScreenState extends State<LoginScreen> {
                             ),
                             child: CustomTextField(
                               labelText: 'Enter Password',
-                              focusNode: _passwordFocus,
                               controller: _passwordController,
                               obscureText: true,
                               validator: (value) {
@@ -170,7 +164,7 @@ class LoginScreenState extends State<LoginScreen> {
                           SizedBox(height: screenSize.height * 0.008),
                           TextButton(
                             onPressed: () {
-                              Modular.to.navigate('/auth/forgotPassword');
+                              Modular.to.pushNamed('forgotpassword');
                             },
                             style: const ButtonStyle(
                               alignment: Alignment.centerRight,
@@ -209,7 +203,7 @@ class LoginScreenState extends State<LoginScreen> {
                         CustomButton(
                           buttonText: 'SIGN UP',
                           onPressed: () {
-                            Modular.to.navigate('/auth/signup');
+                            Modular.to.pushNamed('signup');
                           },
                           isBig: false,
                         ),

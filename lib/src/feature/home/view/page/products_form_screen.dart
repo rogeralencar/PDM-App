@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -20,9 +21,6 @@ class ProductsFormScreen extends StatefulWidget {
 class _ProductsFormScreenState extends State<ProductsFormScreen> {
   File? _pickedImage;
 
-  final _nameFocus = FocusNode();
-  final _priceFocus = FocusNode();
-  final _descriptionFocus = FocusNode();
   final _imageUrlFocus = FocusNode();
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
@@ -32,16 +30,18 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
-  final bool _isLoading = false;
+  bool _isLoading = false;
   bool _isImageUrl = false;
 
   @override
   void dispose() {
-    _nameFocus.dispose();
-    _priceFocus.dispose();
-    _descriptionFocus.dispose();
     _imageUrlFocus.removeListener(updateImage);
     _imageUrlFocus.dispose();
+
+    _nameController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+    _imageUrlController.dispose();
     super.dispose();
   }
 
@@ -116,7 +116,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
     return isValidUrl && endsWithFile;
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -129,12 +129,30 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
 
     _formKey.currentState?.save();
 
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).saveProduct(_formData, _isImageUrl);
-
-    Navigator.of(context).pop();
+    setState(() => _isLoading = true);
+    try {
+      await Provider.of<ProductList>(
+        context,
+        listen: false,
+      ).saveProduct(_formData, _isImageUrl);
+    } catch (error) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Ocorreu um erro!'),
+          content: const Text('Ocorreu um erro para salvar o produto.'),
+          actions: [
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      Modular.to.pop();
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -157,8 +175,10 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             )
           : Padding(
               padding: const EdgeInsets.all(15),
@@ -166,15 +186,12 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                 key: _formKey,
                 child: ListView(
                   children: [
+                    const SizedBox(height: 20),
                     CustomTextField(
                       labelText: 'Name',
                       controller: _nameController,
-                      focusNode: _nameFocus,
                       initialValue: _formData['name']?.toString(),
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(_priceFocus);
-                      },
                       onSaved: (name) => _formData['name'] = name ?? '',
                       validator: (userName) {
                         final name = userName ?? '';
@@ -187,9 +204,9 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         return null;
                       },
                     ),
+                    const Divider(),
                     CustomTextField(
                       labelText: 'Preço',
-                      focusNode: _priceFocus,
                       controller: _priceController,
                       initialValue: _formData['price']?.toString(),
                       textInputAction: TextInputAction.next,
@@ -197,9 +214,6 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         decimal: true,
                         signed: true,
                       ),
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(_descriptionFocus);
-                      },
                       onSaved: (price) =>
                           _formData['price'] = double.parse(price ?? '0'),
                       validator: (userPrice) {
@@ -213,9 +227,9 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         return null;
                       },
                     ),
+                    const Divider(),
                     CustomTextField(
                       labelText: 'Descrição',
-                      focusNode: _descriptionFocus,
                       controller: _descriptionController,
                       initialValue: _formData['description']?.toString(),
                       keyboardType: TextInputType.multiline,
@@ -236,6 +250,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         return null;
                       },
                     ),
+                    const Divider(),
                     if (!_isImageUrl)
                       ImageInput(
                         _pickedImage,

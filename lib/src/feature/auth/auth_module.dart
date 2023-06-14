@@ -7,7 +7,7 @@ import '../home/home_module.dart';
 
 class AuthModule extends Module {
   @override
-  List<Bind<Object>> get binds => [];
+  List<Bind> get binds => [];
 
   @override
   List<ModularRoute> get routes => [
@@ -22,7 +22,7 @@ class AuthModule extends Module {
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/forgotPassword',
+          '/forgotpassword',
           child: (_, __) => const ForgotPasswordScreen(),
           transition: TransitionType.fadeIn,
         ),

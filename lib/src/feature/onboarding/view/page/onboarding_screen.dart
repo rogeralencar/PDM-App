@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../auth/view/widget/auth.dart';
@@ -13,9 +14,10 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class OnBoardingScreenState extends State<OnBoardingScreen> {
-  final Auth auth = Modular.get<Auth>();
+  late Auth auth;
   late SharedPreferences prefs;
   int _currentPage = 0;
+  bool isLoading = true;
 
   final PageController _pageController = PageController(initialPage: 0);
   final List<Widget> _pages = const [
@@ -70,78 +72,65 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 
   Future<void> checkOnboardingStatus(BuildContext context) async {
+    auth = Provider.of(context, listen: false);
     prefs = await SharedPreferences.getInstance();
     bool onboardingCompleted = prefs.getBool('onboardingCompleted') ?? false;
 
     if (onboardingCompleted) {
       await auth.tryAutoLogin();
       if (auth.isAuth) {
-        Modular.to.pushReplacementNamed('/home/');
+        await Modular.to.pushReplacementNamed('/home/');
       } else {
-        Modular.to.pushReplacementNamed('/auth/');
+        await Modular.to.pushReplacementNamed('/auth/');
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _pages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _pages[index % _pages.length];
-                },
-                onPageChanged: (int page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                },
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.outline,
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: _buildPageIndicator(),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            )
+          : Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 20,
-                    ),
-                    onPressed: () {
-                      if (_currentPage > 0) {
-                        _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut);
-                      }
-                    },
-                    child: Text(
-                      'Back',
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: Theme.of(context).colorScheme.tertiary,
-                      ),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: _pages.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _pages[index % _pages.length];
+                      },
+                      onPageChanged: (int page) {
+                        setState(() {
+                          _currentPage = page;
+                        });
+                      },
                     ),
                   ),
-                  _currentPage != 2
-                      ? ElevatedButton(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _buildPageIndicator(),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 Theme.of(context).colorScheme.secondary,
@@ -151,50 +140,77 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             elevation: 20,
                           ),
                           onPressed: () {
-                            prefs.setBool('onboardingCompleted', true);
-                            Modular.to.pushNamed('/auth/');
+                            if (_currentPage > 0) {
+                              _pageController.previousPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut);
+                            }
                           },
                           child: Text(
-                            'Skip',
+                            'Back',
                             style: TextStyle(
                               fontSize: 22,
                               color: Theme.of(context).colorScheme.tertiary,
                             ),
                           ),
-                        )
-                      : const Text(''),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 20,
-                    ),
-                    onPressed: () {
-                      if (_currentPage < _pages.length - 1) {
-                        _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut);
-                      } else {
-                        prefs.setBool('onboardingCompleted', true);
-                        Modular.to.pushNamed('/auth/');
-                      }
-                    },
-                    child: Text(
-                      _currentPage == _pages.length - 1 ? 'Done' : 'Next',
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: Theme.of(context).colorScheme.tertiary,
-                      ),
+                        ),
+                        _currentPage != 2
+                            ? ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  elevation: 20,
+                                ),
+                                onPressed: () {
+                                  prefs.setBool('onboardingCompleted', true);
+                                  Modular.to.pushNamed('/auth/');
+                                },
+                                child: Text(
+                                  'Skip',
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
+                                  ),
+                                ),
+                              )
+                            : const Text(''),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 20,
+                          ),
+                          onPressed: () {
+                            if (_currentPage < _pages.length - 1) {
+                              _pageController.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut);
+                            } else {
+                              prefs.setBool('onboardingCompleted', true);
+                              Modular.to.pushNamed('/auth/');
+                            }
+                          },
+                          child: Text(
+                            _currentPage == _pages.length - 1 ? 'Done' : 'Next',
+                            style: TextStyle(
+                              fontSize: 22,
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

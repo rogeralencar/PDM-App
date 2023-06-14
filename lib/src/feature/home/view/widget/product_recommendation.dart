@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/product.dart';
@@ -63,7 +64,7 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
               ),
               TextButton(
                 onPressed: () {
-                  //Navigator.of(context).pushNamed(AppRoutes.productsOverview);
+                  Modular.to.pushNamed('products');
                 },
                 child: Text(
                   'See all',

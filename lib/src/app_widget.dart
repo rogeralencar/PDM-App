@@ -23,7 +23,15 @@ class AppWidget extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => Auth(),
         ),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProxyProvider<Auth, UserProvider>(
+            create: (_) => UserProvider(),
+            update: (ctx, auth, previous) {
+              return UserProvider(
+                auth.token ?? '',
+                auth.userId ?? '',
+                previous?.user,
+              );
+            }),
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList(),
           update: (ctx, auth, previous) {
@@ -68,11 +76,11 @@ class AppWidget extends StatelessWidget {
           LocalJsonLocalization.delegate
         ],
         supportedLocales: const [
-        Locale('pt', 'BR'),
-        Locale('en', 'US'),
-      ],
-      routeInformationParser: Modular.routeInformationParser,
-      routerDelegate: Modular.routerDelegate,
+          Locale('pt', 'BR'),
+          Locale('en', 'US'),
+        ],
+        routeInformationParser: Modular.routeInformationParser,
+        routerDelegate: Modular.routerDelegate,
       ),
     );
   }

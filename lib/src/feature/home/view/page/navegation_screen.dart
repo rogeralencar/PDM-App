@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/src/feature/home/view/page/products_form_screen.dart';
 
 import '../../../auth/view/widget/auth.dart';
 import 'orders_screen.dart';
@@ -16,7 +15,8 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class NavigationScreenState extends State<NavigationScreen> {
-  final pageViewController = PageController();
+  late PageController pageViewController;
+  int currentPageIndex = 0;
 
   final List<String> _titles = [
     'Perfil',
@@ -31,23 +31,28 @@ class NavigationScreenState extends State<NavigationScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    pageViewController = PageController();
+    pageViewController.addListener(() {
+      setState(() {
+        currentPageIndex = pageViewController.page?.round() ?? 0;
+      });
+    });
+  }
+
+  @override
   void dispose() {
-    super.dispose();
     pageViewController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[pageViewController.page?.round() ?? 0]),
+        title: Text(_titles[currentPageIndex]),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.exit_to_app),
@@ -56,18 +61,14 @@ class NavigationScreenState extends State<NavigationScreen> {
                 context,
                 listen: false,
               ).logout();
-              Modular.to.pushNamed('/auth/');
+              Modular.to.navigate('/auth/');
             },
           ),
-          if (pageViewController.page?.round() == 1)
+          if (currentPageIndex == 1)
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                Modular.to.push(
-                  MaterialPageRoute(
-                    builder: (_) => const ProductsFormScreen(),
-                  ),
-                );
+                Modular.to.pushNamed('products');
               },
             ),
         ],
@@ -76,29 +77,40 @@ class NavigationScreenState extends State<NavigationScreen> {
         controller: pageViewController,
         children: _screens,
       ),
-      bottomNavigationBar: AnimatedBuilder(
-        animation: pageViewController,
-        builder: (context, snapshot) {
-          return BottomNavigationBar(
-            currentIndex: pageViewController.page?.round() ?? 0,
-            onTap: (index) {
-              pageViewController.jumpToPage(index);
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.edit),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.payment),
-              ),
-            ],
-            selectedItemColor: Theme.of(context).colorScheme.secondary,
-            unselectedItemColor: Theme.of(context).colorScheme.tertiary,
-          );
-        },
+      bottomNavigationBar: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(20),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () => pageViewController.jumpToPage(0),
+              color: currentPageIndex == 0
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.tertiary,
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () => pageViewController.jumpToPage(1),
+              color: currentPageIndex == 1
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.tertiary,
+            ),
+            IconButton(
+              icon: const Icon(Icons.payment),
+              onPressed: () => pageViewController.jumpToPage(2),
+              color: currentPageIndex == 2
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.tertiary,
+            ),
+          ],
+        ),
       ),
     );
   }

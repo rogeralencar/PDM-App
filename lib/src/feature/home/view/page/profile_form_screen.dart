@@ -20,17 +20,14 @@ class ProfileFormScreen extends StatefulWidget {
 class ProfileFormScreenState extends State<ProfileFormScreen> {
   File? _pickedImage;
 
+  final _imageUrlFocus = FocusNode();
+  final _imageUrlController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
-  final _nameFocus = FocusNode();
-  final _emailFocus = FocusNode();
-  final _phoneNumberFocus = FocusNode();
-  final _ageFocus = FocusNode();
-  final _bioFocus = FocusNode();
-  final _cpfFocus = FocusNode();
-  final _otherGenderFocus = FocusNode();
   final _nameController = TextEditingController();
+  final _socialNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _ageController = TextEditingController();
@@ -41,53 +38,132 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   String _selectedGender = '';
   bool _showOtherGenderInput = false;
 
-  late UserProvider userProvider;
-  late User? user;
-
   static const List<String> _genderOptions = [
     'Masculino',
     'Feminino',
     'Não-binário',
     'Outro',
   ];
-  @override
-  void initState() {
-    super.initState();
 
-    _loadUser();
+  bool _isLoading = false;
+  bool _isImageUrl = false;
+
+  void _selectImage(File pickedImage) {
+    setState(() {
+      _pickedImage = pickedImage;
+      _formData['image'] = pickedImage;
+    });
+  }
+
+  void _changeTypeImage() {
+    setState(() {
+      _isImageUrl = !_isImageUrl;
+    });
+  }
+
+  bool isValidImageUrl(String url) {
+    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
+        url.toLowerCase().endsWith('.jpg') ||
+        url.toLowerCase().endsWith('.jpeg');
+    return isValidUrl && endsWithFile;
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    _nameFocus.dispose();
-    _emailFocus.dispose();
-    _phoneNumberFocus.dispose();
-    _ageFocus.dispose();
-    _bioFocus.dispose();
-    _cpfFocus.dispose();
-    _otherGenderFocus.dispose();
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneNumberController.dispose();
+    _imageUrlFocus.removeListener(updateImage);
+    _imageUrlFocus.dispose();
+
     _ageController.dispose();
     _bioController.dispose();
     _cpfController.dispose();
+    _emailController.dispose();
+    _imageUrlController.dispose();
+    _nameController.dispose();
     _otherGenderController.dispose();
+    _phoneNumberController.dispose();
+    _socialNameController.dispose();
   }
 
-  void _loadUser() {
-    userProvider = Provider.of<UserProvider>(context);
-    user = userProvider.user;
+  @override
+  void initState() {
+    super.initState();
+    _imageUrlFocus.addListener(updateImage);
+  }
 
-    if (user?.gender != '') {
-      if (_genderOptions.contains(user?.gender)) {
-        _selectedGender = user!.gender!;
-      } else {
-        _selectedGender = 'Outro';
-        _otherGenderController.text = user!.gender!;
+  void updateImage() {
+    setState(() {});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+
+      if (arg != null) {
+        final user = arg as User;
+        _formData['image'] = user.image ?? '';
+        _formData['name'] = user.name ?? '';
+        _formData['socialName'] = user.socialName ?? '';
+        _formData['email'] = user.email ?? '';
+        _formData['age'] = user.age ?? 0;
+        _formData['bio'] = user.bio ?? '';
+        _formData['cpf'] = user.cpf ?? '';
+        _formData['gender'] = user.gender ?? '';
+        _formData['phoneNumber'] = user.phoneNumber ?? '';
+
+        if (user.image.toString().toLowerCase().startsWith('https://')) {
+          _isImageUrl = true;
+          _imageUrlController.text = user.image ?? '';
+        } else {
+          _isImageUrl = false;
+          _pickedImage = File(user.image ?? '');
+        }
       }
+    }
+  }
+
+  Future<void> _submitForm() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
+    if (_isImageUrl) {
+      _formData['image'] = _imageUrlController.text;
+    }
+
+    _formKey.currentState?.save();
+
+    setState(() => _isLoading = true);
+    try {
+      User user = User();
+      await Provider.of<UserProvider>(
+        context,
+        listen: false,
+      ).saveUserInfo(user);
+    } catch (error) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Ocorreu um erro!'),
+          content: const Text('Ocorreu um erro para salvar o produto.'),
+          actions: [
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      Navigator.of(context).pop();
+      setState(() => _isLoading = false);
     }
   }
 
@@ -116,33 +192,6 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
       _selectedGender = 'Outro';
       _showOtherGenderInput = true;
     });
-  }
-
-  void _selectImage(File pickedImage) {
-    setState(() {
-      _pickedImage = pickedImage;
-      _formData['image'] = pickedImage;
-    });
-  }
-
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      user!.name = _nameController.text;
-      user!.email = _emailController.text;
-      user!.phoneNumber = _phoneNumberController.text;
-      user!.age = _ageController.text as int?;
-      user!.bio = _bioController.text;
-      user!.cpf = _cpfController.text;
-
-      if (_selectedGender == 'Outro') {
-        user!.gender = _otherGenderController.text;
-      } else {
-        user!.gender = _selectedGender;
-      }
-      await userProvider.saveUserInfo(user!);
-    }
   }
 
   String? _validateAge(String? value) {
@@ -192,186 +241,248 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
         centerTitle: true,
         actions: [
           IconButton(
+            onPressed: _changeTypeImage,
+            icon: _isImageUrl
+                ? const Icon(Icons.camera_alt)
+                : const Icon(Icons.link),
+          ),
+          IconButton(
             onPressed: _submitForm,
             icon: const Icon(Icons.save),
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              ImageInput(
-                _pickedImage,
-                _selectImage,
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.outline,
               ),
-              const Divider(),
-              CustomTextField(
-                labelText: 'Name',
-                focusNode: _nameFocus,
-                controller: _nameController,
-                initialValue: user?.name,
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value!.trim().isEmpty) {
-                    return 'Nome é obrigatório.';
-                  }
-                  if (value.trim().length < 3) {
-                    return 'Nome precisa ter no mínimo 3 letras.';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(_emailFocus);
-                },
-              ),
-              CustomTextField(
-                labelText: 'E-mail',
-                focusNode: _emailFocus,
-                controller: _emailController,
-                initialValue: user?.email,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'O e-mail é obrigatório';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(_phoneNumberFocus);
-                },
-              ),
-              const Divider(),
-              CustomTextField(
-                labelText: 'Number',
-                focusNode: _phoneNumberFocus,
-                controller: _phoneNumberController,
-                initialValue: user?.phoneNumber ?? '',
-                keyboardType: TextInputType.phone,
-                validator: _validatePhoneNumber,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  MaskTextInputFormatter(mask: '(##) #####-####'),
-                ],
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(_ageFocus);
-                },
-              ),
-              const Divider(),
-              CustomTextField(
-                labelText: 'Age',
-                focusNode: _ageFocus,
-                controller: _ageController,
-                initialValue: user?.age.toString() ?? '',
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                validator: _validateAge,
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(_bioFocus);
-                },
-              ),
-              const Divider(),
-              CustomTextField(
-                labelText: 'Bio',
-                focusNode: _bioFocus,
-                controller: _bioController,
-                initialValue: user?.bio ?? '',
-                maxLines: 3,
-                keyboardType: TextInputType.multiline,
-                textInputAction: TextInputAction.next,
-                validator: _validateBio,
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(_cpfFocus);
-                },
-              ),
-              const Divider(),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Gender',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-              const Divider(),
-              Wrap(
-                spacing: 16,
-                runSpacing: 8,
-                children: [
-                  for (final genderOption in _genderOptions)
-                    SizedBox(
-                      width: 150,
-                      child: InkWell(
-                        onDoubleTap: () =>
-                            _handleGenderOptionChange(genderOption),
-                        child: Row(
-                          children: [
-                            Radio<String>(
-                              value: genderOption,
-                              groupValue: _selectedGender,
-                              onChanged: _handleGenderOptionChange,
+            )
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    if (!_isImageUrl)
+                      ImageInput(
+                        _pickedImage,
+                        _selectImage,
+                      ),
+                    if (_isImageUrl)
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              labelText: 'Url da Imagem',
+                              focusNode: _imageUrlFocus,
+                              controller: _imageUrlController,
+                              keyboardType: TextInputType.url,
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (_) => _submitForm(),
+                              onSaved: (imageUrl) =>
+                                  _formData['imageUrl'] = imageUrl ?? '',
+                              validator: (userImageUrl) {
+                                final imageUrl = userImageUrl ?? '';
+
+                                if (!isValidImageUrl(imageUrl)) {
+                                  return 'Informe uma Url válida!';
+                                }
+                                return null;
+                              },
                             ),
-                            Text(genderOption),
-                          ],
+                          ),
+                          Container(
+                              height: 100,
+                              width: 100,
+                              margin: const EdgeInsets.only(
+                                top: 10,
+                                left: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.outline,
+                                  width: 1,
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: _imageUrlController.text.isEmpty
+                                  ? const Text('Informe a Url')
+                                  : Image.network(_imageUrlController.text)),
+                        ],
+                      ),
+                    const Divider(),
+                    CustomTextField(
+                      labelText: 'Name',
+                      controller: _nameController,
+                      initialValue: _formData['name']?.toString(),
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value!.trim().isEmpty) {
+                          return 'Nome é obrigatório.';
+                        }
+                        if (value.trim().length < 3) {
+                          return 'Nome precisa ter no mínimo 3 letras.';
+                        }
+                        return null;
+                      },
+                      onSaved: (name) => _formData['name'] = name ?? '',
+                    ),
+                    const Divider(),
+                    CustomTextField(
+                      labelText: 'Social Name',
+                      controller: _socialNameController,
+                      initialValue: _formData['socialName']?.toString(),
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          if (value.trim().length < 10) {
+                            return 'Bio precisa ter no mínimo 10 letras.';
+                          }
+                        }
+                        return null;
+                      },
+                      onSaved: (name) => _formData['socialName'] = name ?? '',
+                    ),
+                    const Divider(),
+                    CustomTextField(
+                      labelText: 'E-mail',
+                      controller: _emailController,
+                      initialValue: _formData['email']?.toString(),
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'O e-mail é obrigatório';
+                        }
+                        return null;
+                      },
+                      onSaved: (email) => _formData['email'] = email ?? '',
+                    ),
+                    const Divider(),
+                    CustomTextField(
+                      labelText: 'Number',
+                      controller: _phoneNumberController,
+                      initialValue: _formData['phoneNumber']?.toString(),
+                      keyboardType: TextInputType.phone,
+                      validator: _validatePhoneNumber,
+                      onSaved: (number) =>
+                          _formData['phoneNumber'] = number ?? '',
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        MaskTextInputFormatter(mask: '(##) #####-####'),
+                      ],
+                    ),
+                    const Divider(),
+                    CustomTextField(
+                      labelText: 'Age',
+                      controller: _ageController,
+                      initialValue: _formData['age']?.toString(),
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      validator: _validateAge,
+                      onSaved: (age) =>
+                          _formData['age'] = double.parse(age ?? '0'),
+                    ),
+                    const Divider(),
+                    CustomTextField(
+                      labelText: 'Bio',
+                      controller: _bioController,
+                      initialValue: _formData['bio']?.toString(),
+                      maxLines: 3,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.next,
+                      validator: _validateBio,
+                      onSaved: (bio) => _formData['bio'] = bio ?? '',
+                    ),
+                    const Divider(),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        'Gender',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                    const Divider(),
+                    Wrap(
+                      spacing: 16,
+                      runSpacing: 8,
+                      children: [
+                        for (final genderOption in _genderOptions)
+                          SizedBox(
+                            width: 150,
+                            child: InkWell(
+                              onDoubleTap: () =>
+                                  _handleGenderOptionChange(genderOption),
+                              child: Row(
+                                children: [
+                                  Radio<String>(
+                                    value: genderOption,
+                                    groupValue: _selectedGender,
+                                    onChanged: _handleGenderOptionChange,
+                                  ),
+                                  Text(genderOption),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: SizedBox(
+                        width: 200,
+                        child: TextField(
+                          controller: _otherGenderController,
+                          enabled: _showOtherGenderInput,
+                          decoration: InputDecoration(
+                            labelText: 'Digite seu gênero',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.outline,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.secondary,
+                                width: 2.0,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context).colorScheme.tertiary,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 12.0),
+                          ),
+                          onChanged: _handleOtherGenderInputChange,
                         ),
                       ),
                     ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: SizedBox(
-                  width: 200,
-                  child: TextField(
-                    focusNode: _otherGenderFocus,
-                    controller: _otherGenderController,
-                    enabled: _showOtherGenderInput,
-                    decoration: InputDecoration(
-                      labelText: 'Digite seu gênero',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.outline,
-                          width: 1.0,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.secondary,
-                          width: 2.0,
-                        ),
-                      ),
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16.0, horizontal: 12.0),
+                    const Divider(),
+                    CustomTextField(
+                      labelText: 'CPF',
+                      controller: _cpfController,
+                      initialValue: _formData['cpf']?.toString(),
+                      keyboardType: TextInputType.number,
+                      validator: _validateCpf,
+                      onSaved: (cpf) => _formData['cpf'] = cpf ?? '',
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        MaskTextInputFormatter(mask: '###.###.###-##'),
+                      ],
                     ),
-                    onChanged: _handleOtherGenderInputChange,
-                  ),
+                    const SizedBox(height: 10),
+                  ],
                 ),
               ),
-              CustomTextField(
-                labelText: 'CPF',
-                focusNode: _cpfFocus,
-                controller: _cpfController,
-                keyboardType: TextInputType.number,
-                validator: _validateCpf,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  MaskTextInputFormatter(mask: '###.###.###-##'),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

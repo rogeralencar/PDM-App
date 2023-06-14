@@ -22,7 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.maxLines = 1,
     this.obscureText = false,
-    this.initialValue = '',
+    this.initialValue,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.done,
     this.inputFormatters,
@@ -30,7 +30,9 @@ class CustomTextField extends StatelessWidget {
     this.onSaved,
     this.onFieldSubmitted,
   }) : super(key: key) {
-    controller?.text = initialValue!;
+    if (controller != null && initialValue != null) {
+      controller!.text = initialValue!;
+    }
   }
 
   @override

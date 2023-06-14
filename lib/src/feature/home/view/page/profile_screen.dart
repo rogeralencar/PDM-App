@@ -51,7 +51,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pushNamed('/profileForm/');
+              Navigator.of(context).pushNamed('profile', arguments: user);
             },
             child: const Text('Editar Perfil'),
           ),

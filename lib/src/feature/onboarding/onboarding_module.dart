@@ -6,7 +6,7 @@ import 'view/page/onboarding_screen.dart';
 
 class OnBoardingModule extends Module {
   @override
-  List<Bind<Object>> get binds => [];
+  List<Bind> get binds => [];
 
   @override
   List<ModularRoute> get routes => [

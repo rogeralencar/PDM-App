@@ -27,16 +27,17 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    Provider.of<ProductList>(
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    Provider.of<UserProvider>(
       context,
       listen: false,
-    ).loadProducts().then((_) {
-      Provider.of<UserProvider>(
+    ).loadUser().then((_) {
+      Provider.of<ProductList>(
         context,
         listen: false,
-      ).loadUser().then((_) {
+      ).loadProducts().then((_) {
         setState(() {
           _isLoading = false;
         });

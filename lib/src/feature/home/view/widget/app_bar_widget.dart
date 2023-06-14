@@ -32,7 +32,7 @@ class AppBarWidgetState extends State<AppBarWidget> {
               child: InkWell(
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 onTap: () {
-                  Modular.to.pushNamed('/navegation');
+                  Modular.to.pushNamed('navegation/');
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -54,7 +54,7 @@ class AppBarWidgetState extends State<AppBarWidget> {
                 child: InkWell(
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   onTap: () {
-                    //Navigator.of(context).pushNamed(AppRoutes.cart);
+                    Modular.to.pushNamed('cart');
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),

@@ -21,7 +21,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (!isValid) {
       return;
     }
-    Modular.to.navigate('/auth/');
+    Modular.to.pop();
   }
 
   bool isValidEmail(String email) {
@@ -42,8 +42,8 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF35034F),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -62,7 +62,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     Text(
                       'Reset Password',
                       style: TextStyle(
-                        fontSize: screenSize.width * 0.05,
+                        fontSize: screenSize.width * 0.06,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
@@ -100,7 +100,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     SizedBox(height: screenSize.height * 0.12),
                     CustomButton(
-                      onPressed: (() => Modular.to.navigate('/auth/')),
+                      onPressed: (() => Modular.to.pop()),
                       buttonText: 'BACK',
                     ),
                   ],
