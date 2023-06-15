@@ -118,10 +118,10 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
 
         if (user.image.toString().toLowerCase().startsWith('https://')) {
           _isImageUrl = true;
-          _imageUrlController.text = user.image ?? '';
+          _imageUrlController.text = user.image!;
         } else {
           _isImageUrl = false;
-          _pickedImage = File(user.image ?? '');
+          _pickedImage = user.image != '' ? File(user.image!) : null;
         }
       }
     }
@@ -195,9 +195,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   }
 
   String? _validateAge(String? value) {
-    if (value != null && value.isNotEmpty) {
+    if (value != null && value != '0') {
       final age = int.tryParse(value);
-      if (age == null || age <= 0 || age > 120) {
+      if (age == null || age < 0 || age > 120) {
         return 'Por favor, insira uma idade válida.';
       }
     }
@@ -266,8 +266,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                   children: [
                     if (!_isImageUrl)
                       ImageInput(
-                        _pickedImage,
                         _selectImage,
+                        _pickedImage,
+                        isProfile: true,
                       ),
                     if (_isImageUrl)
                       Row(
@@ -275,7 +276,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                         children: [
                           Expanded(
                             child: CustomTextField(
-                              labelText: 'Url da Imagem',
+                              text: 'Url da Imagem',
                               focusNode: _imageUrlFocus,
                               controller: _imageUrlController,
                               keyboardType: TextInputType.url,
@@ -305,16 +306,24 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                                   color: Theme.of(context).colorScheme.outline,
                                   width: 1,
                                 ),
+                                shape: BoxShape.circle,
                               ),
                               alignment: Alignment.center,
-                              child: _imageUrlController.text.isEmpty
-                                  ? const Text('Informe a Url')
-                                  : Image.network(_imageUrlController.text)),
+                              child: ClipOval(
+                                child: _imageUrlController.text.isEmpty
+                                    ? const Center(
+                                        child: Text(
+                                          'Informe a Url',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )
+                                    : Image.network(_imageUrlController.text),
+                              )),
                         ],
                       ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'Name',
+                      text: 'Name',
                       controller: _nameController,
                       initialValue: _formData['name']?.toString(),
                       textInputAction: TextInputAction.next,
@@ -331,14 +340,14 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'Social Name',
+                      text: 'Social Name',
                       controller: _socialNameController,
                       initialValue: _formData['socialName']?.toString(),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value != null && value.isNotEmpty) {
-                          if (value.trim().length < 10) {
-                            return 'Bio precisa ter no mínimo 10 letras.';
+                          if (value.trim().length < 3) {
+                            return 'Social name precisa ter no mínimo 10 letras.';
                           }
                         }
                         return null;
@@ -347,7 +356,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'E-mail',
+                      text: 'E-mail',
                       controller: _emailController,
                       initialValue: _formData['email']?.toString(),
                       keyboardType: TextInputType.emailAddress,
@@ -362,7 +371,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'Number',
+                      text: 'Number',
                       controller: _phoneNumberController,
                       initialValue: _formData['phoneNumber']?.toString(),
                       keyboardType: TextInputType.phone,
@@ -376,7 +385,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'Age',
+                      text: 'Age',
                       controller: _ageController,
                       initialValue: _formData['age']?.toString(),
                       keyboardType: TextInputType.number,
@@ -387,7 +396,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'Bio',
+                      text: 'Bio',
                       controller: _bioController,
                       initialValue: _formData['bio']?.toString(),
                       maxLines: 3,
@@ -467,7 +476,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'CPF',
+                      text: 'CPF',
                       controller: _cpfController,
                       initialValue: _formData['cpf']?.toString(),
                       keyboardType: TextInputType.number,

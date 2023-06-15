@@ -75,7 +75,8 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           CustomTextField(
-                            labelText: 'Enter your E-mail',
+                            text: 'Enter your E-mail',
+                            isForm: false,
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             validator: (email) {

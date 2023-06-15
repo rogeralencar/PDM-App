@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import 'view/page/cart_screen.dart';
 import 'view/page/home_screen.dart';
+import 'view/page/products_detail_screen.dart';
 import 'view/page/products_overview_screen.dart';
 import 'viewmodel/navegation_module.dart';
 
@@ -19,6 +20,11 @@ class HomeModule extends Module {
         ChildRoute(
           '/cart',
           child: (_, __) => const CartScreen(),
+          transition: TransitionType.fadeIn,
+        ),
+        ChildRoute(
+          '/details',
+          child: (_, __) => const ProductsDetailScreen(),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(

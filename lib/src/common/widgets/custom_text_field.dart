@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
+  final bool isForm;
   final bool obscureText;
   final int maxLines;
-  final String labelText;
+  final String text;
   final String? initialValue;
   final FocusNode? focusNode;
   final TextEditingController? controller;
@@ -17,7 +18,8 @@ class CustomTextField extends StatelessWidget {
 
   CustomTextField({
     Key? key,
-    required this.labelText,
+    required this.text,
+    this.isForm = true,
     this.focusNode,
     this.controller,
     this.maxLines = 1,
@@ -41,7 +43,8 @@ class CustomTextField extends StatelessWidget {
       focusNode: focusNode,
       controller: controller,
       decoration: InputDecoration(
-        labelText: labelText,
+        labelText: isForm ? text : null,
+        hintText: text,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),

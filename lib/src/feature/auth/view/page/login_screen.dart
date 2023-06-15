@@ -124,7 +124,8 @@ class LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: CustomTextField(
-                              labelText: 'Enter your E-mail',
+                              text: 'Enter your E-mail',
+                              isForm: false,
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
@@ -145,7 +146,8 @@ class LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: CustomTextField(
-                              labelText: 'Enter Password',
+                              text: 'Enter Password',
+                              isForm: false,
                               controller: _passwordController,
                               obscureText: true,
                               validator: (value) {

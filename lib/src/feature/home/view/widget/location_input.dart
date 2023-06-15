@@ -84,18 +84,21 @@ class _LocationInputState extends State<LocationInput> {
           width: double.infinity,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Theme.of(context).colorScheme.outline,
-            ),
+              border: Border.all(
+                width: 1,
+                color: Theme.of(context).colorScheme.outline,
+              ),
+              borderRadius: BorderRadius.circular(10)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: _previewImageUrl == null
+                ? const Text('Localização não informada!')
+                : Image.network(
+                    _previewImageUrl!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
           ),
-          child: _previewImageUrl == null
-              ? const Text('Localização não informada!')
-              : Image.network(
-                  _previewImageUrl!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

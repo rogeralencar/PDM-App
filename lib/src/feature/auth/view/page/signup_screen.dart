@@ -51,6 +51,13 @@ class SignupScreenState extends State<SignupScreen> {
     return passwordRegExp.hasMatch(password);
   }
 
+  Future<void> _save(User user) async {
+    await Provider.of<UserProvider>(
+      context,
+      listen: false,
+    ).saveUserInfo(user);
+  }
+
   Future<void> _submit() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -74,10 +81,7 @@ class SignupScreenState extends State<SignupScreen> {
         email: _authData['email']!,
       );
 
-      await Provider.of<UserProvider>(
-        context,
-        listen: false,
-      ).saveUserInfo(user);
+      await _save(user);
 
       Modular.to.navigate('/home/');
     } on AuthException catch (error) {
@@ -145,7 +149,8 @@ class SignupScreenState extends State<SignupScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           CustomTextField(
-                            labelText: 'Enter your name',
+                            text: 'Enter your name',
+                            isForm: false,
                             keyboardType: TextInputType.emailAddress,
                             controller: _nameController,
                             textInputAction: TextInputAction.next,
@@ -162,7 +167,8 @@ class SignupScreenState extends State<SignupScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
-                            labelText: 'Enter your E-mail',
+                            text: 'Enter your E-mail',
+                            isForm: false,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             onSaved: (email) =>
@@ -178,7 +184,8 @@ class SignupScreenState extends State<SignupScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
-                            labelText: 'Enter Password',
+                            text: 'Enter Password',
+                            isForm: false,
                             obscureText: true,
                             controller: _passwordController,
                             textInputAction: TextInputAction.next,
@@ -195,7 +202,8 @@ class SignupScreenState extends State<SignupScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
-                            labelText: 'Confirm Password',
+                            text: 'Confirm Password',
+                            isForm: false,
                             obscureText: true,
                             validator: (password) {
                               if (password != _passwordController.text) {

@@ -51,11 +51,11 @@ class ProductItem extends StatelessWidget {
                     actions: [
                       TextButton(
                         child: const Text('Não'),
-                        onPressed: () => Navigator.of(ctx).pop(false),
+                        onPressed: () => Modular.to.pop(false),
                       ),
                       TextButton(
                         child: const Text('Sim'),
-                        onPressed: () => Navigator.of(ctx).pop(true),
+                        onPressed: () => Modular.to.pop(true),
                       ),
                     ],
                   ),

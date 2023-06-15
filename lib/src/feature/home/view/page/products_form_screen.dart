@@ -188,7 +188,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                   children: [
                     const SizedBox(height: 20),
                     CustomTextField(
-                      labelText: 'Name',
+                      text: 'Name',
                       controller: _nameController,
                       initialValue: _formData['name']?.toString(),
                       textInputAction: TextInputAction.next,
@@ -206,7 +206,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'Preço',
+                      text: 'Preço',
                       controller: _priceController,
                       initialValue: _formData['price']?.toString(),
                       textInputAction: TextInputAction.next,
@@ -229,7 +229,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      labelText: 'Descrição',
+                      text: 'Descrição',
                       controller: _descriptionController,
                       initialValue: _formData['description']?.toString(),
                       keyboardType: TextInputType.multiline,
@@ -253,8 +253,8 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                     const Divider(),
                     if (!_isImageUrl)
                       ImageInput(
-                        _pickedImage,
                         _selectImage,
+                        _pickedImage,
                       ),
                     if (_isImageUrl)
                       Row(
@@ -262,7 +262,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         children: [
                           Expanded(
                             child: CustomTextField(
-                              labelText: 'Url da Imagem',
+                              text: 'Url da Imagem',
                               focusNode: _imageUrlFocus,
                               controller: _imageUrlController,
                               keyboardType: TextInputType.url,
@@ -292,13 +292,18 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                                   color: Theme.of(context).colorScheme.outline,
                                   width: 1,
                                 ),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               alignment: Alignment.center,
-                              child: _imageUrlController.text.isEmpty
-                                  ? const Text('Informe a Url')
-                                  : Image.network(_imageUrlController.text)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: _imageUrlController.text.isEmpty
+                                    ? const Text('Informe a Url')
+                                    : Image.network(_imageUrlController.text),
+                              )),
                         ],
                       ),
+                    const Divider(),
                     const SizedBox(height: 10),
                     LocationInput(_selectPosition, _formData),
                   ],

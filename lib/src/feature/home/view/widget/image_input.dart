@@ -8,19 +8,21 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 // ignore: must_be_immutable
 class ImageInput extends StatefulWidget {
   final Function onSelectImage;
+  final bool isProfile;
   File? image;
 
   ImageInput(
-    this.image,
-    this.onSelectImage, {
+    this.onSelectImage,
+    this.image, {
+    this.isProfile = false,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ImageInput> createState() => _ImageInputState();
+  ImageInputState createState() => ImageInputState();
 }
 
-class _ImageInputState extends State<ImageInput> {
+class ImageInputState extends State<ImageInput> {
   _takePicture() async {
     final ImagePicker picker = ImagePicker();
     XFile imageFile = await picker.pickImage(
@@ -82,22 +84,39 @@ class _ImageInputState extends State<ImageInput> {
               ],
             ),
             Container(
-              width: 180,
-              height: 100,
+              width: widget.isProfile ? 100 : 180,
+              height: widget.isProfile ? 100 : 150,
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 1,
                   color: Theme.of(context).colorScheme.outline,
                 ),
+                shape: widget.isProfile ? BoxShape.circle : BoxShape.rectangle,
+                borderRadius:
+                    !widget.isProfile ? BorderRadius.circular(10) : null,
               ),
-              alignment: Alignment.center,
-              child: widget.image != null
-                  ? Image.file(
-                      widget.image!,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+              child: widget.isProfile
+                  ? ClipOval(
+                      child: widget.image != null
+                          ? Image.file(
+                              widget.image!,
+                              fit: BoxFit.cover,
+                            )
+                          : const Center(
+                              child: Text(
+                              'Nenhuma imagem!',
+                              textAlign: TextAlign.center,
+                            )),
                     )
-                  : const Text('Nenhuma imagem!'),
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: widget.image != null
+                          ? Image.file(
+                              widget.image!,
+                              fit: BoxFit.cover,
+                            )
+                          : const Center(child: Text('Nenhuma imagem!')),
+                    ),
             ),
           ],
         ),
