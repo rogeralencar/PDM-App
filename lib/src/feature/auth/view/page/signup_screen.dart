@@ -195,7 +195,7 @@ class SignupScreenState extends State<SignupScreen> {
                               if (password!.isEmpty) {
                                 return 'Please enter the password';
                               } else if (!isValidPassword(password)) {
-                                return 'Please enter a valid password (minimum 8 characters with at least one uppercase letter, one lowercase letter, one number, and one special character)';
+                                return 'Invalid password. Minimum 8 characters: 1 uppercase, 1 lowercase, 1 number, and 1 special character.';
                               }
                               return null;
                             },

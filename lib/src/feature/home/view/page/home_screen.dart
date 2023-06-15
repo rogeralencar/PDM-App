@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../auth/repository/user_provider.dart';
+import '../../repository/order_list.dart';
 import '../../repository/product_list.dart';
 import '../widget/app_bar_widget.dart';
 import '../widget/carousel.dart';
@@ -38,8 +39,13 @@ class HomeScreenState extends State<HomeScreen> {
         context,
         listen: false,
       ).loadProducts().then((_) {
-        setState(() {
-          _isLoading = false;
+        Provider.of<OrderList>(
+          context,
+          listen: false,
+        ).loadOrders().then((_) {
+          setState(() {
+            _isLoading = false;
+          });
         });
       });
     });

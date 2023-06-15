@@ -24,7 +24,7 @@ class PlaceLocation {
 class Product with ChangeNotifier {
   bool isFavorite;
   final int orders;
-  final List<String> category;
+  final List<String> categories;
   final String description;
   final String id;
   final dynamic image;
@@ -36,7 +36,7 @@ class Product with ChangeNotifier {
   Product({
     this.isFavorite = false,
     this.orders = 0,
-    required this.category,
+    required this.categories,
     required this.description,
     required this.id,
     required this.image,

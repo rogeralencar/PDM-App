@@ -5,11 +5,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/custom_text_field.dart';
+import '../../repository/categories_data.dart';
 import '../../repository/product.dart';
 import '../../repository/product_list.dart';
 import '../../../../common/utils/location_util.dart';
 import '../widget/image_input.dart';
 import '../widget/location_input.dart';
+import 'category_selector_screen.dart';
 
 class ProductsFormScreen extends StatefulWidget {
   const ProductsFormScreen({super.key});
@@ -26,6 +28,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imageUrlController = TextEditingController();
+  final _categoryController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
@@ -65,11 +68,16 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
         _formData['price'] = product.price;
         _formData['orders'] = product.orders;
         _formData['description'] = product.description;
-        _formData['category'] = product.category;
+        _formData['categories'] = product.categories;
         _formData['image'] = product.image;
         _formData['latitude'] = product.location.latitude;
         _formData['longitude'] = product.location.longitude;
         _formData['address'] = product.location.address!;
+
+        if (_formData.isNotEmpty && _categoryController.text.isEmpty) {
+          List<String>? categories = _formData['categories'] as List<String>?;
+          _categoryController.text = categories!.join(', ');
+        }
 
         if (product.image.toString().toLowerCase().startsWith('https://')) {
           _isImageUrl = true;
@@ -80,6 +88,40 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
         }
       }
     }
+  }
+
+  void _selectCategory() async {
+    final selectedCategoryNames =
+        (_formData['categories'] as List<String>?)?.toList();
+
+    final updatedCategories = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CategorySelectionScreen(
+          selectedCategoryNames: selectedCategoryNames ?? [],
+        ),
+      ),
+    );
+
+    if (updatedCategories != null) {
+      List<Category> selectedCategories = categoryList
+          .where((category) => updatedCategories.contains(category.name))
+          .toList();
+
+      setState(() {
+        _formData['categories'] =
+            selectedCategories.map((category) => category.name).toList();
+        _categoryController.text =
+            _formatSelectedCategories(selectedCategories);
+
+        if (selectedCategories.isEmpty) {
+          _categoryController.text = '';
+        }
+      });
+    }
+  }
+
+  String _formatSelectedCategories(List<Category> categories) {
+    return categories.map((category) => category.name).join(', ');
   }
 
   void _selectImage(File pickedImage) {
@@ -249,6 +291,52 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
 
                         return null;
                       },
+                    ),
+                    const Divider(),
+                    TextField(
+                      controller: _categoryController,
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        labelText: 'Selected Categories',
+                        hintText: 'Press the buttom below',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
+                            width: 2.0,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.tertiary,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 12.0,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _formData['category'] = [];
+                              _categoryController.clear();
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _selectCategory,
+                      child: const Text('Select Category'),
                     ),
                     const Divider(),
                     if (!_isImageUrl)

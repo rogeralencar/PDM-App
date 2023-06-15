@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../repository/categories_data.dart';
+
 class ProductCategories extends StatelessWidget {
   const ProductCategories({super.key});
 
-  Widget _buildCategoryItem(String category, IconData iconData) {
+  Widget _buildCategoryItem(Category category) {
     return Padding(
       padding: const EdgeInsets.all(6),
       child: ElevatedButton(
         onPressed: () {
-          debugPrint(category);
+          debugPrint(category.name);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
@@ -25,12 +27,12 @@ class ProductCategories extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                iconData,
+                category.iconData,
                 size: 28,
               ),
               const SizedBox(height: 6),
               Text(
-                category,
+                category.name,
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -41,39 +43,6 @@ class ProductCategories extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  List<Widget> _buildCategoryList() {
-    return [
-      _buildCategoryItem('Accessories', Icons.wallet_giftcard),
-      _buildCategoryItem('Agro', Icons.grass),
-      _buildCategoryItem('Animals', Icons.pets),
-      _buildCategoryItem('Appliances', Icons.kitchen),
-      _buildCategoryItem('Art & Crafts', Icons.create),
-      _buildCategoryItem('Babies', Icons.child_care),
-      _buildCategoryItem('Beauty', Icons.face),
-      _buildCategoryItem('Books', Icons.menu_book),
-      _buildCategoryItem('Cameras', Icons.photo_camera),
-      _buildCategoryItem('Clothes', Icons.style),
-      _buildCategoryItem('Commerce', Icons.store),
-      _buildCategoryItem('Computers', Icons.computer),
-      _buildCategoryItem('Construction', Icons.build),
-      _buildCategoryItem('Electronics', Icons.tv),
-      _buildCategoryItem('Food & Drinks', Icons.restaurant),
-      _buildCategoryItem('Footwear', Icons.shopping_bag),
-      _buildCategoryItem('Games', Icons.videogame_asset),
-      _buildCategoryItem('Health', Icons.favorite),
-      _buildCategoryItem('Home Decor', Icons.home),
-      _buildCategoryItem('Jewelry', Icons.watch),
-      _buildCategoryItem('Music', Icons.music_note),
-      _buildCategoryItem('Parties', Icons.cake),
-      _buildCategoryItem('Phones', Icons.phone_android),
-      _buildCategoryItem('Sports', Icons.sports_soccer),
-      _buildCategoryItem('Tickets', Icons.event),
-      _buildCategoryItem('Tools', Icons.build_circle),
-      _buildCategoryItem('Toys', Icons.toys),
-      _buildCategoryItem('Vehicles', Icons.directions_car),
-    ];
   }
 
   @override
@@ -112,15 +81,18 @@ class ProductCategories extends StatelessWidget {
             height: 140,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: _buildCategoryList().length ~/ 2,
+              itemCount: (categoryList.length / 2).ceil(),
               itemBuilder: (BuildContext context, int index) {
-                int itemIndex = index * 2;
+                int firstIndex = index * 2;
+                int secondIndex = firstIndex + 1;
+
                 return Column(
                   children: [
-                    _buildCategoryList()[itemIndex],
+                    if (firstIndex < categoryList.length)
+                      _buildCategoryItem(categoryList[firstIndex]),
                     const SizedBox(width: 16),
-                    if (itemIndex + 1 < _buildCategoryList().length)
-                      _buildCategoryList()[itemIndex + 1],
+                    if (secondIndex < categoryList.length)
+                      _buildCategoryItem(categoryList[secondIndex]),
                   ],
                 );
               },
