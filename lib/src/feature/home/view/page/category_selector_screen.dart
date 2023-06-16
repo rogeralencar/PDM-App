@@ -5,8 +5,10 @@ import '../../repository/categories_data.dart';
 class CategorySelectionScreen extends StatefulWidget {
   final List<String> selectedCategoryNames;
 
-  const CategorySelectionScreen(
-      {super.key, required this.selectedCategoryNames});
+  const CategorySelectionScreen({
+    Key? key,
+    required this.selectedCategoryNames,
+  }) : super(key: key);
 
   @override
   CategorySelectionScreenState createState() => CategorySelectionScreenState();
@@ -18,7 +20,14 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedCategoryNames = widget.selectedCategoryNames;
+    if (widget.selectedCategoryNames.length == 1) {
+      _selectedCategoryNames = widget.selectedCategoryNames[0]
+          .split(',')
+          .map((category) => category.trim())
+          .toList();
+    } else {
+      _selectedCategoryNames = List<String>.from(widget.selectedCategoryNames);
+    }
   }
 
   void _toggleCategory(String categoryName) {
@@ -43,7 +52,6 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
         itemBuilder: (context, index) {
           final category = categoryList[index];
           final isSelected = _selectedCategoryNames.contains(category.name);
-
           return ListTile(
             onTap: () => _toggleCategory(category.name),
             iconColor: Theme.of(context).colorScheme.secondary,

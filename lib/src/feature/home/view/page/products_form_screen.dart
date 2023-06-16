@@ -182,7 +182,8 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Ocorreu um erro!'),
-          content: const Text('Ocorreu um erro para salvar o produto.'),
+          content: const Text(
+              'Ocorreu um erro para salvar o produto. Certifique-se de ter preenchido todos os campos'),
           actions: [
             TextButton(
               child: const Text('Ok'),
@@ -326,7 +327,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                           icon: const Icon(Icons.clear),
                           onPressed: () {
                             setState(() {
-                              _formData['category'] = [];
+                              _formData['categories'] = [];
                               _categoryController.clear();
                             });
                           },
