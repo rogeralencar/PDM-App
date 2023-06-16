@@ -24,7 +24,23 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveUserInfo(User user) async {
+  Future<void> saveUserInfo(User user, {bool isImageUrl = true}) async {
+    var image = "";
+    if (isImageUrl) {
+      image = user.image.toString();
+    } else {
+      image = user.image
+          .toString()
+          .replaceAll("'", "")
+          .replaceFirst("F", "")
+          .replaceFirst("i", "")
+          .replaceFirst("l", "")
+          .replaceFirst("e", "")
+          .replaceFirst(":", "")
+          .replaceFirst(" ", "");
+    }
+
+    user.image = image;
     try {
       final response = await http.put(
         Uri.parse('${Constants.userInfo}/$_userId.json?auth=$_token'),

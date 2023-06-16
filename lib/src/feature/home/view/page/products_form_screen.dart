@@ -161,7 +161,10 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
-    if (!isValid) {
+    if (!isValid ||
+        _formData['image'] == null ||
+        _formData['address'] == null ||
+        _formData['categories'] == null) {
       return;
     }
 
@@ -182,8 +185,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Ocorreu um erro!'),
-          content: const Text(
-              'Ocorreu um erro para salvar o produto. Certifique-se de ter preenchido todos os campos'),
+          content: const Text('Ocorreu um erro para salvar o produto'),
           actions: [
             TextButton(
               child: const Text('Ok'),

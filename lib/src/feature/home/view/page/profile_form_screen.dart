@@ -61,14 +61,6 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     });
   }
 
-  bool isValidImageUrl(String url) {
-    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
-    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
-        url.toLowerCase().endsWith('.jpg') ||
-        url.toLowerCase().endsWith('.jpeg');
-    return isValidUrl && endsWithFile;
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -115,6 +107,8 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
         _formData['cpf'] = user.cpf ?? '';
         _formData['gender'] = user.gender ?? '';
         _formData['phoneNumber'] = user.phoneNumber ?? '';
+        _formData['cep'] = user.cep ?? '';
+        _formData['city'] = user.city ?? '';
 
         if (user.image.toString().toLowerCase().startsWith('https://')) {
           _isImageUrl = true;
@@ -122,6 +116,15 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
         } else {
           _isImageUrl = false;
           _pickedImage = user.image != '' ? File(user.image!) : null;
+        }
+
+        if (user.gender != null && user.gender!.isNotEmpty) {
+          if (_genderOptions.contains(user.gender)) {
+            _selectedGender = user.gender!;
+          } else {
+            _selectedGender = 'Outro';
+            _otherGenderController.text = user.gender!;
+          }
         }
       }
     }
@@ -136,23 +139,40 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
 
     if (_isImageUrl) {
       _formData['image'] = _imageUrlController.text;
+    } else {
+      _formData['image'] = _pickedImage ?? '';
     }
 
     _formKey.currentState?.save();
 
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    User? user = userProvider.user;
+
     setState(() => _isLoading = true);
+    if (_selectedGender == 'Outro') {
+      _formData['gender'] = _otherGenderController.text;
+    } else {
+      _formData['gender'] = _selectedGender;
+    }
     try {
-      User user = User();
-      await Provider.of<UserProvider>(
-        context,
-        listen: false,
-      ).saveUserInfo(user);
+      user!.age = _formData['age'] as int;
+      user.name = _formData['name'] as String;
+      user.bio = _formData['bio'] as String;
+      user.cpf = _formData['cpf'] as String;
+      user.socialName = _formData['socialName'] as String;
+      user.email = _formData['email'] as String;
+      user.phoneNumber = _formData['phoneNumber'] as String;
+      user.gender = _formData['gender'] as String;
+      user.image = _formData['image'];
+
+      await userProvider.saveUserInfo(user, isImageUrl: _isImageUrl);
+      userProvider.setUser(user);
     } catch (error) {
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Ocorreu um erro!'),
-          content: const Text('Ocorreu um erro para salvar o produto.'),
+          content: Text(error.toString()),
           actions: [
             TextButton(
               child: const Text('Ok'),
@@ -194,10 +214,22 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     });
   }
 
+  bool isValidImageUrl(String url) {
+    if (url.isNotEmpty) {
+      bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+      bool endsWithFile = url.toLowerCase().endsWith('.png') ||
+          url.toLowerCase().endsWith('.jpg') ||
+          url.toLowerCase().endsWith('.jpeg');
+      return isValidUrl && endsWithFile;
+    } else {
+      return true;
+    }
+  }
+
   String? _validateAge(String? value) {
-    if (value != null && value != '0') {
-      final age = int.tryParse(value);
-      if (age == null || age < 0 || age > 120) {
+    if (value != null && value.isNotEmpty) {
+      final age = double.tryParse(value);
+      if (age == null || age.isNaN || age.isNegative || age.remainder(1) != 0) {
         return 'Por favor, insira uma idade válida.';
       }
     }
@@ -206,9 +238,8 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
 
   String? _validatePhoneNumber(String? value) {
     if (value != null && value.isNotEmpty) {
-      final phoneNumberRegex = RegExp(r'^\(\d{2}\)\d{4,5}-\d{4}$');
-      if (!phoneNumberRegex.hasMatch(value)) {
-        return 'Por favor, insira um número de telefone válido (formato: (XX)XXXXX-XXXX).';
+      if (value.length != 15) {
+        return 'número de telefone inválido (formato: (XX)XXXXX-XXXX).';
       }
     }
     return null;
@@ -387,12 +418,17 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     CustomTextField(
                       text: 'Age',
                       controller: _ageController,
-                      initialValue: _formData['age']?.toString(),
+                      initialValue: _formData['age'] == 0
+                          ? ''
+                          : _formData['age'].toString(),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       validator: _validateAge,
-                      onSaved: (age) =>
-                          _formData['age'] = double.parse(age ?? '0'),
+                      onSaved: (age) => _formData['age'] =
+                          int.tryParse(age ?? '0')?.round() ?? 0,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                     const Divider(),
                     CustomTextField(

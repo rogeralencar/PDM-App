@@ -6,7 +6,7 @@ class User {
   String? cpf;
   String? email;
   String? gender;
-  String? image;
+  dynamic image;
   String? name;
   String? phoneNumber;
   String? socialName;
