@@ -11,7 +11,8 @@ import '../../../../common/widgets/custom_text_field.dart';
 import '../widget/image_input.dart';
 
 class ProfileFormScreen extends StatefulWidget {
-  const ProfileFormScreen({Key? key}) : super(key: key);
+  final User user;
+  const ProfileFormScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   ProfileFormScreenState createState() => ProfileFormScreenState();
@@ -94,37 +95,33 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     super.didChangeDependencies();
 
     if (_formData.isEmpty) {
-      final arg = ModalRoute.of(context)?.settings.arguments;
+      _formData['image'] = widget.user.image ?? '';
+      _formData['name'] = widget.user.name ?? '';
+      _formData['socialName'] = widget.user.socialName ?? '';
+      _formData['email'] = widget.user.email ?? '';
+      _formData['age'] = widget.user.age ?? 0;
+      _formData['bio'] = widget.user.bio ?? '';
+      _formData['cpf'] = widget.user.cpf ?? '';
+      _formData['gender'] = widget.user.gender ?? '';
+      _formData['phoneNumber'] = widget.user.phoneNumber ?? '';
+      _formData['cep'] = widget.user.cep ?? '';
+      _formData['city'] = widget.user.city ?? '';
 
-      if (arg != null) {
-        final user = arg as User;
-        _formData['image'] = user.image ?? '';
-        _formData['name'] = user.name ?? '';
-        _formData['socialName'] = user.socialName ?? '';
-        _formData['email'] = user.email ?? '';
-        _formData['age'] = user.age ?? 0;
-        _formData['bio'] = user.bio ?? '';
-        _formData['cpf'] = user.cpf ?? '';
-        _formData['gender'] = user.gender ?? '';
-        _formData['phoneNumber'] = user.phoneNumber ?? '';
-        _formData['cep'] = user.cep ?? '';
-        _formData['city'] = user.city ?? '';
+      if (widget.user.image.toString().toLowerCase().startsWith('https://')) {
+        _isImageUrl = true;
+        _imageUrlController.text = widget.user.image!;
+      } else {
+        _isImageUrl = false;
+        _pickedImage =
+            widget.user.image != '' ? File(widget.user.image!) : null;
+      }
 
-        if (user.image.toString().toLowerCase().startsWith('https://')) {
-          _isImageUrl = true;
-          _imageUrlController.text = user.image!;
+      if (widget.user.gender != null && widget.user.gender!.isNotEmpty) {
+        if (_genderOptions.contains(widget.user.gender)) {
+          _selectedGender = widget.user.gender!;
         } else {
-          _isImageUrl = false;
-          _pickedImage = user.image != '' ? File(user.image!) : null;
-        }
-
-        if (user.gender != null && user.gender!.isNotEmpty) {
-          if (_genderOptions.contains(user.gender)) {
-            _selectedGender = user.gender!;
-          } else {
-            _selectedGender = 'Outro';
-            _otherGenderController.text = user.gender!;
-          }
+          _selectedGender = 'Outro';
+          _otherGenderController.text = widget.user.gender!;
         }
       }
     }
@@ -290,7 +287,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
               ),
             )
           : Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Form(
                 key: _formKey,
                 child: ListView(

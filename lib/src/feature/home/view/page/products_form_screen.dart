@@ -14,7 +14,8 @@ import '../widget/location_input.dart';
 import 'category_selector_screen.dart';
 
 class ProductsFormScreen extends StatefulWidget {
-  const ProductsFormScreen({super.key});
+  final Product? product;
+  const ProductsFormScreen({super.key, this.product});
 
   @override
   State<ProductsFormScreen> createState() => _ProductsFormScreenState();
@@ -59,32 +60,32 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
     super.didChangeDependencies();
 
     if (_formData.isEmpty) {
-      final arg = ModalRoute.of(context)?.settings.arguments;
-
-      if (arg != null) {
-        final product = arg as Product;
-        _formData['id'] = product.id;
-        _formData['name'] = product.name;
-        _formData['price'] = product.price;
-        _formData['orders'] = product.orders;
-        _formData['description'] = product.description;
-        _formData['categories'] = product.categories;
-        _formData['image'] = product.image;
-        _formData['latitude'] = product.location.latitude;
-        _formData['longitude'] = product.location.longitude;
-        _formData['address'] = product.location.address!;
+      if (widget.product != null) {
+        _formData['id'] = widget.product!.id;
+        _formData['name'] = widget.product!.name;
+        _formData['price'] = widget.product!.price;
+        _formData['orders'] = widget.product!.orders;
+        _formData['description'] = widget.product!.description;
+        _formData['categories'] = widget.product!.categories;
+        _formData['image'] = widget.product!.image;
+        _formData['latitude'] = widget.product!.location.latitude;
+        _formData['longitude'] = widget.product!.location.longitude;
+        _formData['address'] = widget.product!.location.address!;
 
         if (_formData.isNotEmpty && _categoryController.text.isEmpty) {
           List<String>? categories = _formData['categories'] as List<String>?;
           _categoryController.text = categories!.join(', ');
         }
 
-        if (product.image.toString().toLowerCase().startsWith('https://')) {
+        if (widget.product!.image
+            .toString()
+            .toLowerCase()
+            .startsWith('https://')) {
           _isImageUrl = true;
-          _imageUrlController.text = product.image;
+          _imageUrlController.text = widget.product!.image;
         } else {
           _isImageUrl = false;
-          _pickedImage = File(product.image);
+          _pickedImage = File(widget.product!.image);
         }
       }
     }
@@ -226,7 +227,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
               ),
             )
           : Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Form(
                 key: _formKey,
                 child: ListView(

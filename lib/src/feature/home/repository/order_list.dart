@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../common/exceptions/http_exception.dart';
 import 'cart.dart';
 import 'cart_item.dart';
 import 'order.dart';
 import '../../../common/utils/constants.dart';
+import 'product_list.dart';
 
 class OrderList with ChangeNotifier {
   final String _token;
@@ -82,6 +84,23 @@ class OrderList with ChangeNotifier {
     );
 
     final id = jsonDecode(response.body)['name'];
+
+    for (var cartItem in cart.items.values) {
+      final productList = ProductList();
+
+      final product = productList.findProductById(cartItem.productId);
+
+      if (product != null) {
+        product.orders += cartItem.quantity;
+        await product.updateOrders(_token, product.orders);
+      } else {
+        throw HttpException(
+          msg: 'Não foi possível fazer o pedido',
+          statusCode: response.statusCode,
+        );
+      }
+    }
+
     _items.insert(
       0,
       Order(

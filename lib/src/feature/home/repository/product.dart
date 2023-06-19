@@ -23,7 +23,7 @@ class PlaceLocation {
 
 class Product with ChangeNotifier {
   bool isFavorite;
-  final int orders;
+  int orders;
   final List<String> categories;
   final String description;
   final String id;
@@ -67,6 +67,20 @@ class Product with ChangeNotifier {
       }
     } catch (_) {
       _toggleFavorite();
+    }
+  }
+
+  Future<void> updateOrders(String token, int newOrders) async {
+    final response = await http.patch(
+      Uri.parse('${Constants.productBaseUrl}/$id.json?auth=$token'),
+      body: jsonEncode(
+        {'orders': newOrders},
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      orders = newOrders;
+      notifyListeners();
     }
   }
 }

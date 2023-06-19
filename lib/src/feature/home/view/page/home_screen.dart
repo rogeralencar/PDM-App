@@ -63,12 +63,12 @@ class HomeScreenState extends State<HomeScreen> {
               onRefresh: () => _refreshProducts(context),
               color: Theme.of(context).colorScheme.outline,
               child: ListView(
-                children: const [
-                  AppBarWidget(),
+                children: [
+                  const AppBarWidget(),
                   SearchWidget(),
-                  Carousel(),
-                  ProductCategories(),
-                  ProductRecommendation(),
+                  const Carousel(),
+                  const ProductCategories(),
+                  const ProductRecommendation(),
                 ],
               ),
             ),

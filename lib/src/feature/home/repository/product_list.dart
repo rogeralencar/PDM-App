@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
 
 import 'product.dart';
@@ -24,6 +25,10 @@ class ProductList with ChangeNotifier {
 
   int get itemsCount {
     return _items.where((product) => product.userId == _userId).length;
+  }
+
+  Product? findProductById(String id) {
+    return _items.firstWhereOrNull((product) => product.id == id);
   }
 
   Future<void> loadProducts() async {

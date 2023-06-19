@@ -10,6 +10,7 @@ import 'feature/auth/view/widget/auth.dart';
 import 'feature/home/repository/cart.dart';
 import 'feature/home/repository/order_list.dart';
 import 'feature/home/repository/product_list.dart';
+import 'feature/home/viewmodel/search_provider.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({Key? key}) : super(key: key);
@@ -54,6 +55,9 @@ class AppWidget extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SearchProvider(),
         ),
       ],
       child: MaterialApp.router(

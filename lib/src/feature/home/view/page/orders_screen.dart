@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/order_list.dart';
@@ -20,6 +21,16 @@ class OrdersScreen extends StatelessWidget {
     final bool withoutOrders = orders.items.isEmpty;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Pedidos'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Modular.to.pop();
+          },
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: () => _refreshOrders(context),
         child: withoutOrders

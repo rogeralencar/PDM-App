@@ -2,9 +2,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import 'view/page/cart_screen.dart';
 import 'view/page/home_screen.dart';
+import 'view/page/navegation_screen.dart';
 import 'view/page/products_detail_screen.dart';
 import 'view/page/products_overview_screen.dart';
-import 'viewmodel/navegation_module.dart';
 
 class HomeModule extends Module {
   @override
@@ -23,18 +23,19 @@ class HomeModule extends Module {
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/details',
-          child: (_, __) => const ProductsDetailScreen(),
+          '/productDetails',
+          child: (_, args) => const ProductsDetailScreen(),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/products',
-          child: (_, __) => const ProductsOverviewScreen(),
+          '/productsOverview',
+          child: (_, args) => const ProductsOverviewScreen(),
           transition: TransitionType.fadeIn,
         ),
-        ModuleRoute(
+        ChildRoute(
           '/navegation',
-          module: NavegationModule(),
+          child: (_, __) => const NavigationScreen(),
+          transition: TransitionType.fadeIn,
         ),
       ];
 }

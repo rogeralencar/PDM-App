@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
+import '../../../auth/view/widget/auth.dart';
+import 'profile_form_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -34,195 +36,280 @@ class ProfileScreenState extends State<ProfileScreen> {
         ? NetworkImage(image!) as ImageProvider<Object>
         : FileImage(File(image!));
 
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
-      body: ListView(
-        children: [
-          Card(
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ClipOval(
-                    child: FadeInImage(
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                      placeholder: placeholderImage,
-                      image: mainImage,
-                      imageErrorBuilder: (context, error, stackTrace) {
-                        return CircleAvatar(
-                          backgroundImage: placeholderImage,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.outline,
-                        );
-                      },
-                    ),
-                  ),
-                  Text(
-                    name ?? '',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Modular.to.pushNamed('profile', arguments: user);
-                    },
-                    child: const Text('Edit'),
-                  ),
-                ],
-              ),
-            ),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Modular.to.pop();
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.exit_to_app),
+            onPressed: () {
+              Provider.of<Auth>(
+                context,
+                listen: false,
+              ).logout();
+              Modular.to.navigate('/auth/');
+            },
           ),
-          if (user.bio != '')
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'My Bio',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        user.bio ?? '',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          if (user.bio != '') const Divider(),
-          if (user.cep != '')
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'My Address',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        '${user.city}, ${user.cep}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          if (user.cep != '') const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'How to Contact Me',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (user.phoneNumber != '')
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'My Number',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              user.phoneNumber!,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).colorScheme.outline,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Material(
+              elevation: 8,
+              child: Container(
+                color: Theme.of(context).colorScheme.secondary,
+                height: screenSize.height * 0.32,
+                child: Center(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'My Email',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              ClipOval(
+                                child: FadeInImage(
+                                  width: screenSize.width * 0.24,
+                                  height: screenSize.width * 0.24,
+                                  fit: BoxFit.cover,
+                                  placeholder: placeholderImage,
+                                  image: mainImage,
+                                  imageErrorBuilder:
+                                      (context, error, stackTrace) {
+                                    return CircleAvatar(
+                                      backgroundImage: placeholderImage,
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.outline,
+                                    );
+                                  },
+                                ),
+                              ),
+                              Positioned(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfileFormScreen(user: user),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(
+                                          screenSize.width * 0.01),
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                        size: screenSize.width * 0.045,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: screenSize.width * 0.05),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Hello',
+                                style: TextStyle(
+                                  fontSize: screenSize.width * 0.045,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(height: screenSize.height * 0.01),
+                              Text(
+                                name!,
+                                style: TextStyle(
+                                  fontSize: screenSize.width * 0.055,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
+                      SizedBox(height: screenSize.height * 0.025),
                       Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.2,
+                          vertical: screenSize.height * 0.01,
                         ),
-                        elevation: 2,
+                        clipBehavior: Clip.antiAlias,
+                        color: Colors.white,
+                        elevation: 5.0,
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            user.email!,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenSize.width * 0.015,
+                            vertical: screenSize.height * 0.025,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              if (user.age == 0 && user.gender == '')
+                                Text(
+                                  "Sem informações adicionais",
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    fontSize: screenSize.width * 0.045,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              if (user.age != 0)
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      "Age",
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                        fontSize: screenSize.width * 0.05,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: screenSize.height * 0.01),
+                                    Text(
+                                      user.age.toString(),
+                                      style: TextStyle(
+                                        fontSize: screenSize.width * 0.045,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              if (user.gender != '')
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      "Gender",
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                        fontSize: screenSize.width * 0.05,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: screenSize.height * 0.01),
+                                    Text(
+                                      user.gender!,
+                                      style: TextStyle(
+                                        fontSize: screenSize.width * 0.045,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+            SizedBox(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.03,
+                  horizontal: screenSize.width * 0.1,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Text(
+                      "Bio:",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontStyle: FontStyle.normal,
+                        fontSize: screenSize.width * 0.08,
+                      ),
+                    ),
+                    SizedBox(height: screenSize.height * 0.02),
+                    Text(
+                      user.bio != '' ? user.bio! : 'Bio não fornecida',
+                      style: TextStyle(
+                        fontSize: screenSize.width * 0.05,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w300,
+                        letterSpacing: screenSize.width * 0.01,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: screenSize.height * 0.02),
+            SizedBox(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.03,
+                  horizontal: screenSize.width * 0.1,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Text(
+                      "Contact me:",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontStyle: FontStyle.normal,
+                        fontSize: screenSize.width * 0.08,
+                      ),
+                    ),
+                    SizedBox(height: screenSize.height * 0.02),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "Email: ${user.email}",
+                          style: TextStyle(
+                            fontSize: screenSize.width * 0.045,
+                          ),
+                        ),
+                        if (user.phoneNumber != '')
+                          Text(
+                            "Número: ${user.phoneNumber}",
+                            style: TextStyle(
+                              fontSize: screenSize.width * 0.045,
+                            ),
+                          ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

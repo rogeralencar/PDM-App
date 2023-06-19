@@ -23,12 +23,29 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showFavoriteOnly = false;
+  String? _searchText;
 
   Future<void> _refreshProducts(BuildContext context) {
     return Provider.of<ProductList>(
       context,
       listen: false,
     ).loadProducts();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _handleArguments();
+  }
+
+  void _handleArguments() {
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments != null && arguments is String) {
+      setState(() {
+        _searchText = arguments;
+      });
+    }
+    debugPrint(_searchText);
   }
 
   @override
@@ -85,8 +102,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         color: Theme.of(context).colorScheme.outline,
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(4),
+            Padding(
+              padding: const EdgeInsets.all(4),
               child: SearchWidget(),
             ),
             const Padding(

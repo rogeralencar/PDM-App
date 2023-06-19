@@ -46,6 +46,9 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductList>(context);
     loadedProducts = provider.items;
+
+    loadedProducts.sort((a, b) => b.orders.compareTo(a.orders));
+
     provider.updateProduct;
 
     return Column(
@@ -64,7 +67,7 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
               ),
               TextButton(
                 onPressed: () {
-                  Modular.to.pushNamed('products');
+                  Modular.to.pushNamed('productsOverview');
                 },
                 child: Text(
                   'See all',
