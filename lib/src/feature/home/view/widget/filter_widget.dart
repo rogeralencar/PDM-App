@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../repository/categories_data.dart';
+import '../page/category_selector_screen.dart';
+
 class FilterWidget extends StatefulWidget {
   const FilterWidget({super.key});
 
@@ -8,72 +11,54 @@ class FilterWidget extends StatefulWidget {
 }
 
 class FilterWidgetState extends State<FilterWidget> {
-  String _selectedCategory = 'Categoria';
-  String _selectedPrice = 'Preço';
-  String _selectedOrder = 'Ordem';
+  List<String> _selectedCategoriesNames = [];
+  String _selectedFilter = 'Mais vendidos';
+
+  void _selectCategory() async {
+    final updatedCategories = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CategorySelectionScreen(
+          selectedCategoryNames: _selectedCategoriesNames,
+        ),
+      ),
+    );
+
+    if (updatedCategories != null) {
+      List<Category> selectedCategories = categoryList
+          .where((category) => updatedCategories.contains(category.name))
+          .toList();
+
+      setState(() {
+        _selectedCategoriesNames =
+            selectedCategories.map((category) => category.name).toList();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: DropdownButton<String>(
-            isExpanded: true,
-            value: _selectedCategory,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedCategory = newValue!;
-              });
-            },
-            items: <String>[
-              'Categoria',
-              'Categoria 1',
-              'Categoria 2',
-              'Categoria 3',
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+          child: ElevatedButton(
+            onPressed: _selectCategory,
+            child: const Text('Select Category'),
           ),
         ),
-        const SizedBox(width: 8),
+        const Divider(),
         Expanded(
           child: DropdownButton<String>(
             isExpanded: true,
-            value: _selectedPrice,
+            value: _selectedFilter,
             onChanged: (String? newValue) {
               setState(() {
-                _selectedPrice = newValue!;
+                _selectedFilter = newValue!;
               });
             },
             items: <String>[
-              'Preço',
-              'Menor para maior',
-              'Maior para menor',
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: DropdownButton<String>(
-            isExpanded: true,
-            value: _selectedOrder,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedOrder = newValue!;
-              });
-            },
-            items: <String>[
-              'Ordem',
-              'A-Z',
-              'Z-A',
+              'Mais vendidos',
+              'Preco crescente',
+              'Preco decrescente',
             ].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,

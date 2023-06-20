@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../auth/repository/user_provider.dart';
 import '../../repository/cart.dart';
 import '../../repository/order_list.dart';
+import '../../repository/product_list.dart';
 import '../widget/cart_item.dart';
 import '../widget/cep_widget.dart';
 
@@ -84,24 +86,45 @@ class CartButton extends StatefulWidget {
 class _CartButtonState extends State<CartButton> {
   bool _isLoading = false;
 
+  void _showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Informe seu CEP'),
+        content: const Text('Nao foi possivel encontrar um cep na sua conta'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ProductList>(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user = userProvider.user!;
     return _isLoading
         ? const CircularProgressIndicator()
         : TextButton(
             onPressed: widget.cart.itemsCount == 0
                 ? null
-                : () async {
-                    setState(() => _isLoading = true);
+                : user.cep == ''
+                    ? () => _showErrorDialog()
+                    : () async {
+                        setState(() => _isLoading = true);
 
-                    await Provider.of<OrderList>(
-                      context,
-                      listen: false,
-                    ).addOrder(widget.cart);
+                        await Provider.of<OrderList>(
+                          context,
+                          listen: false,
+                        ).addOrder(widget.cart, provider, user);
 
-                    widget.cart.clear();
-                    setState(() => _isLoading = false);
-                  },
+                        widget.cart.clear();
+                        setState(() => _isLoading = false);
+                      },
             child: const Text('COMPRAR'),
           );
   }

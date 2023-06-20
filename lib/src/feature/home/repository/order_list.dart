@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../common/exceptions/http_exception.dart';
+import '../../auth/repository/user_model.dart';
 import 'cart.dart';
 import 'cart_item.dart';
 import 'order.dart';
@@ -42,6 +43,8 @@ class OrderList with ChangeNotifier {
           id: orderId,
           date: DateTime.parse(orderData['date']),
           total: orderData['total'],
+          cep: orderData['cep'],
+          city: orderData['city'],
           products: (orderData['products'] as List<dynamic>).map((item) {
             return CartItem(
               id: item['id'],
@@ -59,7 +62,7 @@ class OrderList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addOrder(Cart cart) async {
+  Future<void> addOrder(Cart cart, ProductList productList, User user) async {
     final date = DateTime.now();
 
     final response = await http.post(
@@ -68,6 +71,8 @@ class OrderList with ChangeNotifier {
         {
           'total': cart.totalAmount,
           'date': date.toIso8601String(),
+          'cep': user.cep,
+          'city': user.city,
           'products': cart.items.values
               .map(
                 (cartItem) => {
@@ -86,13 +91,11 @@ class OrderList with ChangeNotifier {
     final id = jsonDecode(response.body)['name'];
 
     for (var cartItem in cart.items.values) {
-      final productList = ProductList();
-
       final product = productList.findProductById(cartItem.productId);
 
       if (product != null) {
-        product.orders += cartItem.quantity;
-        await product.updateOrders(_token, product.orders);
+        final newOrders = product.orders + cartItem.quantity;
+        await product.updateOrders(_token, newOrders);
       } else {
         throw HttpException(
           msg: 'Não foi possível fazer o pedido',
@@ -107,6 +110,8 @@ class OrderList with ChangeNotifier {
         id: id,
         total: cart.totalAmount,
         date: date,
+        cep: user.cep!,
+        city: user.city!,
         products: cart.items.values.toList(),
       ),
     );

@@ -59,7 +59,7 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'We Recommend',
+                'Mais vendidos',
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
