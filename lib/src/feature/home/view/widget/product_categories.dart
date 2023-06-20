@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../repository/categories_data.dart';
 
@@ -47,6 +48,7 @@ class ProductCategories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> selectedCategoriesNames = [];
     return Column(
       children: [
         Padding(
@@ -63,7 +65,13 @@ class ProductCategories extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  debugPrint('Ver todas as categorias');
+                  Modular.to.pushNamed(
+                    'productOverview/categories',
+                    arguments: {
+                      'selectedCategoriesNames': selectedCategoriesNames,
+                      'isInRoute': false,
+                    },
+                  );
                 },
                 child: Text(
                   'See all',

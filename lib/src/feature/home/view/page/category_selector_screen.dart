@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../repository/categories_data.dart';
 
 class CategorySelectionScreen extends StatefulWidget {
-  final List<String> selectedCategoryNames;
+  final List<String> selectedCategoriesNames;
+  final bool isInRoute;
 
   const CategorySelectionScreen({
     Key? key,
-    required this.selectedCategoryNames,
+    this.isInRoute = true,
+    required this.selectedCategoriesNames,
   }) : super(key: key);
 
   @override
@@ -16,26 +19,31 @@ class CategorySelectionScreen extends StatefulWidget {
 
 class CategorySelectionScreenState extends State<CategorySelectionScreen> {
   List<String> _selectedCategoryNames = [];
+  bool _selectAll = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.selectedCategoryNames.length == 1) {
-      _selectedCategoryNames = widget.selectedCategoryNames[0]
-          .split(',')
-          .map((category) => category.trim())
-          .toList();
-    } else {
-      _selectedCategoryNames = List<String>.from(widget.selectedCategoryNames);
-    }
+    _selectedCategoryNames = List<String>.from(widget.selectedCategoriesNames);
   }
 
   void _toggleCategory(String categoryName) {
     setState(() {
-      if (_selectedCategoryNames.contains(categoryName)) {
-        _selectedCategoryNames.remove(categoryName);
+      if (categoryName.isEmpty) {
+        _selectAll = !_selectAll;
+        if (_selectAll) {
+          _selectedCategoryNames =
+              List<String>.from(categoryList.map((category) => category.name));
+        } else {
+          _selectedCategoryNames.clear();
+        }
       } else {
-        _selectedCategoryNames.add(categoryName);
+        if (_selectedCategoryNames.contains(categoryName)) {
+          _selectedCategoryNames.remove(categoryName);
+        } else {
+          _selectedCategoryNames.add(categoryName);
+        }
+        _selectAll = false;
       }
     });
   }
@@ -46,6 +54,12 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
       appBar: AppBar(
         title: const Text('Select Categories'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => _toggleCategory(''),
+            icon: Icon(_selectAll ? Icons.undo : Icons.done),
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: categoryList.length,
@@ -63,7 +77,14 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pop(_selectedCategoryNames);
+          widget.isInRoute
+              ? Navigator.of(context).pop(_selectedCategoryNames)
+              : Modular.to.pushNamed(
+                  '/home/productOverview/',
+                  arguments: {
+                    'selectedCategoriesNames': _selectedCategoryNames,
+                  },
+                );
         },
         child: const Icon(Icons.check),
       ),

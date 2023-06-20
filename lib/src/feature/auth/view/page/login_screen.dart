@@ -188,6 +188,7 @@ class LoginScreenState extends State<LoginScreen> {
                             color: Theme.of(context).colorScheme.outline,
                           )
                         : CustomButton(
+                            size: screenSize,
                             buttonText: 'LOG IN',
                             onPressed: _submit,
                           ),
@@ -203,6 +204,7 @@ class LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         CustomButton(
+                          size: screenSize,
                           buttonText: 'SIGN UP',
                           onPressed: () {
                             Modular.to.pushNamed('signup');

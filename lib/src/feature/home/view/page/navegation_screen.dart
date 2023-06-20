@@ -80,7 +80,7 @@ class NavigationScreenState extends State<NavigationScreen> {
               icon: const Icon(Icons.person),
               onPressed: () => pageViewController.animateToPage(
                 0,
-                duration: const Duration(seconds: 500),
+                duration: const Duration(milliseconds: 500),
                 curve: Curves.ease,
               ),
               color: currentPageIndex == 0
@@ -91,7 +91,7 @@ class NavigationScreenState extends State<NavigationScreen> {
               icon: const Icon(Icons.edit),
               onPressed: () => pageViewController.animateToPage(
                 1,
-                duration: const Duration(seconds: 500),
+                duration: const Duration(milliseconds: 500),
                 curve: Curves.ease,
               ),
               color: currentPageIndex == 1
@@ -102,7 +102,7 @@ class NavigationScreenState extends State<NavigationScreen> {
               icon: const Icon(Icons.payment),
               onPressed: () => pageViewController.animateToPage(
                 2,
-                duration: const Duration(seconds: 500),
+                duration: const Duration(milliseconds: 500),
                 curve: Curves.ease,
               ),
               color: currentPageIndex == 2

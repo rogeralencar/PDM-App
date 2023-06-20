@@ -1,70 +1,75 @@
 import 'package:flutter/material.dart';
 
-import '../../repository/categories_data.dart';
-import '../page/category_selector_screen.dart';
-
 class FilterWidget extends StatefulWidget {
-  const FilterWidget({super.key});
+  final void Function() selectCategory;
+  final void Function(String?) changeSortOption;
+  final String selectedFilter;
+
+  const FilterWidget({
+    Key? key,
+    required this.selectCategory,
+    required this.changeSortOption,
+    required this.selectedFilter,
+  }) : super(key: key);
 
   @override
   FilterWidgetState createState() => FilterWidgetState();
 }
 
 class FilterWidgetState extends State<FilterWidget> {
-  List<String> _selectedCategoriesNames = [];
-  String _selectedFilter = 'Mais vendidos';
-
-  void _selectCategory() async {
-    final updatedCategories = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CategorySelectionScreen(
-          selectedCategoryNames: _selectedCategoriesNames,
-        ),
-      ),
-    );
-
-    if (updatedCategories != null) {
-      List<Category> selectedCategories = categoryList
-          .where((category) => updatedCategories.contains(category.name))
-          .toList();
-
-      setState(() {
-        _selectedCategoriesNames =
-            selectedCategories.map((category) => category.name).toList();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: ElevatedButton(
-            onPressed: _selectCategory,
-            child: const Text('Select Category'),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: ElevatedButton(
+              onPressed: widget.selectCategory,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 15,
+                ),
+              ),
+              child: const Text(
+                'Select Category',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
           ),
         ),
-        const Divider(),
+        const VerticalDivider(),
         Expanded(
-          child: DropdownButton<String>(
-            isExpanded: true,
-            value: _selectedFilter,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedFilter = newValue!;
-              });
-            },
-            items: <String>[
-              'Mais vendidos',
-              'Preco crescente',
-              'Preco decrescente',
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: DropdownButton<String>(
+              value: widget.selectedFilter,
+              onChanged: widget.changeSortOption,
+              items: const <String>[
+                'Mais vendidos',
+                'Preço crescente',
+                'Preço decrescente',
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                );
+              }).toList(),
+              underline: const SizedBox(),
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+            ),
           ),
         ),
       ],

@@ -51,9 +51,10 @@ class ProductList with ChangeNotifier {
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
       final categoriesValue = productData['categories'];
-      final categoriesList = categoriesValue is List<dynamic>
-          ? List<String>.from(categoriesValue)
+      final categoriesList = (categoriesValue is String)
+          ? categoriesValue.split(',')
           : [categoriesValue.toString()];
+
       final isFavorite = favData[productId] ?? false;
       _items.add(
         Product(

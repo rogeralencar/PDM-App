@@ -65,7 +65,11 @@ class HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 children: [
                   const AppBarWidget(),
-                  SearchWidget(),
+                  SearchWidget(
+                    isInRoute: false,
+                    searchSubmitted: (_) {},
+                    search: '',
+                  ),
                   const Carousel(),
                   const ProductCategories(),
                   const ProductRecommendation(),

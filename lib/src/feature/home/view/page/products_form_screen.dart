@@ -92,13 +92,13 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
   }
 
   void _selectCategory() async {
-    final selectedCategoryNames =
+    final selectedCategoriesNames =
         (_formData['categories'] as List<String>?)?.toList();
 
     final updatedCategories = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => CategorySelectionScreen(
-          selectedCategoryNames: selectedCategoryNames ?? [],
+          selectedCategoriesNames: selectedCategoriesNames ?? [],
         ),
       ),
     );

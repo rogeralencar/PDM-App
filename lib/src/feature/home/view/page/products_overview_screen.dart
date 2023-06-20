@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
+import '../../repository/categories_data.dart';
 import '../../repository/product_list.dart';
 import '../../repository/cart.dart';
 import '../widget/search_widget.dart';
@@ -15,15 +16,24 @@ enum FilterOptions {
 }
 
 class ProductsOverviewScreen extends StatefulWidget {
-  const ProductsOverviewScreen({Key? key}) : super(key: key);
+  final List<String>? selectedCategoriesNames;
+  final String? search;
+
+  const ProductsOverviewScreen({
+    Key? key,
+    this.selectedCategoriesNames,
+    this.search,
+  }) : super(key: key);
 
   @override
   State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
 }
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+  late String _search = '';
+  late List<String> _selectedCategoriesNames = [];
+  String _selectedSortOption = 'Mais vendidos';
   bool _showFavoriteOnly = false;
-  String? _searchText;
 
   Future<void> _refreshProducts(BuildContext context) {
     return Provider.of<ProductList>(
@@ -32,20 +42,42 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     ).loadProducts();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _handleArguments();
+  void _searchSubmitted(String value) {
+    setState(() {
+      _search = value;
+    });
   }
 
-  void _handleArguments() {
-    final arguments = ModalRoute.of(context)?.settings.arguments;
-    if (arguments != null && arguments is String) {
+  void _changeSortOption(String? value) {
+    setState(() {
+      _selectedSortOption = value ?? '';
+    });
+  }
+
+  void _selectCategory() async {
+    final updatedCategories = await Modular.to.pushNamed(
+      'categories',
+      arguments: {'selectedCategoriesNames': _selectedCategoriesNames},
+    );
+
+    if (updatedCategories != null) {
+      List<Category> selectedCategories = categoryList
+          .where((category) =>
+              (updatedCategories as List<String>).contains(category.name))
+          .toList();
+
       setState(() {
-        _searchText = arguments;
+        _selectedCategoriesNames =
+            selectedCategories.map((category) => category.name).toList();
       });
     }
-    debugPrint(_searchText);
+  }
+
+  @override
+  void initState() {
+    _selectedCategoriesNames = widget.selectedCategoriesNames ?? [];
+    _search = widget.search ?? '';
+    super.initState();
   }
 
   @override
@@ -104,14 +136,24 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(4),
-              child: SearchWidget(),
+              child: SearchWidget(
+                  searchSubmitted: _searchSubmitted, search: _search),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FilterWidget(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: FilterWidget(
+                selectCategory: _selectCategory,
+                changeSortOption: _changeSortOption,
+                selectedFilter: _selectedSortOption,
+              ),
             ),
             Expanded(
-              child: ProductGrid(_showFavoriteOnly),
+              child: ProductGrid(
+                _showFavoriteOnly,
+                _selectedCategoriesNames,
+                _search,
+                _selectedSortOption,
+              ),
             ),
           ],
         ),

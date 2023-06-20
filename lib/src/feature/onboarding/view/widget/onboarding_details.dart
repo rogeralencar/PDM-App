@@ -8,12 +8,12 @@ class OnBoardingDetails extends StatefulWidget {
   final bool isTitle;
 
   const OnBoardingDetails({
-    super.key,
+    Key? key,
     required this.title,
     required this.subtitle,
     required this.imagePath,
     required this.isTitle,
-  });
+  }) : super(key: key);
 
   @override
   State<OnBoardingDetails> createState() => OnBoardingDetailsState();
@@ -39,17 +39,21 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double screenWidth = screenSize.width;
+    final double screenHeight = screenSize.height;
+
     GifController controller = GifController(vsync: this);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 50),
+        SizedBox(height: screenHeight * 0.06),
         widget.isTitle
             ? Text(
                 'Snap',
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: screenWidth * 0.1,
                   color: Theme.of(context).colorScheme.tertiary,
                 ),
                 textAlign: TextAlign.center,
@@ -59,17 +63,17 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
                   Text(
                     widget.title,
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: screenWidth * 0.08,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: screenHeight * 0.04),
                   Text(
                     widget.subtitle,
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: screenWidth * 0.06,
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
                     textAlign: TextAlign.center,
@@ -88,8 +92,8 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
             controller.reset();
             controller.forward();
           },
-          width: 340,
-          height: 320,
+          width: screenWidth * 0.9,
+          height: screenHeight * 0.4,
           fit: BoxFit.cover,
         ),
         if (widget.isTitle)
@@ -98,17 +102,17 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
               Text(
                 widget.title,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: screenWidth * 0.06,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.tertiary,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: screenHeight * 0.04),
               Text(
                 widget.subtitle,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: screenWidth * 0.04,
                   color: Theme.of(context).colorScheme.tertiary,
                 ),
                 textAlign: TextAlign.center,

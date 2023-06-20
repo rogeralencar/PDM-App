@@ -224,6 +224,7 @@ class SignupScreenState extends State<SignupScreen> {
                             color: Theme.of(context).colorScheme.outline,
                           )
                         : CustomButton(
+                            size: screenSize,
                             onPressed: _submit,
                             buttonText: "SIGN IN",
                           ),
@@ -239,6 +240,7 @@ class SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                         CustomButton(
+                          size: screenSize,
                           onPressed: () {
                             Modular.to.pop();
                           },

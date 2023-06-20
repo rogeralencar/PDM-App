@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../viewmodel/search_provider.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class SearchWidget extends StatelessWidget {
   final TextEditingController _searchController = TextEditingController();
+  final bool isInRoute;
+  final String search;
+  final Function(String) searchSubmitted;
 
-  SearchWidget({super.key});
+  SearchWidget({
+    super.key,
+    this.isInRoute = true,
+    required this.search,
+    required this.searchSubmitted,
+  }) {
+    _searchController.text = search;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final searchProvider = Provider.of<SearchProvider>(context);
-
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Material(
@@ -22,9 +28,16 @@ class SearchWidget extends StatelessWidget {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
-          onChanged: (value) {
-            searchProvider.setSearchText(value);
-          },
+          onSubmitted: !isInRoute
+              ? (value) {
+                  Modular.to.pushNamed(
+                    'productOverview/',
+                    arguments: {
+                      'search': value,
+                    },
+                  );
+                }
+              : searchSubmitted,
           decoration: InputDecoration(
             hintText: 'Search',
             suffixIcon: const Icon(

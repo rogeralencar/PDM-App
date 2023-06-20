@@ -65,177 +65,173 @@ class ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Material(
-              elevation: 8,
-              child: Container(
-                color: Theme.of(context).colorScheme.secondary,
-                height: screenSize.height * 0.32,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              ClipOval(
-                                child: FadeInImage(
-                                  width: screenSize.width * 0.24,
-                                  height: screenSize.width * 0.24,
-                                  fit: BoxFit.cover,
-                                  placeholder: placeholderImage,
-                                  image: mainImage,
-                                  imageErrorBuilder:
-                                      (context, error, stackTrace) {
-                                    return CircleAvatar(
-                                      backgroundImage: placeholderImage,
-                                      backgroundColor:
-                                          Theme.of(context).colorScheme.outline,
-                                    );
-                                  },
-                                ),
+            SizedBox(
+              height: screenSize.height * 0.32,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(width: screenSize.width * 0.1),
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipOval(
+                              child: FadeInImage(
+                                width: screenSize.width * 0.24,
+                                height: screenSize.width * 0.24,
+                                fit: BoxFit.cover,
+                                placeholder: placeholderImage,
+                                image: mainImage,
+                                imageErrorBuilder:
+                                    (context, error, stackTrace) {
+                                  return CircleAvatar(
+                                    backgroundImage: placeholderImage,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.outline,
+                                  );
+                                },
                               ),
-                              Positioned(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProfileFormScreen(user: user),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      shape: BoxShape.circle,
+                            ),
+                            Positioned(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProfileFormScreen(user: user),
                                     ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(
-                                          screenSize.width * 0.01),
-                                      child: Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                        size: screenSize.width * 0.045,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(width: screenSize.width * 0.05),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Hello',
-                                style: TextStyle(
-                                  fontSize: screenSize.width * 0.045,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(height: screenSize.height * 0.01),
-                              Text(
-                                name!,
-                                style: TextStyle(
-                                  fontSize: screenSize.width * 0.055,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: screenSize.height * 0.025),
-                      Card(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: screenSize.width * 0.2,
-                          vertical: screenSize.height * 0.01,
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        color: Colors.white,
-                        elevation: 5.0,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.015,
-                            vertical: screenSize.height * 0.025,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              if (user.age == 0 && user.gender == '')
-                                Text(
-                                  "Sem informações adicionais",
-                                  style: TextStyle(
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
                                     color:
-                                        Theme.of(context).colorScheme.secondary,
-                                    fontSize: screenSize.width * 0.045,
-                                    fontWeight: FontWeight.bold,
+                                        Theme.of(context).colorScheme.primary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.all(screenSize.width * 0.01),
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                      size: screenSize.width * 0.045,
+                                    ),
                                   ),
                                 ),
-                              if (user.age != 0)
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "Age",
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        fontSize: screenSize.width * 0.05,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: screenSize.height * 0.01),
-                                    Text(
-                                      user.age.toString(),
-                                      style: TextStyle(
-                                        fontSize: screenSize.width * 0.045,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                    ),
-                                  ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: screenSize.width * 0.05),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Hello',
+                              style: TextStyle(
+                                fontSize: screenSize.width * 0.045,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                            Text(
+                              name!,
+                              style: TextStyle(
+                                fontSize: screenSize.width * 0.055,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenSize.height * 0.025),
+                    Card(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: screenSize.width * 0.2,
+                        vertical: screenSize.height * 0.01,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 5.0,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.015,
+                          vertical: screenSize.height * 0.025,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            if (user.age == 0 && user.gender == '')
+                              Text(
+                                "Sem informações adicionais",
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  fontSize: screenSize.width * 0.045,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              if (user.gender != '')
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "Gender",
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        fontSize: screenSize.width * 0.05,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                              ),
+                            if (user.age != 0)
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "Age",
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      fontSize: screenSize.width * 0.05,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    SizedBox(height: screenSize.height * 0.01),
-                                    Text(
-                                      user.gender!,
-                                      style: TextStyle(
-                                        fontSize: screenSize.width * 0.045,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
+                                  ),
+                                  SizedBox(height: screenSize.height * 0.01),
+                                  Text(
+                                    user.age.toString(),
+                                    style: TextStyle(
+                                      fontSize: screenSize.width * 0.045,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                     ),
-                                  ],
-                                ),
-                            ],
-                          ),
+                                  ),
+                                ],
+                              ),
+                            if (user.gender != '')
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "Gender",
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      fontSize: screenSize.width * 0.05,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: screenSize.height * 0.01),
+                                  Text(
+                                    user.gender!,
+                                    style: TextStyle(
+                                      fontSize: screenSize.width * 0.045,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
+            const Divider(),
             SizedBox(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -260,19 +256,19 @@ class ProfileScreenState extends State<ProfileScreen> {
                         fontSize: screenSize.width * 0.05,
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w300,
-                        letterSpacing: screenSize.width * 0.01,
+                        letterSpacing: screenSize.width * 0.001,
                       ),
                     )
                   ],
                 ),
               ),
             ),
-            SizedBox(height: screenSize.height * 0.02),
             SizedBox(
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.03,
-                  horizontal: screenSize.width * 0.1,
+                padding: EdgeInsets.only(
+                  bottom: screenSize.height * 0.03,
+                  left: screenSize.width * 0.1,
+                  right: screenSize.width * 0.1,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

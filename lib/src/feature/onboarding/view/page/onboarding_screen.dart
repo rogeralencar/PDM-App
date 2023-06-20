@@ -91,6 +91,10 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double screenWidth = screenSize.width;
+    final double screenHeight = screenSize.height;
+
     return Scaffold(
       body: isLoading
           ? Center(
@@ -123,10 +127,12 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: _buildPageIndicator(),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: screenHeight * 0.03),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.04,
+                      vertical: screenHeight * 0.02,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -143,13 +149,13 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             if (_currentPage > 0) {
                               _pageController.previousPage(
                                   duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut);
+                                  curve: Curves.ease);
                             }
                           },
                           child: Text(
                             'Back',
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: screenWidth * 0.05,
                               color: Theme.of(context).colorScheme.tertiary,
                             ),
                           ),
@@ -171,7 +177,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                                 child: Text(
                                   'Skip',
                                   style: TextStyle(
-                                    fontSize: 22,
+                                    fontSize: screenWidth * 0.05,
                                     color:
                                         Theme.of(context).colorScheme.tertiary,
                                   ),
@@ -191,7 +197,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             if (_currentPage < _pages.length - 1) {
                               _pageController.nextPage(
                                   duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut);
+                                  curve: Curves.ease);
                             } else {
                               prefs.setBool('onboardingCompleted', true);
                               Modular.to.pushNamed('/auth/');
@@ -200,7 +206,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                           child: Text(
                             _currentPage == _pages.length - 1 ? 'Done' : 'Next',
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: screenWidth * 0.05,
                               color: Theme.of(context).colorScheme.tertiary,
                             ),
                           ),

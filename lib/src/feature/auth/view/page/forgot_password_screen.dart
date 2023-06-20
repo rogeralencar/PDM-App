@@ -96,11 +96,13 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     SizedBox(height: screenSize.height * 0.06),
                     CustomButton(
+                      size: screenSize,
                       onPressed: _submit,
                       buttonText: 'SEND',
                     ),
                     SizedBox(height: screenSize.height * 0.12),
                     CustomButton(
+                      size: screenSize,
                       onPressed: (() => Modular.to.pop()),
                       buttonText: 'BACK',
                     ),

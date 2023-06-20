@@ -7,8 +7,17 @@ import '../../repository/product_list.dart';
 
 class ProductGrid extends StatelessWidget {
   final bool showFavoriteOnly;
+  final String search;
+  final List<String> categories;
+  final String selectedSortOption;
 
-  const ProductGrid(this.showFavoriteOnly, {Key? key}) : super(key: key);
+  const ProductGrid(
+    this.showFavoriteOnly,
+    this.categories,
+    this.search,
+    this.selectedSortOption, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +25,38 @@ class ProductGrid extends StatelessWidget {
     final List<Product> loadedProducts =
         showFavoriteOnly ? provider.favoriteItems : provider.items;
 
-    return loadedProducts.isEmpty
+    List<Product> filteredProducts = loadedProducts.where((product) {
+      final String productName = product.name.toLowerCase();
+
+      if (categories.isEmpty && search.isEmpty) {
+        return true;
+      }
+
+      if (categories.isEmpty && search.isNotEmpty) {
+        return productName.contains(search.toLowerCase()) ||
+            product.name.toLowerCase().contains(search.toLowerCase());
+      }
+
+      for (final category in categories) {
+        if (product.categories.contains(category) &&
+            (productName.contains(search.toLowerCase()) ||
+                product.name.toLowerCase().contains(search.toLowerCase()))) {
+          return true;
+        }
+      }
+
+      return false;
+    }).toList();
+
+    if (selectedSortOption == 'Mais vendidos') {
+      filteredProducts.sort((a, b) => b.orders.compareTo(a.orders));
+    } else if (selectedSortOption == 'Preço crescente') {
+      filteredProducts.sort((a, b) => a.price.compareTo(b.price));
+    } else if (selectedSortOption == 'Preço decrescente') {
+      filteredProducts.sort((a, b) => b.price.compareTo(a.price));
+    }
+
+    return filteredProducts.isEmpty
         ? const Center(
             child: Text(
               'Nenhum Produto encontrado',
@@ -28,9 +68,9 @@ class ProductGrid extends StatelessWidget {
           )
         : GridView.builder(
             padding: const EdgeInsets.all(10),
-            itemCount: loadedProducts.length,
+            itemCount: filteredProducts.length,
             itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-              value: loadedProducts[i],
+              value: filteredProducts[i],
               child: const ProductGridItem(),
             ),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
