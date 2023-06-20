@@ -52,17 +52,14 @@ class NavigationScreenState extends State<NavigationScreen> {
           PageView(
             controller: pageViewController,
             children: _screens.map((screen) {
-              return Offstage(
-                offstage: _screens.indexOf(screen) != currentPageIndex,
-                child: Navigator(
-                  key: _navigatorKeys[_screens.indexOf(screen)],
-                  onGenerateRoute: (settings) {
-                    return MaterialPageRoute(
-                      settings: settings,
-                      builder: (_) => screen,
-                    );
-                  },
-                ),
+              return Navigator(
+                key: _navigatorKeys[_screens.indexOf(screen)],
+                onGenerateRoute: (settings) {
+                  return MaterialPageRoute(
+                    settings: settings,
+                    builder: (_) => screen,
+                  );
+                },
               );
             }).toList(),
           ),
@@ -81,21 +78,33 @@ class NavigationScreenState extends State<NavigationScreen> {
           children: <Widget>[
             IconButton(
               icon: const Icon(Icons.person),
-              onPressed: () => pageViewController.jumpToPage(0),
+              onPressed: () => pageViewController.animateToPage(
+                0,
+                duration: const Duration(seconds: 500),
+                curve: Curves.ease,
+              ),
               color: currentPageIndex == 0
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.tertiary,
             ),
             IconButton(
               icon: const Icon(Icons.edit),
-              onPressed: () => pageViewController.jumpToPage(1),
+              onPressed: () => pageViewController.animateToPage(
+                1,
+                duration: const Duration(seconds: 500),
+                curve: Curves.ease,
+              ),
               color: currentPageIndex == 1
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.tertiary,
             ),
             IconButton(
               icon: const Icon(Icons.payment),
-              onPressed: () => pageViewController.jumpToPage(2),
+              onPressed: () => pageViewController.animateToPage(
+                2,
+                duration: const Duration(seconds: 500),
+                curve: Curves.ease,
+              ),
               color: currentPageIndex == 2
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.tertiary,
