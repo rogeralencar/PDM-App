@@ -6,6 +6,7 @@ import 'view/page/home_screen.dart';
 import 'view/page/navegation_screen.dart';
 import 'view/page/products_detail_screen.dart';
 import 'view/page/products_overview_screen.dart';
+import 'view/page/promotion_details_screen.dart';
 
 class HomeModule extends Module {
   @override
@@ -26,6 +27,13 @@ class HomeModule extends Module {
         ChildRoute(
           '/navegation',
           child: (_, __) => const NavigationScreen(),
+          transition: TransitionType.fadeIn,
+        ),
+        ChildRoute(
+          '/promotionDetails',
+          child: (_, args) => PromotionDetailsScreen(
+            promotion: args.data,
+          ),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(

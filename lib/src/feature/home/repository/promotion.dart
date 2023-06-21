@@ -1,11 +1,11 @@
-class Promotions {
+class Promotion {
   String title;
-  String subTitle;
+  String content;
   String image;
 
-  Promotions({
+  Promotion({
     required this.title,
-    required this.subTitle,
+    required this.content,
     required this.image,
   });
 }

@@ -18,6 +18,7 @@ class CategorySelectionScreen extends StatefulWidget {
 }
 
 class CategorySelectionScreenState extends State<CategorySelectionScreen> {
+  final ScrollController _scrollController = ScrollController();
   List<String> _selectedCategoryNames = [];
   bool _selectAll = false;
 
@@ -25,6 +26,20 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
   void initState() {
     super.initState();
     _selectedCategoryNames = List<String>.from(widget.selectedCategoriesNames);
+
+    if (_selectedCategoryNames.isNotEmpty) {
+      final categoryIndex = categoryList.indexWhere(
+          (category) => category.name == _selectedCategoryNames.first);
+      if (categoryIndex != -1) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollController.animateTo(
+            categoryIndex * 56.0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        });
+      }
+    }
   }
 
   void _toggleCategory(String categoryName) {
@@ -62,6 +77,7 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
         ],
       ),
       body: ListView.builder(
+        controller: _scrollController,
         itemCount: categoryList.length,
         itemBuilder: (context, index) {
           final category = categoryList[index];

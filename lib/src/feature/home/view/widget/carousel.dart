@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../repository/promotions.dart';
+import '../../repository/promotion.dart';
 
 class Carousel extends StatefulWidget {
   const Carousel({super.key});
@@ -13,22 +14,36 @@ class Carousel extends StatefulWidget {
 class _CarouselState extends State<Carousel> {
   late CarouselSliderController _pageController;
 
-  final List<Promotions> items = [
-    Promotions(
-        title: 'Page 1',
-        subTitle: 'Show More 1',
-        image:
-            'https://casaeconstrucao.org/wp-content/uploads/2022/07/2-modelo-de-frase-para-loja-de-roupas.png'),
-    Promotions(
-        title: 'Page 2',
-        subTitle: 'Show More 2',
-        image:
-            'https://casaeconstrucao.org/wp-content/uploads/2022/07/2-modelo-de-frase-para-loja-de-roupas.png'),
-    Promotions(
-        title: 'Page 3',
-        subTitle: 'Show More 3',
-        image:
-            'https://casaeconstrucao.org/wp-content/uploads/2022/07/2-modelo-de-frase-para-loja-de-roupas.png'),
+  final List<Promotion> items = [
+    Promotion(
+      title: 'Bem-vindo à nossa loja!',
+      content:
+          '\tSomos uma loja online especializada em vendas de produtos diversos. '
+          'Oferecemos uma ampla variedade de itens, desde eletrônicos e móveis '
+          'até roupas e acessórios. Com qualidade garantida e preços competitivos, '
+          'temos o que você procura. Aproveite nossas promoções e faça suas compras '
+          'com toda a comodidade!',
+      image:
+          'https://cdn.awsli.com.br/1101/1101329/produto/155685739/fc8ff2c15a.jpg',
+    ),
+    Promotion(
+      title: 'Frete grátis em todos os pedidos!',
+      content:
+          '\tNa nossa loja, oferecemos frete grátis em todos os pedidos, sem valor mínimo de compra. '
+          'Entregamos para todo o país com agilidade e segurança. Aproveite essa vantagem exclusiva '
+          'e faça suas compras sem preocupações!',
+      image:
+          'https://ajuda.simplo7.com.br/hc/article_attachments/7681169045659/225edfb8a33c5a100cce5e21a13fe102.jpg',
+    ),
+    Promotion(
+      title: 'Promoção de Inverno',
+      content:
+          '\tAproveite nossa promoção de inverno com descontos imperdíveis! '
+          'Compre casacos, botas, cobertores e muito mais com preços incríveis. '
+          'Mantenha-se aquecido e estiloso neste inverno com nossas ofertas especiais!',
+      image:
+          'https://static.vecteezy.com/system/resources/previews/013/553/618/original/winter-sale-promotion-banner-winter-special-offers-square-banner-social-media-post-advertising-winter-background-free-vector.jpg',
+    ),
   ];
 
   @override
@@ -37,10 +52,10 @@ class _CarouselState extends State<Carousel> {
     _pageController = CarouselSliderController();
   }
 
-  Widget buildPromotionsContainer(Promotions promotion) {
+  Widget buildPromotionsContainer(Promotion promotion) {
     return ElevatedButton(
       onPressed: () {
-        debugPrint(promotion.title);
+        Modular.to.pushNamed('promotionDetails', arguments: promotion);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.tertiary,
@@ -49,46 +64,52 @@ class _CarouselState extends State<Carousel> {
         ),
       ),
       child: Container(
-        padding: const EdgeInsetsDirectional.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  promotion.title,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    promotion.title,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  promotion.subTitle,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Show more',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: Theme.of(context).colorScheme.outline, width: 2),
+                  color: Theme.of(context).colorScheme.outline,
+                  width: 2,
+                ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Image.network(
-                promotion.image,
-                fit: BoxFit.cover,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.network(
+                  promotion.image,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ],
@@ -99,8 +120,9 @@ class _CarouselState extends State<Carousel> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
     return Container(
-      height: 150,
+      height: screenSize.height * 0.18,
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -117,7 +139,7 @@ class _CarouselState extends State<Carousel> {
             return buildPromotionsContainer(promotions);
           },
           enableAutoSlider: true,
-          slideTransform: const CubeTransform(),
+          slideTransform: const DepthTransform(),
           slideIndicator: CircularWaveSlideIndicator(
             itemSpacing: 16,
             indicatorRadius: 4,
