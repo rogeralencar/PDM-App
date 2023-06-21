@@ -6,12 +6,21 @@ import '../../repository/categories_data.dart';
 class ProductCategories extends StatelessWidget {
   const ProductCategories({super.key});
 
-  Widget _buildCategoryItem(Category category) {
+  Widget _buildCategoryItem(
+      Category category, List<String> selectedCategoriesNames) {
     return Padding(
       padding: const EdgeInsets.all(6),
       child: ElevatedButton(
         onPressed: () {
-          debugPrint(category.name);
+          selectedCategoriesNames.clear();
+          selectedCategoriesNames.add(category.name);
+          Modular.to.pushNamed(
+            'productOverview/categories',
+            arguments: {
+              'selectedCategoriesNames': selectedCategoriesNames,
+              'isInRoute': false,
+            },
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
@@ -65,6 +74,7 @@ class ProductCategories extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
+                  selectedCategoriesNames.clear();
                   Modular.to.pushNamed(
                     'productOverview/categories',
                     arguments: {
@@ -97,10 +107,16 @@ class ProductCategories extends StatelessWidget {
                 return Column(
                   children: [
                     if (firstIndex < categoryList.length)
-                      _buildCategoryItem(categoryList[firstIndex]),
+                      _buildCategoryItem(
+                        categoryList[firstIndex],
+                        selectedCategoriesNames,
+                      ),
                     const SizedBox(width: 16),
                     if (secondIndex < categoryList.length)
-                      _buildCategoryItem(categoryList[secondIndex]),
+                      _buildCategoryItem(
+                        categoryList[secondIndex],
+                        selectedCategoriesNames,
+                      ),
                   ],
                 );
               },

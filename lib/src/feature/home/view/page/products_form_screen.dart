@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -74,7 +73,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
 
         if (_formData.isNotEmpty && _categoryController.text.isEmpty) {
           List<String>? categories = _formData['categories'] as List<String>?;
-          _categoryController.text = categories!.join(', ');
+          _categoryController.text = categories!.join(',');
         }
 
         if (widget.product!.image
@@ -122,7 +121,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
   }
 
   String _formatSelectedCategories(List<Category> categories) {
-    return categories.map((category) => category.name).join(', ');
+    return categories.map((category) => category.name).join(',');
   }
 
   void _selectImage(File pickedImage) {
@@ -196,7 +195,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
         ),
       );
     } finally {
-      Modular.to.pop();
+      Navigator.of(context).pop();
       setState(() => _isLoading = false);
     }
   }

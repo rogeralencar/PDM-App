@@ -79,7 +79,7 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
         onPressed: () {
           widget.isInRoute
               ? Navigator.of(context).pop(_selectedCategoryNames)
-              : Modular.to.pushNamed(
+              : Modular.to.pushReplacementNamed(
                   '/home/productOverview/',
                   arguments: {
                     'selectedCategoriesNames': _selectedCategoryNames,

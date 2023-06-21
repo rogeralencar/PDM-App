@@ -124,7 +124,7 @@ class ProductList with ChangeNotifier {
       body: jsonEncode(
         {
           "address": product.location.address,
-          "categories": product.categories,
+          "categories": product.categories.join(','),
           "description": product.description,
           "image": image,
           "latitude": product.location.latitude,
@@ -168,7 +168,7 @@ class ProductList with ChangeNotifier {
             "userId": product.userId,
             "name": product.name,
             "description": product.description,
-            "categories": product.categories,
+            "categories": product.categories.join(','),
             "price": product.price,
             "orders": product.orders,
             "image": product.image,

@@ -74,25 +74,27 @@ class ProfileScreenState extends State<ProfileScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(width: screenSize.width * 0.1),
+                        SizedBox(width: screenSize.width * 0.18),
                         Stack(
                           alignment: Alignment.bottomRight,
                           children: [
                             ClipOval(
-                              child: FadeInImage(
-                                width: screenSize.width * 0.24,
-                                height: screenSize.width * 0.24,
-                                fit: BoxFit.cover,
-                                placeholder: placeholderImage,
-                                image: mainImage,
-                                imageErrorBuilder:
-                                    (context, error, stackTrace) {
-                                  return CircleAvatar(
-                                    backgroundImage: placeholderImage,
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.outline,
-                                  );
-                                },
+                              child: SizedBox(
+                                width: screenSize.width * 0.22,
+                                height: screenSize.width * 0.22,
+                                child: FadeInImage(
+                                  fit: BoxFit.cover,
+                                  placeholder: placeholderImage,
+                                  image: mainImage,
+                                  imageErrorBuilder:
+                                      (context, error, stackTrace) {
+                                    return CircleAvatar(
+                                      backgroundImage: placeholderImage,
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.outline,
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                             Positioned(

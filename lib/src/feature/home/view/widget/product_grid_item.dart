@@ -80,7 +80,8 @@ class ProductGridItem extends StatelessWidget {
                       ),
               ),
               onTap: () {
-                Modular.to.pushNamed('productDetails', arguments: product);
+                Modular.to
+                    .pushNamed('/home/productDetails', arguments: product);
               },
             ),
           ),
