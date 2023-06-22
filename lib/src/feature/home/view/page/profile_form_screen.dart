@@ -169,7 +169,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Ocorreu um erro!'),
-          content: Text(error.toString()),
+          content: const Text('Ocorreu um erro para salvar o usuário'),
           actions: [
             TextButton(
               child: const Text('Ok'),
@@ -228,6 +228,8 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
       final age = double.tryParse(value);
       if (age == null || age.isNaN || age.isNegative || age.remainder(1) != 0) {
         return 'Por favor, insira uma idade válida.';
+      } else if (age < 18) {
+        return 'Você precisa ser maior de idade.';
       }
     }
     return null;
@@ -375,7 +377,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                       validator: (value) {
                         if (value != null && value.isNotEmpty) {
                           if (value.trim().length < 3) {
-                            return 'Social name precisa ter no mínimo 10 letras.';
+                            return 'Social name precisa ter no mínimo 3 letras.';
                           }
                         }
                         return null;

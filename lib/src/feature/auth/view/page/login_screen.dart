@@ -166,7 +166,7 @@ class LoginScreenState extends State<LoginScreen> {
                           SizedBox(height: screenSize.height * 0.008),
                           TextButton(
                             onPressed: () {
-                              Modular.to.pushNamed('forgotpassword');
+                              Modular.to.pushNamed('forgotPassword');
                             },
                             style: const ButtonStyle(
                               alignment: Alignment.centerRight,

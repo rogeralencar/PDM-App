@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +11,6 @@ import '../../repository/product_list.dart';
 import '../../../../common/utils/location_util.dart';
 import '../widget/image_input.dart';
 import '../widget/location_input.dart';
-import 'category_selector_screen.dart';
 
 class ProductsFormScreen extends StatefulWidget {
   final Product? product;
@@ -94,17 +94,13 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
     final selectedCategoriesNames =
         (_formData['categories'] as List<String>?)?.toList();
 
-    final updatedCategories = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CategorySelectionScreen(
-          selectedCategoriesNames: selectedCategoriesNames ?? [],
-        ),
-      ),
-    );
+    final updatedCategories = await Modular.to
+        .pushNamed('categories', arguments: selectedCategoriesNames ?? []);
 
     if (updatedCategories != null) {
       List<Category> selectedCategories = categoryList
-          .where((category) => updatedCategories.contains(category.name))
+          .where((category) =>
+              (updatedCategories as List<String>).contains(category.name))
           .toList();
 
       setState(() {

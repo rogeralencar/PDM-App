@@ -94,7 +94,7 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           widget.isInRoute
-              ? Navigator.of(context).pop(_selectedCategoryNames)
+              ? Modular.to.pop(_selectedCategoryNames)
               : Modular.to.pushReplacementNamed(
                   '/home/productOverview/',
                   arguments: {

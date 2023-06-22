@@ -22,7 +22,7 @@ class AuthModule extends Module {
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/forgotpassword',
+          '/forgotPassword',
           child: (_, __) => const ForgotPasswordScreen(),
           transition: TransitionType.fadeIn,
         ),

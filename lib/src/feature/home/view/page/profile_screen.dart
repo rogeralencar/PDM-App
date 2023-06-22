@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
-import '../../../auth/view/widget/auth.dart';
-import 'profile_form_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -39,28 +37,6 @@ class ProfileScreenState extends State<ProfileScreen> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Modular.to.pop();
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              Provider.of<Auth>(
-                context,
-                listen: false,
-              ).logout();
-              Modular.to.navigate('/auth/');
-            },
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -100,12 +76,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                             Positioned(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProfileFormScreen(user: user),
-                                    ),
-                                  );
+                                  Modular.to.pushNamed('profileForm',
+                                      arguments: user);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
