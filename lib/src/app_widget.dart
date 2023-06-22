@@ -68,7 +68,7 @@ class AppWidget extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         scrollBehavior: AppScrollBehavior(),
-        title: 'Snap',
+        title: 'app_name'.i18n(),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,

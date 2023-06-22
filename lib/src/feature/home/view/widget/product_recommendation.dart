@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/product.dart';
@@ -57,9 +58,9 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Mais vendidos',
-                style: TextStyle(
+              Text(
+                'top_selling'.i18n(),
+                style: const TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -69,7 +70,7 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
                   Modular.to.pushNamed('productOverview/', arguments: {});
                 },
                 child: Text(
-                  'See all',
+                  'see_all'.i18n(),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -111,7 +112,7 @@ class _ProductRecommendationState extends State<ProductRecommendation> {
             ? Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
-                  child: const Text('Show More'),
+                  child: Text('show_more'.i18n()),
                   onPressed: () {
                     loadMoreProducts();
                   },

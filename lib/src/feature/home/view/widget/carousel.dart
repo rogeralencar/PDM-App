@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 
 import '../../repository/promotion.dart';
 
@@ -16,31 +17,20 @@ class _CarouselState extends State<Carousel> {
 
   final List<Promotion> items = [
     Promotion(
-      title: 'Bem-vindo à nossa loja!',
-      content:
-          '\tSomos uma loja online especializada em vendas de produtos diversos. '
-          'Oferecemos uma ampla variedade de itens, desde eletrônicos e móveis '
-          'até roupas e acessórios. Com qualidade garantida e preços competitivos, '
-          'temos o que você procura. Aproveite nossas promoções e faça suas compras '
-          'com toda a comodidade!',
+      title: 'promotion_title1'.i18n(),
+      content: 'promotion_content1'.i18n(),
       image:
           'https://cdn.awsli.com.br/1101/1101329/produto/155685739/fc8ff2c15a.jpg',
     ),
     Promotion(
-      title: 'Frete grátis em todos os pedidos!',
-      content:
-          '\tNa nossa loja, oferecemos frete grátis em todos os pedidos, sem valor mínimo de compra. '
-          'Entregamos para todo o país com agilidade e segurança. Aproveite essa vantagem exclusiva '
-          'e faça suas compras sem preocupações!',
+      title: 'promotion_title2'.i18n(),
+      content: 'promotion_content2'.i18n(),
       image:
           'https://ajuda.simplo7.com.br/hc/article_attachments/7681169045659/225edfb8a33c5a100cce5e21a13fe102.jpg',
     ),
     Promotion(
-      title: 'Promoção de Inverno',
-      content:
-          '\tAproveite nossa promoção de inverno com descontos imperdíveis! '
-          'Compre casacos, botas, cobertores e muito mais com preços incríveis. '
-          'Mantenha-se aquecido e estiloso neste inverno com nossas ofertas especiais!',
+      title: 'promotion_title3'.i18n(),
+      content: 'promotion_content3'.i18n(),
       image:
           'https://static.vecteezy.com/system/resources/previews/013/553/618/original/winter-sale-promotion-banner-winter-special-offers-square-banner-social-media-post-advertising-winter-background-free-vector.jpg',
     ),
@@ -86,9 +76,9 @@ class _CarouselState extends State<Carousel> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Show more',
-                    style: TextStyle(
+                  Text(
+                    'show_more'.i18n(),
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black,
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,25 +21,23 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
   bool isLoading = true;
 
   final PageController _pageController = PageController(initialPage: 0);
-  final List<Widget> _pages = const [
+  final List<Widget> _pages = [
     OnBoardingDetails(
-      title: 'Bem-vindo a loja Snap',
-      subtitle: 'A melhor loja virtual que você vai conhecer!',
-      imagePath: 'lib/assets/images/snap_LOGO_GIF.gif',
+      title: 'onboard_title1'.i18n(),
+      subtitle: 'onboard_sub_title1'.i18n(),
+      imagePath: 'lib/assets/images/onboarding1.gif',
       isTitle: true,
     ),
     OnBoardingDetails(
-      title: 'Tenha um app feito para você',
-      subtitle:
-          'Aqui no snap você tem variás opções para compras, onde uma dessas opções pode até ser sua!',
-      imagePath: 'lib/assets/images/snap_CARRINHO_GIF.gif',
+      title: 'onboard_title2'.i18n(),
+      subtitle: 'onboard_sub_title2'.i18n(),
+      imagePath: 'lib/assets/images/onboarding2.gif',
       isTitle: false,
     ),
     OnBoardingDetails(
-      title: 'Começe agora!',
-      subtitle:
-          'Crie seu perfil e comece a fazer suas compras ou vendas, o aplicativo snap é todo feito para e pelos nossos usuários',
-      imagePath: 'lib/assets/images/snap_MAO.SELL.BUY_GIF.gif',
+      title: 'onboard_title3'.i18n(),
+      subtitle: 'onboard_sub_title3'.i18n(),
+      imagePath: 'lib/assets/images/onboarding3.gif',
       isTitle: false,
     ),
   ];
@@ -153,7 +152,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             }
                           },
                           child: Text(
-                            'Back',
+                            'back'.i18n(),
                             style: TextStyle(
                               fontSize: screenWidth * 0.05,
                               color: Theme.of(context).colorScheme.tertiary,
@@ -175,7 +174,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                                   Modular.to.pushNamed('/auth/');
                                 },
                                 child: Text(
-                                  'Skip',
+                                  'skip'.i18n(),
                                   style: TextStyle(
                                     fontSize: screenWidth * 0.05,
                                     color:
@@ -204,7 +203,9 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                             }
                           },
                           child: Text(
-                            _currentPage == _pages.length - 1 ? 'Done' : 'Next',
+                            _currentPage == _pages.length - 1
+                                ? 'Done'.i18n()
+                                : 'Next'.i18n(),
                             style: TextStyle(
                               fontSize: screenWidth * 0.05,
                               color: Theme.of(context).colorScheme.tertiary,

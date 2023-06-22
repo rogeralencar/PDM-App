@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 
 import '../../repository/categories_data.dart';
 
@@ -67,7 +68,7 @@ class CategorySelectionScreenState extends State<CategorySelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Categories'),
+        title: Text('select_category'.i18n()),
         centerTitle: true,
         actions: [
           IconButton(

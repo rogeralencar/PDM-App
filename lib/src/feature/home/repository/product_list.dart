@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
+import 'package:localization/localization.dart';
 
 import 'product.dart';
 import '../../../common/exceptions/http_exception.dart';
@@ -105,34 +106,34 @@ class ProductList with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product, bool isImageUrl) async {
-    var image = "";
+    var image = '';
     if (isImageUrl) {
       image = product.image.toString();
     } else {
       image = product.image
           .toString()
           .replaceAll("'", "")
-          .replaceFirst("F", "")
-          .replaceFirst("i", "")
-          .replaceFirst("l", "")
-          .replaceFirst("e", "")
-          .replaceFirst(":", "")
-          .replaceFirst(" ", "");
+          .replaceFirst('F', '')
+          .replaceFirst('i', '')
+          .replaceFirst('l', '')
+          .replaceFirst('e', '')
+          .replaceFirst(':', '')
+          .replaceFirst(' ', '');
     }
     final response = await http.post(
       Uri.parse('${Constants.productBaseUrl}.json?auth=$_token'),
       body: jsonEncode(
         {
-          "address": product.location.address,
-          "categories": product.categories.join(','),
-          "description": product.description,
-          "image": image,
-          "latitude": product.location.latitude,
-          "longitude": product.location.longitude,
-          "name": product.name,
-          "orders": 0,
-          "price": product.price,
-          "userId": product.userId,
+          'address': product.location.address,
+          'categories': product.categories.join(','),
+          'description': product.description,
+          'image': image,
+          'latitude': product.location.latitude,
+          'longitude': product.location.longitude,
+          'name': product.name,
+          'orders': 0,
+          'price': product.price,
+          'userId': product.userId,
         },
       ),
     );
@@ -165,16 +166,16 @@ class ProductList with ChangeNotifier {
             '${Constants.productBaseUrl}/${product.id}.json?auth=$_token'),
         body: jsonEncode(
           {
-            "userId": product.userId,
-            "name": product.name,
-            "description": product.description,
-            "categories": product.categories.join(','),
-            "price": product.price,
-            "orders": product.orders,
-            "image": product.image,
-            "latitude": product.location.latitude,
-            "longitude": product.location.longitude,
-            "address": product.location.address,
+            'userId': product.userId,
+            'name': product.name,
+            'description': product.description,
+            'categories': product.categories.join(','),
+            'price': product.price,
+            'orders': product.orders,
+            'image': product.image,
+            'latitude': product.location.latitude,
+            'longitude': product.location.longitude,
+            'address': product.location.address,
           },
         ),
       );
@@ -201,7 +202,7 @@ class ProductList with ChangeNotifier {
         _items.insert(index, product);
         notifyListeners();
         throw HttpException(
-          msg: 'Não foi possível excluir o produto.',
+          msg: 'error_message_product_delete'.i18n(),
           statusCode: response1.statusCode,
         );
       }

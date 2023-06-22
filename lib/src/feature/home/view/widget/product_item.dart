@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/product.dart';
@@ -46,15 +47,15 @@ class ProductItem extends StatelessWidget {
                 showDialog<bool>(
                   context: context,
                   builder: (ctx) => AlertDialog(
-                    title: const Text('Excluir Produto'),
-                    content: const Text('Tem certeza?'),
+                    title: Text('delete_product'.i18n()),
+                    content: Text('are_you_sure'.i18n()),
                     actions: [
                       TextButton(
-                        child: const Text('Não'),
+                        child: Text('no'.i18n()),
                         onPressed: () => Modular.to.pop(false),
                       ),
                       TextButton(
-                        child: const Text('Sim'),
+                        child: Text('yes'.i18n()),
                         onPressed: () => Modular.to.pop(true),
                       ),
                     ],

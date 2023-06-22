@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/custom_text_field.dart';
@@ -180,18 +181,18 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Ocorreu um erro!'),
-          content: const Text('Ocorreu um erro para salvar o produto'),
+          title: Text('error_occurred'.i18n()),
+          content: Text('error_saving_product'.i18n()),
           actions: [
             TextButton(
-              child: const Text('Ok'),
+              child: Text('Ok'.i18n()),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         ),
       );
     } finally {
-      Navigator.of(context).pop();
+      Modular.to.pop();
       setState(() => _isLoading = false);
     }
   }
@@ -200,7 +201,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Formulário do Produto'),
+        title: Text('product_form'.i18n()),
         centerTitle: true,
         actions: [
           IconButton(
@@ -229,7 +230,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                   children: [
                     const SizedBox(height: 20),
                     CustomTextField(
-                      text: 'Name',
+                      text: 'name_field'.i18n(),
                       controller: _nameController,
                       initialValue: _formData['name']?.toString(),
                       textInputAction: TextInputAction.next,
@@ -237,17 +238,17 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                       validator: (userName) {
                         final name = userName ?? '';
                         if (name.trim().isEmpty) {
-                          return 'Nome é obrigatório.';
+                          return 'name_required'.i18n();
                         }
                         if (name.trim().length < 3) {
-                          return 'Nome precisa no mínimo de 3 letras.';
+                          return 'name_invalid'.i18n();
                         }
                         return null;
                       },
                     ),
                     const Divider(),
                     CustomTextField(
-                      text: 'Preço',
+                      text: 'price_field'.i18n(),
                       controller: _priceController,
                       initialValue: _formData['price']?.toString(),
                       textInputAction: TextInputAction.next,
@@ -262,7 +263,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         final price = double.tryParse(priceString) ?? -1;
 
                         if (price <= 0) {
-                          return 'Informe um preço válido.';
+                          return 'price_invalid'.i18n();
                         }
 
                         return null;
@@ -270,7 +271,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      text: 'Descrição',
+                      text: 'description_field'.i18n(),
                       controller: _descriptionController,
                       initialValue: _formData['description']?.toString(),
                       keyboardType: TextInputType.multiline,
@@ -281,11 +282,11 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         final description = userDescription ?? '';
 
                         if (description.trim().isEmpty) {
-                          return 'Descrição é obrigatória.';
+                          return 'description_required'.i18n();
                         }
 
                         if (description.trim().length < 10) {
-                          return 'Descrição precisa no mínimo de 10 letras.';
+                          return 'description_invalid'.i18n();
                         }
 
                         return null;
@@ -296,8 +297,8 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                       controller: _categoryController,
                       readOnly: true,
                       decoration: InputDecoration(
-                        labelText: 'Selected Categories',
-                        hintText: 'Press the buttom below',
+                        labelText: 'selected_categories'.i18n(),
+                        hintText: 'press_button_below'.i18n(),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -335,7 +336,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                     const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: _selectCategory,
-                      child: const Text('Select Category'),
+                      child: Text('select_category'.i18n()),
                     ),
                     const Divider(),
                     if (!_isImageUrl)
@@ -349,7 +350,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                         children: [
                           Expanded(
                             child: CustomTextField(
-                              text: 'Url da Imagem',
+                              text: 'image_url'.i18n(),
                               focusNode: _imageUrlFocus,
                               controller: _imageUrlController,
                               keyboardType: TextInputType.url,
@@ -361,7 +362,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                                 final imageUrl = userImageUrl ?? '';
 
                                 if (!isValidImageUrl(imageUrl)) {
-                                  return 'Informe uma Url válida!';
+                                  return 'url_invalid'.i18n();
                                 }
                                 return null;
                               },
@@ -385,7 +386,7 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: _imageUrlController.text.isEmpty
-                                    ? const Text('Informe a Url')
+                                    ? Text('no_url'.i18n())
                                     : Image.network(_imageUrlController.text),
                               )),
                         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 
 import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_text_field.dart';
@@ -60,7 +61,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       height: screenSize.height * 0.2,
                     ),
                     Text(
-                      'Reset Password',
+                      'reset_password'.i18n(),
                       style: TextStyle(
                         fontSize: screenSize.width * 0.06,
                         fontWeight: FontWeight.bold,
@@ -75,15 +76,15 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           CustomTextField(
-                            text: 'Enter your E-mail',
+                            text: 'email_field'.i18n(),
                             isForm: false,
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             validator: (email) {
                               if (email!.isEmpty) {
-                                return 'Por favor, insira o e-mail';
+                                return 'email_required'.i18n();
                               } else if (!isValidEmail(email)) {
-                                return 'Insira um e-mail válido';
+                                return 'email_invalid'.i18n();
                               }
                               return null;
                             },
@@ -98,13 +99,13 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     CustomButton(
                       size: screenSize,
                       onPressed: _submit,
-                      buttonText: 'SEND',
+                      buttonText: 'send'.i18n(),
                     ),
                     SizedBox(height: screenSize.height * 0.12),
                     CustomButton(
                       size: screenSize,
                       onPressed: (() => Modular.to.pop()),
-                      buttonText: 'BACK',
+                      buttonText: 'back'.i18n(),
                     ),
                   ],
                 ),

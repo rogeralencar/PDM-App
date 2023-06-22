@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:localization/localization.dart';
 import 'package:location/location.dart';
 
 import '../page/map_screen.dart';
@@ -92,7 +93,7 @@ class _LocationInputState extends State<LocationInput> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: _previewImageUrl == null
-                ? const Text('Localização não informada!')
+                ? Text('location_not_provided'.i18n())
                 : Image.network(
                     _previewImageUrl!,
                     fit: BoxFit.cover,
@@ -105,12 +106,12 @@ class _LocationInputState extends State<LocationInput> {
           children: [
             TextButton.icon(
               icon: const Icon(Icons.location_on),
-              label: const Text('Localização atual'),
+              label: Text('current_location'.i18n()),
               onPressed: _getCurrentUserLocation,
             ),
             TextButton.icon(
               icon: const Icon(Icons.map),
-              label: const Text('Selecione no Mapa'),
+              label: Text('select_on_map'.i18n()),
               onPressed: _selectOnMap,
             ),
           ],

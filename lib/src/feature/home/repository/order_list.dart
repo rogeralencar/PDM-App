@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:localization/localization.dart';
 
 import '../../../common/exceptions/http_exception.dart';
 import '../../auth/repository/user_model.dart';
@@ -98,7 +99,7 @@ class OrderList with ChangeNotifier {
         await product.updateOrders(_token, newOrders);
       } else {
         throw HttpException(
-          msg: 'Não foi possível fazer o pedido',
+          msg: 'error_message_order'.i18n(),
           statusCode: response.statusCode,
         );
       }

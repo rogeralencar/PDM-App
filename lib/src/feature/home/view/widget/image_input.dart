@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:localization/localization.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
 
@@ -73,12 +74,12 @@ class ImageInputState extends State<ImageInput> {
               children: [
                 TextButton.icon(
                   icon: const Icon(Icons.camera_alt),
-                  label: const Text('Tirar Foto'),
+                  label: Text('take_photo'.i18n()),
                   onPressed: _takePicture,
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.photo),
-                  label: const Text('Galeria'),
+                  label: Text('gallery'.i18n()),
                   onPressed: pickImage,
                 ),
               ],
@@ -102,9 +103,9 @@ class ImageInputState extends State<ImageInput> {
                               widget.image!,
                               fit: BoxFit.cover,
                             )
-                          : const Center(
+                          : Center(
                               child: Text(
-                              'Nenhuma imagem!',
+                              'no_image'.i18n(),
                               textAlign: TextAlign.center,
                             )),
                     )
@@ -115,7 +116,7 @@ class ImageInputState extends State<ImageInput> {
                               widget.image!,
                               fit: BoxFit.cover,
                             )
-                          : const Center(child: Text('Nenhuma imagem!')),
+                          : Center(child: Text('no_image'.i18n())),
                     ),
             ),
           ],

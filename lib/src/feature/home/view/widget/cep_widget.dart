@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'dart:convert';
@@ -95,14 +96,14 @@ class _CepWidgetState extends State<CepWidget> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Erro'),
-          content: const Text('Ocorreu um erro ao obter os dados do CEP.'),
+          title: Text('error'.i18n()),
+          content: Text('error_getting_cep_data'.i18n()),
           actions: [
             ElevatedButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: const Text('OK'),
+              child: Text('ok'.i18n()),
             ),
           ],
         );
@@ -119,7 +120,7 @@ class _CepWidgetState extends State<CepWidget> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Text('Informe seu CEP'),
+          title: Text('enter_your_cep'.i18n()),
           content: TextField(
             controller: cepController,
             keyboardType: TextInputType.number,
@@ -127,8 +128,8 @@ class _CepWidgetState extends State<CepWidget> {
               FilteringTextInputFormatter.digitsOnly,
               MaskTextInputFormatter(mask: '#####-###'),
             ],
-            decoration: const InputDecoration(
-              hintText: 'Digite seu CEP',
+            decoration: InputDecoration(
+              hintText: 'enter_cep'.i18n(),
             ),
             onSubmitted: (value) {
               saveCep(value);
@@ -145,7 +146,7 @@ class _CepWidgetState extends State<CepWidget> {
                 saveCep(cep);
                 Navigator.of(context).pop();
               },
-              child: const Text('Salvar'),
+              child: Text('save'.i18n()),
             ),
           ],
         );
@@ -162,17 +163,17 @@ class _CepWidgetState extends State<CepWidget> {
             onTap: () {
               openCepDialog();
             },
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.location_on_outlined,
                     size: 32,
                   ),
                   Text(
-                    'Informe seu CEP',
-                    style: TextStyle(
+                    'enter_your_cep'.i18n(),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -198,9 +199,9 @@ class _CepWidgetState extends State<CepWidget> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Enviar para',
-                        style: TextStyle(
+                      Text(
+                        'send_to'.i18n(),
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 12,
                         ),

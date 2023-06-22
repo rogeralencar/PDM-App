@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/cart.dart';
@@ -98,11 +99,10 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: const Text(
-                                      'Produto adicionado com sucesso!'),
+                                  content: Text('success_message'.i18n()),
                                   duration: const Duration(seconds: 2),
                                   action: SnackBarAction(
-                                    label: 'DESFAZER',
+                                    label: 'undo'.i18n(),
                                     onPressed: () {
                                       cart.removeSingleItem(product.id);
                                     },
@@ -126,9 +126,9 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 10),
-                          const Text(
-                            'Descrição:',
-                            style: TextStyle(
+                          Text(
+                            'description'.i18n(),
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -149,8 +149,8 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                               },
                               child: Text(
                                 showFullDescription
-                                    ? 'Mostrar Menos'
-                                    : 'Mostrar Mais',
+                                    ? 'show_less'.i18n()
+                                    : 'show_more'.i18n(),
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.bold,
@@ -158,9 +158,9 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                               ),
                             ),
                           const SizedBox(height: 10),
-                          const Text(
-                            'Endereço:',
-                            style: TextStyle(
+                          Text(
+                            'address'.i18n(),
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -175,7 +175,7 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                             alignment: Alignment.center,
                             child: TextButton.icon(
                               icon: const Icon(Icons.map),
-                              label: const Text('Ver no Mapa'),
+                              label: Text('view_on_map'.i18n()),
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(

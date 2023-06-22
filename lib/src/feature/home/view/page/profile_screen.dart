@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../../auth/repository/user_model.dart';
@@ -104,7 +105,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Hello',
+                              'hello'.i18n(),
                               style: TextStyle(
                                 fontSize: screenSize.width * 0.045,
                                 color: Theme.of(context).colorScheme.secondary,
@@ -139,7 +140,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                           children: <Widget>[
                             if (user.age == 0 && user.gender == '')
                               Text(
-                                "Sem informações adicionais",
+                                'no_additional_information'.i18n(),
                                 style: TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.secondary,
@@ -151,7 +152,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                               Column(
                                 children: <Widget>[
                                   Text(
-                                    "Age",
+                                    'age'.i18n(),
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -176,7 +177,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                               Column(
                                 children: <Widget>[
                                   Text(
-                                    "Gender",
+                                    'gender'.i18n(),
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -216,7 +217,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Text(
-                      "Bio:",
+                      'bio'.i18n(),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                         fontStyle: FontStyle.normal,
@@ -225,7 +226,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: screenSize.height * 0.02),
                     Text(
-                      user.bio != '' ? user.bio! : 'Bio não fornecida',
+                      user.bio != '' ? user.bio! : 'bio_not_provided'.i18n(),
                       style: TextStyle(
                         fontSize: screenSize.width * 0.05,
                         fontStyle: FontStyle.italic,
@@ -248,7 +249,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Text(
-                      "Contact me:",
+                      'contact_me'.i18n(),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                         fontStyle: FontStyle.normal,
@@ -260,14 +261,14 @@ class ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          "Email: ${user.email}",
+                          '${'email'.i18n()} ${user.email}',
                           style: TextStyle(
                             fontSize: screenSize.width * 0.045,
                           ),
                         ),
                         if (user.phoneNumber != '')
                           Text(
-                            "Número: ${user.phoneNumber}",
+                            '${'number'.i18n()} ${user.phoneNumber}',
                             style: TextStyle(
                               fontSize: screenSize.width * 0.045,
                             ),

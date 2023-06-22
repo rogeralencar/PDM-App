@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/cart.dart';
@@ -32,17 +33,17 @@ class CartItemWidget extends StatelessWidget {
         return showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Tem Certeza?'),
-            content: const Text('Quer remover o item do carrinho?'),
+            title: Text('are_you_sure'.i18n()),
+            content: Text('remove_item_from_cart'.i18n()),
             actions: [
               TextButton(
-                child: const Text('Não'),
+                child: Text('no'.i18n()),
                 onPressed: () {
                   Navigator.of(ctx).pop(false);
                 },
               ),
               TextButton(
-                child: const Text('Sim'),
+                child: Text('yes'.i18n()),
                 onPressed: () {
                   Navigator.of(ctx).pop(true);
                 },
@@ -76,7 +77,8 @@ class CartItemWidget extends StatelessWidget {
               ),
             ),
             title: Text(cartItem.name),
-            subtitle: Text('Total: R\$ ${cartItem.price * cartItem.quantity}'),
+            subtitle: Text(
+                '${'total'.i18n()}: R\$ ${cartItem.price * cartItem.quantity}'),
             trailing: Text('${cartItem.quantity}x'),
           ),
         ),

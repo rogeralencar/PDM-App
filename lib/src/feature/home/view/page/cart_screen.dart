@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../../auth/repository/user_provider.dart';
@@ -18,7 +19,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Carrinho'),
+        title: Text('cart'.i18n()),
         centerTitle: true,
       ),
       body: Column(
@@ -37,9 +38,9 @@ class CartScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Total',
-                    style: TextStyle(
+                  Text(
+                    'total'.i18n(),
+                    style: const TextStyle(
                       fontSize: 20,
                     ),
                   ),
@@ -90,12 +91,12 @@ class _CartButtonState extends State<CartButton> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Informe seu CEP'),
-        content: const Text('Nao foi possivel encontrar um cep na sua conta'),
+        title: Text('enter_your_cep'.i18n()),
+        content: Text('error_getting_cep_data'.i18n()),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Fechar'),
+            child: Text('close'.i18n()),
           ),
         ],
       ),
@@ -125,7 +126,7 @@ class _CartButtonState extends State<CartButton> {
                         widget.cart.clear();
                         setState(() => _isLoading = false);
                       },
-            child: const Text('COMPRAR'),
+            child: Text('buy'.i18n()),
           );
   }
 }

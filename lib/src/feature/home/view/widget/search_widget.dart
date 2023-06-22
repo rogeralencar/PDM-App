@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 
 class SearchWidget extends StatelessWidget {
   final TextEditingController _searchController = TextEditingController();
@@ -39,7 +40,7 @@ class SearchWidget extends StatelessWidget {
                 }
               : searchSubmitted,
           decoration: InputDecoration(
-            hintText: 'Search',
+            hintText: 'search'.i18n(),
             suffixIcon: const Icon(
               Icons.search,
             ),

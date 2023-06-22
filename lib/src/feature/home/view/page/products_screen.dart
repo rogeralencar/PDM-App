@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/product_list.dart';
@@ -33,11 +34,11 @@ class ProductsScreen extends StatelessWidget {
                     ],
                   ),
                 )
-              : const Center(
+              : Center(
                   child: Text(
-                    'Você ainda não adicionou nenhum produto!',
+                    'info_message_no_product'.i18n(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 28,
                     ),
                   ),

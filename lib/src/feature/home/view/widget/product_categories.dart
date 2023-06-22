@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 
 import '../../repository/categories_data.dart';
 
@@ -65,9 +66,9 @@ class ProductCategories extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Categories',
-                style: TextStyle(
+              Text(
+                'categories'.i18n(),
+                style: const TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -84,7 +85,7 @@ class ProductCategories extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  'See all',
+                  'see_all'.i18n(),
                   style:
                       TextStyle(color: Theme.of(context).colorScheme.outline),
                 ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 
 import '../../repository/product.dart';
 import 'map_screen.dart';
@@ -31,7 +32,7 @@ class PlaceDetailScreen extends StatelessWidget {
           const SizedBox(height: 10),
           TextButton.icon(
             icon: const Icon(Icons.map),
-            label: const Text('Ver no Mapa'),
+            label: Text('view_on_map'.i18n()),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

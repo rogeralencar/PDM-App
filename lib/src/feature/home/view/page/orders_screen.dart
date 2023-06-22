@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/order_list.dart';
@@ -22,7 +23,7 @@ class OrdersScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pedidos'),
+        title: Text('orders'.i18n()),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -34,11 +35,11 @@ class OrdersScreen extends StatelessWidget {
       body: RefreshIndicator(
         onRefresh: () => _refreshOrders(context),
         child: withoutOrders
-            ? const Center(
+            ? Center(
                 child: Text(
-                  'Você ainda não realizou nenhuma compra!',
+                  'info_message_no_order'.i18n(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 28,
                   ),
                 ),

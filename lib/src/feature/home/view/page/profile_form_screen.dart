@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -39,11 +40,11 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   String _selectedGender = '';
   bool _showOtherGenderInput = false;
 
-  static const List<String> _genderOptions = [
-    'Masculino',
-    'Feminino',
-    'Não-binário',
-    'Outro',
+  static final List<String> _genderOptions = [
+    'male'.i18n(),
+    'female'.i18n(),
+    'non_binary'.i18n(),
+    'other'.i18n(),
   ];
 
   bool _isLoading = false;
@@ -120,7 +121,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
         if (_genderOptions.contains(widget.user.gender)) {
           _selectedGender = widget.user.gender!;
         } else {
-          _selectedGender = 'Outro';
+          _selectedGender = 'other'.i18n();
           _otherGenderController.text = widget.user.gender!;
         }
       }
@@ -146,7 +147,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     User? user = userProvider.user;
 
     setState(() => _isLoading = true);
-    if (_selectedGender == 'Outro') {
+    if (_selectedGender == 'other'.i18n()) {
       _formData['gender'] = _otherGenderController.text;
     } else {
       _formData['gender'] = _selectedGender;
@@ -168,11 +169,11 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Ocorreu um erro!'),
-          content: const Text('Ocorreu um erro para salvar o usuário'),
+          title: Text('error_occurred'.i18n()),
+          content: Text('error_saving_user'.i18n()),
           actions: [
             TextButton(
-              child: const Text('Ok'),
+              child: Text('ok'.i18n()),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -194,7 +195,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     } else {
       setState(() {
         _selectedGender = value ?? '';
-        if (value == 'Outro') {
+        if (value == 'other'.i18n()) {
           _showOtherGenderInput = true;
         } else {
           _showOtherGenderInput = false;
@@ -206,7 +207,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
 
   void _handleOtherGenderInputChange(String value) {
     setState(() {
-      _selectedGender = 'Outro';
+      _selectedGender = 'other'.i18n();
       _showOtherGenderInput = true;
     });
   }
@@ -223,13 +224,19 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     }
   }
 
+  bool isValidEmail(String email) {
+    RegExp emailRegExp = RegExp(
+        r'^[a-zA-Z0-9.!#$%&*+\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$');
+    return emailRegExp.hasMatch(email);
+  }
+
   String? _validateAge(String? value) {
     if (value != null && value.isNotEmpty) {
       final age = double.tryParse(value);
       if (age == null || age.isNaN || age.isNegative || age.remainder(1) != 0) {
-        return 'Por favor, insira uma idade válida.';
+        return 'age_invalid'.i18n();
       } else if (age < 18) {
-        return 'Você precisa ser maior de idade.';
+        return 'age_requirement'.i18n();
       }
     }
     return null;
@@ -238,7 +245,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   String? _validatePhoneNumber(String? value) {
     if (value != null && value.isNotEmpty) {
       if (value.length != 15) {
-        return 'número de telefone inválido (formato: (XX)XXXXX-XXXX).';
+        return 'phone_number_invalid'.i18n();
       }
     }
     return null;
@@ -247,7 +254,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   String? _validateBio(String? value) {
     if (value != null && value.isNotEmpty) {
       if (value.trim().length < 10) {
-        return 'Bio precisa ter no mínimo 10 letras.';
+        return 'bio_invalid'.i18n();
       }
     }
     return null;
@@ -257,7 +264,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     if (value != null && value.isNotEmpty) {
       final cpfRegex = RegExp(r'^\d{3}\.\d{3}\.\d{3}-\d{2}$');
       if (!cpfRegex.hasMatch(value)) {
-        return 'Por favor, insira um CPF válido (formato: XXX.XXX.XXX-XX).';
+        return 'cpf_invalid'.i18n();
       }
     }
     return null;
@@ -267,7 +274,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile Form'),
+        title: Text('profile_form'.i18n()),
         centerTitle: true,
         actions: [
           IconButton(
@@ -306,7 +313,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                         children: [
                           Expanded(
                             child: CustomTextField(
-                              text: 'Url da Imagem',
+                              text: 'image_url'.i18n(),
                               focusNode: _imageUrlFocus,
                               controller: _imageUrlController,
                               keyboardType: TextInputType.url,
@@ -318,7 +325,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                                 final imageUrl = userImageUrl ?? '';
 
                                 if (!isValidImageUrl(imageUrl)) {
-                                  return 'Informe uma Url válida!';
+                                  return 'url_invalid'.i18n();
                                 }
                                 return null;
                               },
@@ -341,9 +348,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                               alignment: Alignment.center,
                               child: ClipOval(
                                 child: _imageUrlController.text.isEmpty
-                                    ? const Center(
+                                    ? Center(
                                         child: Text(
-                                          'Informe a Url',
+                                          'no_url'.i18n(),
                                           textAlign: TextAlign.center,
                                         ),
                                       )
@@ -353,16 +360,16 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                       ),
                     const Divider(),
                     CustomTextField(
-                      text: 'Name',
+                      text: 'name_field'.i18n(),
                       controller: _nameController,
                       initialValue: _formData['name']?.toString(),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value!.trim().isEmpty) {
-                          return 'Nome é obrigatório.';
+                          return 'name_required'.i18n();
                         }
                         if (value.trim().length < 3) {
-                          return 'Nome precisa ter no mínimo 3 letras.';
+                          return 'name_invalid'.i18n();
                         }
                         return null;
                       },
@@ -370,14 +377,14 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      text: 'Social Name',
+                      text: 'social_name_field'.i18n(),
                       controller: _socialNameController,
                       initialValue: _formData['socialName']?.toString(),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value != null && value.isNotEmpty) {
                           if (value.trim().length < 3) {
-                            return 'Social name precisa ter no mínimo 3 letras.';
+                            return 'social_name_invalid'.i18n();
                           }
                         }
                         return null;
@@ -386,14 +393,16 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      text: 'E-mail',
+                      text: 'email_field'.i18n(),
                       controller: _emailController,
                       initialValue: _formData['email']?.toString(),
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'O e-mail é obrigatório';
+                          return 'email_required'.i18n();
+                        } else if (!isValidEmail(value)) {
+                          return 'email_invalid'.i18n();
                         }
                         return null;
                       },
@@ -401,7 +410,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      text: 'Number',
+                      text: 'number_field'.i18n(),
                       controller: _phoneNumberController,
                       initialValue: _formData['phoneNumber']?.toString(),
                       keyboardType: TextInputType.phone,
@@ -415,7 +424,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      text: 'Age',
+                      text: 'age_field'.i18n(),
                       controller: _ageController,
                       initialValue: _formData['age'] == 0
                           ? ''
@@ -431,7 +440,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      text: 'Bio',
+                      text: 'bio_field'.i18n(),
                       controller: _bioController,
                       initialValue: _formData['bio']?.toString(),
                       maxLines: 3,
@@ -441,11 +450,11 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                       onSaved: (bio) => _formData['bio'] = bio ?? '',
                     ),
                     const Divider(),
-                    const Padding(
-                      padding: EdgeInsets.all(16.0),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        'Gender',
-                        style: TextStyle(fontSize: 14),
+                        'gender'.i18n(),
+                        style: const TextStyle(fontSize: 14),
                       ),
                     ),
                     const Divider(),
@@ -482,7 +491,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                           controller: _otherGenderController,
                           enabled: _showOtherGenderInput,
                           decoration: InputDecoration(
-                            labelText: 'Digite seu gênero',
+                            labelText: 'enter_gender'.i18n(),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),
@@ -511,7 +520,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     const Divider(),
                     CustomTextField(
-                      text: 'CPF',
+                      text: 'cpf_field'.i18n(),
                       controller: _cpfController,
                       initialValue: _formData['cpf']?.toString(),
                       keyboardType: TextInputType.number,

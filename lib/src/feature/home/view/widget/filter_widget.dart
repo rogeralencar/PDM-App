@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 
 class FilterWidget extends StatefulWidget {
   final void Function() selectCategory;
@@ -36,9 +37,9 @@ class FilterWidgetState extends State<FilterWidget> {
                   vertical: 15,
                 ),
               ),
-              child: const Text(
-                'Select Category',
-                style: TextStyle(color: Colors.black),
+              child: Text(
+                'select_category'.i18n(),
+                style: const TextStyle(color: Colors.black),
               ),
             ),
           ),
@@ -54,10 +55,10 @@ class FilterWidgetState extends State<FilterWidget> {
             child: DropdownButton<String>(
               value: widget.selectedFilter,
               onChanged: widget.changeSortOption,
-              items: const <String>[
-                'Mais vendidos',
-                'Preço crescente',
-                'Preço decrescente',
+              items: <String>[
+                'top_selling'.i18n(),
+                'increasing_price'.i18n(),
+                'decreasing_price'.i18n(),
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

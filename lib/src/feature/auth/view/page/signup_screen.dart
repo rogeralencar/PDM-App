@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/custom_button.dart';
@@ -97,12 +98,12 @@ class SignupScreenState extends State<SignupScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Ocorreo um Erro'),
+        title: Text('error_occurred'.i18n()),
         content: Text(msg),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Fechar'),
+            child: Text('close'.i18n()),
           ),
         ],
       ),
@@ -134,7 +135,7 @@ class SignupScreenState extends State<SignupScreen> {
                       height: screenSize.height * 0.2,
                     ),
                     Text(
-                      'Create Account',
+                      'sign_up_title'.i18n(),
                       style: TextStyle(
                         fontSize: screenSize.width * 0.06,
                         fontWeight: FontWeight.bold,
@@ -149,7 +150,7 @@ class SignupScreenState extends State<SignupScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           CustomTextField(
-                            text: 'Enter your name',
+                            text: 'name_field'.i18n(),
                             isForm: false,
                             keyboardType: TextInputType.emailAddress,
                             controller: _nameController,
@@ -157,17 +158,17 @@ class SignupScreenState extends State<SignupScreen> {
                             onSaved: (name) => _authData['name'] = name ?? '',
                             validator: (name) {
                               if (name!.isEmpty) {
-                                return 'Please enter your name';
+                                return 'name_required'.i18n();
                               }
                               if (name.length < 3) {
-                                return 'Your name must have at least 3 characters';
+                                return 'name_invalid'.i18n();
                               }
                               return null;
                             },
                           ),
                           SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
-                            text: 'Enter your E-mail',
+                            text: 'email_field'.i18n(),
                             isForm: false,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
@@ -175,16 +176,16 @@ class SignupScreenState extends State<SignupScreen> {
                                 _authData['email'] = email ?? '',
                             validator: (email) {
                               if (email!.isEmpty) {
-                                return 'Please enter the email';
+                                return 'email_required'.i18n();
                               } else if (!isValidEmail(email)) {
-                                return 'Please enter a valid email';
+                                return 'email_invalid'.i18n();
                               }
                               return null;
                             },
                           ),
                           SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
-                            text: 'Enter Password',
+                            text: 'password_field'.i18n(),
                             isForm: false,
                             obscureText: true,
                             controller: _passwordController,
@@ -193,21 +194,21 @@ class SignupScreenState extends State<SignupScreen> {
                                 _authData['password'] = password ?? '',
                             validator: (password) {
                               if (password!.isEmpty) {
-                                return 'Please enter the password';
+                                return 'password_required'.i18n();
                               } else if (!isValidPassword(password)) {
-                                return 'Invalid password. Minimum 8 characters: 1 uppercase, 1 lowercase, 1 number, and 1 special character.';
+                                return 'password_invalid'.i18n();
                               }
                               return null;
                             },
                           ),
                           SizedBox(height: screenSize.height * 0.016),
                           CustomTextField(
-                            text: 'Confirm Password',
+                            text: 'confirm_password'.i18n(),
                             isForm: false,
                             obscureText: true,
                             validator: (password) {
                               if (password != _passwordController.text) {
-                                return 'Senhas informadas não conferem.';
+                                return 'passwords_do_not_match'.i18n();
                               }
                               return null;
                             },
@@ -226,14 +227,14 @@ class SignupScreenState extends State<SignupScreen> {
                         : CustomButton(
                             size: screenSize,
                             onPressed: _submit,
-                            buttonText: "SIGN IN",
+                            buttonText: 'sign_in'.i18n(),
                           ),
                     SizedBox(height: screenSize.height * 0.08),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Already have an account ? ',
+                          'with_account'.i18n(),
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
                             fontSize: screenSize.width * 0.04,
@@ -244,7 +245,7 @@ class SignupScreenState extends State<SignupScreen> {
                           onPressed: () {
                             Modular.to.pop();
                           },
-                          buttonText: "LOG IN",
+                          buttonText: 'login'.i18n(),
                           isBig: false,
                         ),
                       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
@@ -37,12 +38,12 @@ class LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Ocorreu um Erro'),
+        title: Text('error_occurred'.i18n()),
         content: Text(msg),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Fechar'),
+            child: Text('close'.i18n()),
           ),
         ],
       ),
@@ -71,10 +72,8 @@ class LoginScreenState extends State<LoginScreen> {
       Modular.to.navigate('/home/');
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
-    } catch (error, stackTrace) {
-      debugPrint('Erro inesperado: $error');
-      debugPrint('StackTrace: $stackTrace');
-      _showErrorDialog('Ocorreu um erro inesperado!');
+    } catch (error) {
+      _showErrorDialog('unexpected_error'.i18n());
     }
     setState(() => _isLoading = false);
   }
@@ -104,7 +103,7 @@ class LoginScreenState extends State<LoginScreen> {
                       height: screenSize.height * 0.2,
                     ),
                     Text(
-                      'Login Account',
+                      'login_title'.i18n(),
                       style: TextStyle(
                         fontSize: screenSize.width * 0.06,
                         fontWeight: FontWeight.bold,
@@ -124,14 +123,14 @@ class LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: CustomTextField(
-                              text: 'Enter your E-mail',
+                              text: 'email_field'.i18n(),
                               isForm: false,
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'Por favor, insira o e-mail';
+                                  return 'email_required'.i18n();
                                 }
                                 return null;
                               },
@@ -146,13 +145,13 @@ class LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: CustomTextField(
-                              text: 'Enter Password',
+                              text: 'password_field'.i18n(),
                               isForm: false,
                               controller: _passwordController,
                               obscureText: true,
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'Por favor, insira a senha';
+                                  return 'password_required'.i18n();
                                 }
                                 return null;
                               },
@@ -172,7 +171,7 @@ class LoginScreenState extends State<LoginScreen> {
                               alignment: Alignment.centerRight,
                             ),
                             child: Text(
-                              'Forgot Password ?',
+                              'forgot_password'.i18n(),
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.tertiary,
                                 fontSize: screenSize.width * 0.04,
@@ -189,7 +188,7 @@ class LoginScreenState extends State<LoginScreen> {
                           )
                         : CustomButton(
                             size: screenSize,
-                            buttonText: 'LOG IN',
+                            buttonText: 'login'.i18n(),
                             onPressed: _submit,
                           ),
                     SizedBox(height: screenSize.height * 0.12),
@@ -197,7 +196,7 @@ class LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Don\'t have an account ? ',
+                          'without_account'.i18n(),
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
                             fontSize: screenSize.width * 0.04,
@@ -205,7 +204,7 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                         CustomButton(
                           size: screenSize,
-                          buttonText: 'SIGN UP',
+                          buttonText: 'sign_up'.i18n(),
                           onPressed: () {
                             Modular.to.pushNamed('signup');
                           },

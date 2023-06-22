@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../../auth/view/widget/auth.dart';
@@ -48,10 +49,10 @@ class ProductGridItem extends StatelessWidget {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: const Text('Produto adicionado com sucesso!'),
+                      content: Text('success_message'.i18n()),
                       duration: const Duration(seconds: 2),
                       action: SnackBarAction(
-                        label: 'DESFAZER',
+                        label: 'undo'.i18n(),
                         onPressed: () {
                           cart.removeSingleItem(product.id);
                         },

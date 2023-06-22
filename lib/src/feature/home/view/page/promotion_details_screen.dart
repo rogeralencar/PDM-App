@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 
 import '../../repository/promotion.dart';
 
@@ -14,7 +15,7 @@ class PromotionDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Snap'),
+        title: Text('app_name'.i18n()),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

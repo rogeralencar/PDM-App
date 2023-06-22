@@ -25,19 +25,19 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> saveUserInfo(User user, {bool isImageUrl = true}) async {
-    var image = "";
+    var image = '';
     if (isImageUrl) {
       image = user.image.toString();
     } else {
       image = user.image
           .toString()
           .replaceAll("'", "")
-          .replaceFirst("F", "")
-          .replaceFirst("i", "")
-          .replaceFirst("l", "")
-          .replaceFirst("e", "")
-          .replaceFirst(":", "")
-          .replaceFirst(" ", "");
+          .replaceFirst('F', '')
+          .replaceFirst('i', '')
+          .replaceFirst('l', '')
+          .replaceFirst('e', '')
+          .replaceFirst(':', '')
+          .replaceFirst(' ', '');
     }
 
     user.image = image;

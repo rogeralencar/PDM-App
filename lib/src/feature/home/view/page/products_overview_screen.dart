@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../repository/categories_data.dart';
@@ -85,7 +86,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Snap'),
+        title: Text('app_name'.i18n()),
         actions: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,13 +94,13 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               PopupMenuButton(
                 icon: const Icon(Icons.more_vert),
                 itemBuilder: (_) => [
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: FilterOptions.favorite,
-                    child: Text('Somente Favoritos'),
+                    child: Text('favorites'.i18n()),
                   ),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: FilterOptions.all,
-                    child: Text('Todos'),
+                    child: Text('all'.i18n()),
                   ),
                 ],
                 onSelected: (FilterOptions selectedValue) {

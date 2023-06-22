@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
 import 'product_grid_item.dart';
@@ -48,20 +49,20 @@ class ProductGrid extends StatelessWidget {
       return false;
     }).toList();
 
-    if (selectedSortOption == 'Mais vendidos') {
+    if (selectedSortOption == 'top_selling'.i18n()) {
       filteredProducts.sort((a, b) => b.orders.compareTo(a.orders));
-    } else if (selectedSortOption == 'Preço crescente') {
+    } else if (selectedSortOption == 'increasing_price'.i18n()) {
       filteredProducts.sort((a, b) => a.price.compareTo(b.price));
-    } else if (selectedSortOption == 'Preço decrescente') {
+    } else if (selectedSortOption == 'decreasing_price'.i18n()) {
       filteredProducts.sort((a, b) => b.price.compareTo(a.price));
     }
 
     return filteredProducts.isEmpty
-        ? const Center(
+        ? Center(
             child: Text(
-              'Nenhum Produto encontrado',
+              'no_product_found'.i18n(),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 28,
               ),
             ),
