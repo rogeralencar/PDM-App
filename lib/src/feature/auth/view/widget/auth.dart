@@ -54,9 +54,7 @@ class Auth with ChangeNotifier {
       _userId = body['localId'];
 
       _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(body['expiresIn']),
-        ),
+        const Duration(days: 30),
       );
 
       UserStore.saveMap('userData', {
@@ -77,6 +75,24 @@ class Auth with ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     return _authenticate(email, password, 'signInWithPassword');
+  }
+
+  Future<void> resetPassword(String email) async {
+    const url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${Constants.webApiKey}';
+    final response = await http.post(
+      Uri.parse(url),
+      body: jsonEncode({
+        'requestType': 'PASSWORD_RESET',
+        'email': email,
+      }),
+    );
+
+    final body = jsonDecode(response.body);
+
+    if (body['error'] != null) {
+      throw AuthException(body['error']['message']);
+    }
   }
 
   Future<void> tryAutoLogin() async {

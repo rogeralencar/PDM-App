@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../common/exceptions/auth_exception.dart';
 import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_text_field.dart';
+import '../widget/auth.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -15,6 +18,23 @@ class ForgotPasswordScreen extends StatefulWidget {
 class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('error_occurred'.i18n()),
+        content: Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('close'.i18n()),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _submit() async {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -22,7 +42,23 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (!isValid) {
       return;
     }
-    Modular.to.pop();
+
+    setState(() => _isLoading = true);
+
+    _formKey.currentState?.save();
+
+    Auth auth = Provider.of(context, listen: false);
+
+    try {
+      await auth.resetPassword(_emailController.text);
+
+      Modular.to.pop();
+    } on AuthException catch (error) {
+      _showErrorDialog(error.toString());
+    } catch (error) {
+      _showErrorDialog('unexpected_error'.i18n());
+    }
+    setState(() => _isLoading = false);
   }
 
   bool isValidEmail(String email) {
@@ -96,11 +132,15 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                     SizedBox(height: screenSize.height * 0.06),
-                    CustomButton(
-                      size: screenSize,
-                      onPressed: _submit,
-                      buttonText: 'send'.i18n(),
-                    ),
+                    _isLoading
+                        ? CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.outline,
+                          )
+                        : CustomButton(
+                            size: screenSize,
+                            onPressed: _submit,
+                            buttonText: 'send'.i18n(),
+                          ),
                     SizedBox(height: screenSize.height * 0.12),
                     CustomButton(
                       size: screenSize,
