@@ -13,10 +13,10 @@ SnapStore
 * [Project Description](#project-description)
 * [Access the Project](#-access-the-project)
 * [Requirements](#-requirements)
-* [Project Features](#🔨-project-features)
-* [Run the Project](#▶-run-the-project)
-* [Conclusion](#✅-conclusion)
-* [Authors](#👨‍💻-authors)
+* [Project Features](#-project-features)
+* [Run the Project](#-run-the-project)
+* [Conclusion](#-conclusion)
+* [Authors](#-authors)
 
 # Project Status
 
