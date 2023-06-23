@@ -9,6 +9,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
 import '../../../../common/widgets/custom_text_field.dart';
+import '../../../auth/view/widget/auth.dart';
 import '../widget/image_input.dart';
 
 class ProfileFormScreen extends StatefulWidget {
@@ -212,6 +213,71 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     });
   }
 
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('error_occurred'.i18n()),
+        content: Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('close'.i18n()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteUser() async {
+    bool confirmDelete = await _showConfirmationDialog();
+    if (confirmDelete == true) {
+      await _performDeleteUser();
+    }
+  }
+
+  Future<bool> _showConfirmationDialog() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmação'),
+          content: const Text('Tem certeza de que deseja excluir sua conta?'),
+          actions: [
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: const Text('Excluir'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _performDeleteUser() async {
+    setState(() => _isLoading = true);
+    try {
+      await Provider.of<UserProvider>(
+        context,
+        listen: false,
+      ).deleteUser().then((value) => Provider.of<Auth>(
+            context,
+            listen: false,
+          ).deleteUser());
+    } catch (error) {
+      _showErrorDialog('unexpected_error'.i18n());
+    }
+    setState(() => _isLoading = false);
+  }
+
   bool isValidImageUrl(String url) {
     if (url.isNotEmpty) {
       bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
@@ -286,6 +352,10 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
           IconButton(
             onPressed: _submitForm,
             icon: const Icon(Icons.save),
+          ),
+          IconButton(
+            onPressed: () => _deleteUser(),
+            icon: const Icon(Icons.delete),
           )
         ],
       ),

@@ -9,17 +9,31 @@ import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final User? user;
+  final bool isYourProfile;
+
+  const ProfileScreen({
+    Key? key,
+    this.isYourProfile = true,
+    this.user,
+  }) : super(key: key);
 
   @override
   ProfileScreenState createState() => ProfileScreenState();
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
+  User? user;
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    final User? user = userProvider.user;
+    User? user;
+    if (widget.isYourProfile) {
+      user = userProvider.user;
+    } else {
+      user = widget.user;
+    }
 
     final String? name =
         user!.socialName!.isEmpty ? user.name : user.socialName;
@@ -74,43 +88,46 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
-                            Positioned(
-                              child: GestureDetector(
-                                onTap: () {
-                                  Modular.to.pushNamed('profileForm',
-                                      arguments: user);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.all(screenSize.width * 0.01),
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
-                                      size: screenSize.width * 0.045,
+                            if (widget.isYourProfile)
+                              Positioned(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Modular.to.pushNamed('profileForm',
+                                        arguments: user);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(
+                                          screenSize.width * 0.01),
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                        size: screenSize.width * 0.045,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                         SizedBox(width: screenSize.width * 0.05),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'hello'.i18n(),
-                              style: TextStyle(
-                                fontSize: screenSize.width * 0.045,
-                                color: Theme.of(context).colorScheme.secondary,
+                            if (widget.isYourProfile)
+                              Text(
+                                'hello'.i18n(),
+                                style: TextStyle(
+                                  fontSize: screenSize.width * 0.045,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
                               ),
-                            ),
                             Text(
                               name!,
                               style: TextStyle(

@@ -61,16 +61,18 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<void> loadUser() async {
+  Future<User?> loadUser(
+      {String userId = '', bool isAnotherUser = false}) async {
     try {
+      if (!isAnotherUser) userId = _userId;
       final response = await http
-          .get(Uri.parse('${Constants.userInfo}/$_userId.json?auth=$_token'));
+          .get(Uri.parse('${Constants.userInfo}/$userId.json?auth=$_token'));
 
       if (response.statusCode == 200) {
         final String responseData = response.body;
 
         if (responseData.isEmpty || responseData == 'null') {
-          return;
+          return null;
         }
 
         final Map<String, dynamic> jsonData = json.decode(responseData);
@@ -89,7 +91,11 @@ class UserProvider with ChangeNotifier {
           socialName: jsonData['socialName'] ?? '',
         );
 
-        setUser(user);
+        if (isAnotherUser) {
+          return user;
+        } else {
+          setUser(user);
+        }
       } else {
         throw HttpException(
           msg: 'Failed to load user information: ${response.statusCode}',
@@ -99,6 +105,29 @@ class UserProvider with ChangeNotifier {
     } catch (error) {
       throw HttpException(
         msg: 'Failed to load user information: $error',
+        statusCode: 1,
+      );
+    }
+    return null;
+  }
+
+  Future<void> deleteUser() async {
+    try {
+      final response = await http.delete(
+        Uri.parse('${Constants.userInfo}/$_userId.json?auth=$_token'),
+      );
+
+      if (response.statusCode == 200) {
+        setUser(User());
+      } else {
+        throw HttpException(
+          msg: 'Failed to delete user: ${response.statusCode}',
+          statusCode: 1,
+        );
+      }
+    } catch (error) {
+      throw HttpException(
+        msg: 'Failed to delete user: $error',
         statusCode: 1,
       );
     }

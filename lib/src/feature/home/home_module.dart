@@ -5,6 +5,7 @@ import 'view/page/category_selector_screen.dart';
 import 'view/page/home_screen.dart';
 import 'view/page/products_detail_screen.dart';
 import 'view/page/products_overview_screen.dart';
+import 'view/page/profile_screen.dart';
 import 'view/page/promotion_details_screen.dart';
 //import 'viewmodel/navegation_module.dart';
 
@@ -33,8 +34,16 @@ class HomeModule extends Module {
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
-          '/productDetails',
+          '/productDetails/',
           child: (_, args) => const ProductsDetailScreen(),
+          transition: TransitionType.fadeIn,
+        ),
+        ChildRoute(
+          '/productDetails/profile',
+          child: (_, args) => ProfileScreen(
+            user: args.data,
+            isYourProfile: false,
+          ),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(

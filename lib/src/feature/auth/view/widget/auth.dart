@@ -138,4 +138,27 @@ class Auth with ChangeNotifier {
       logout,
     );
   }
+
+  Future<void> deleteUser() async {
+    if (!isAuth) {
+      throw AuthException('User is not authenticated.');
+    }
+
+    const url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:delete?key=${Constants.webApiKey}';
+    final response = await http.post(
+      Uri.parse(url),
+      body: jsonEncode({
+        'idToken': _token,
+      }),
+    );
+
+    final body = jsonDecode(response.body);
+
+    if (body['error'] != null) {
+      throw AuthException(body['error']['message']);
+    } else {
+      logout();
+    }
+  }
 }
