@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:provider/provider.dart';
+
+import '../../../auth/view/widget/auth.dart';
 import 'orders_screen.dart';
 import 'products_screen.dart';
 import 'profile_screen.dart';
 
-class NavigationScreen extends StatefulWidget {
-  const NavigationScreen({Key? key}) : super(key: key);
-
+class NavegationScreen extends StatefulWidget {
+  const NavegationScreen({Key? key}) : super(key: key);
   @override
-  NavigationScreenState createState() => NavigationScreenState();
+  NavegationScreenState createState() => NavegationScreenState();
 }
 
-class NavigationScreenState extends State<NavigationScreen> {
+class NavegationScreenState extends State<NavegationScreen> {
   late PageController pageViewController;
   int currentPageIndex = 0;
+
+  final List<String> _titles = [
+    'Perfil',
+    'Produtos',
+    'Pedidos',
+  ];
 
   final List<Widget> _screens = const [
     ProfileScreen(),
     ProductsScreen(),
     OrdersScreen(),
-  ];
-
-  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
   ];
 
   @override
@@ -47,23 +51,32 @@ class NavigationScreenState extends State<NavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          PageView(
-            controller: pageViewController,
-            children: _screens.map((screen) {
-              return Navigator(
-                key: _navigatorKeys[_screens.indexOf(screen)],
-                onGenerateRoute: (settings) {
-                  return MaterialPageRoute(
-                    settings: settings,
-                    builder: (_) => screen,
-                  );
-                },
-              );
-            }).toList(),
+      appBar: AppBar(
+        title: Text(_titles[currentPageIndex]),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.exit_to_app),
+            onPressed: () {
+              Provider.of<Auth>(
+                context,
+                listen: false,
+              ).logout();
+              Modular.to.navigate('/auth/');
+            },
           ),
+          if (currentPageIndex == 1)
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                Modular.to.pushNamed('productForm/');
+              },
+            ),
         ],
+      ),
+      body: PageView(
+        controller: pageViewController,
+        children: _screens,
       ),
       bottomNavigationBar: Container(
         height: 60,
