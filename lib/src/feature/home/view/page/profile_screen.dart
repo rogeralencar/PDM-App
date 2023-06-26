@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
+import '../../../auth/view/widget/auth.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User? user;
@@ -23,12 +24,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
-  User? user;
-
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     User? user;
+
     if (widget.isYourProfile) {
       user = userProvider.user;
     } else {
@@ -52,6 +52,23 @@ class ProfileScreenState extends State<ProfileScreen> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('profile'.i18n()),
+        centerTitle: true,
+        actions: [
+          if (widget.isYourProfile)
+            IconButton(
+              icon: const Icon(Icons.exit_to_app),
+              onPressed: () {
+                Provider.of<Auth>(
+                  context,
+                  listen: false,
+                ).logout();
+                Modular.to.navigate('/auth/', arguments: false);
+              },
+            ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

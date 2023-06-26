@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,18 @@ class ProductsScreen extends StatelessWidget {
     final ProductList products = Provider.of(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('products'.i18n()),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Modular.to.pushNamed('productForm/');
+            },
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () => _refreshProducts(context),
         child: Padding(

@@ -241,17 +241,17 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmação'),
-          content: const Text('Tem certeza de que deseja excluir sua conta?'),
+          title: Text('delete_account'.i18n()),
+          content: Text('are_you_sure'.i18n()),
           actions: [
             TextButton(
-              child: const Text('Cancelar'),
+              child: Text('no'.i18n()),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: const Text('Excluir'),
+              child: Text('yes'.i18n()),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -353,10 +353,6 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
             onPressed: _submitForm,
             icon: const Icon(Icons.save),
           ),
-          IconButton(
-            onPressed: () => _deleteUser(),
-            icon: const Icon(Icons.delete),
-          )
         ],
       ),
       body: _isLoading
@@ -401,31 +397,59 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                               },
                             ),
                           ),
-                          Container(
-                              height: 100,
-                              width: 100,
-                              margin: const EdgeInsets.only(
-                                top: 10,
-                                left: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.outline,
-                                  width: 1,
+                          Stack(
+                            children: [
+                              Container(
+                                height: 100,
+                                width: 100,
+                                margin: const EdgeInsets.only(
+                                  top: 10,
+                                  left: 10,
                                 ),
-                                shape: BoxShape.circle,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                    width: 1,
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                                alignment: Alignment.center,
+                                child: ClipOval(
+                                  child: _imageUrlController.text.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'no_url'.i18n(),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        )
+                                      : Image.network(_imageUrlController.text),
+                                ),
                               ),
-                              alignment: Alignment.center,
-                              child: ClipOval(
-                                child: _imageUrlController.text.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          'no_url'.i18n(),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )
-                                    : Image.network(_imageUrlController.text),
-                              )),
+                              Positioned(
+                                top: 10,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _formData['imageUrl'] = '';
+                                      _imageUrlController.text = '';
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     const Divider(),
@@ -600,6 +624,12 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                         FilteringTextInputFormatter.digitsOnly,
                         MaskTextInputFormatter(mask: '###.###.###-##'),
                       ],
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton.icon(
+                      onPressed: _deleteUser,
+                      icon: const Icon(Icons.delete),
+                      label: Text('delete_account'.i18n()),
                     ),
                     const SizedBox(height: 10),
                   ],

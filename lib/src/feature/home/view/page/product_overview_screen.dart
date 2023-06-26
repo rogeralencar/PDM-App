@@ -16,24 +16,24 @@ enum FilterOptions {
   all,
 }
 
-class ProductsOverviewScreen extends StatefulWidget {
+class ProductOverviewScreen extends StatefulWidget {
   final List<String>? selectedCategoriesNames;
   final String? search;
 
-  const ProductsOverviewScreen({
+  const ProductOverviewScreen({
     Key? key,
     this.selectedCategoriesNames,
     this.search,
   }) : super(key: key);
 
   @override
-  State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
+  State<ProductOverviewScreen> createState() => _ProductOverviewScreenState();
 }
 
-class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   late String _search = '';
   late List<String> _selectedCategoriesNames = [];
-  String _selectedSortOption = 'Mais vendidos';
+  String _selectedSortOption = 'top_selling'.i18n();
   bool _showFavoriteOnly = false;
 
   Future<void> _refreshProducts(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 
 import '../../repository/user_store.dart';
@@ -54,7 +55,9 @@ class Auth with ChangeNotifier {
       _userId = body['localId'];
 
       _expiryDate = DateTime.now().add(
-        const Duration(days: 30),
+        Duration(
+          seconds: int.parse(body['expiresIn']),
+        ),
       );
 
       UserStore.saveMap('userData', {
@@ -135,7 +138,10 @@ class Auth with ChangeNotifier {
     final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
     _logoutTimer = Timer(
       Duration(seconds: timeToLogout ?? 0),
-      logout,
+      () {
+        logout();
+        Modular.to.navigate('/auth/', arguments: true);
+      },
     );
   }
 

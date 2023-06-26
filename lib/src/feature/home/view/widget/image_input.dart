@@ -10,11 +10,11 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 class ImageInput extends StatefulWidget {
   final Function onSelectImage;
   final bool isProfile;
-  File? image;
+  File? _image;
 
   ImageInput(
     this.onSelectImage,
-    this.image, {
+    this._image, {
     this.isProfile = false,
     Key? key,
   }) : super(key: key);
@@ -32,12 +32,12 @@ class ImageInputState extends State<ImageInput> {
     ) as XFile;
 
     setState(() {
-      widget.image = File(imageFile.path);
+      widget._image = File(imageFile.path);
     });
 
     final appDir = await syspaths.getApplicationDocumentsDirectory();
-    String fileName = path.basename(widget.image!.path);
-    final savedImage = await widget.image!.copy(
+    String fileName = path.basename(widget._image!.path);
+    final savedImage = await widget._image!.copy(
       '${appDir.path}/$fileName',
     );
     widget.onSelectImage(savedImage);
@@ -53,10 +53,10 @@ class ImageInputState extends State<ImageInput> {
 
     if (pickedImage != null) {
       setState(() {
-        widget.image = File(pickedImage.path);
+        widget._image = File(pickedImage.path);
       });
 
-      widget.onSelectImage(widget.image);
+      widget.onSelectImage(widget._image);
     }
   }
 
@@ -84,40 +84,66 @@ class ImageInputState extends State<ImageInput> {
                 ),
               ],
             ),
-            Container(
-              width: widget.isProfile ? 100 : 180,
-              height: widget.isProfile ? 100 : 150,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                shape: widget.isProfile ? BoxShape.circle : BoxShape.rectangle,
-                borderRadius:
-                    !widget.isProfile ? BorderRadius.circular(10) : null,
-              ),
-              child: widget.isProfile
-                  ? ClipOval(
-                      child: widget.image != null
-                          ? Image.file(
-                              widget.image!,
-                              fit: BoxFit.cover,
-                            )
-                          : Center(
-                              child: Text(
-                              'no_image'.i18n(),
-                              textAlign: TextAlign.center,
-                            )),
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: widget.image != null
-                          ? Image.file(
-                              widget.image!,
-                              fit: BoxFit.cover,
-                            )
-                          : Center(child: Text('no_image'.i18n())),
+            Stack(
+              children: [
+                Container(
+                  width: widget.isProfile ? 100 : 180,
+                  height: widget.isProfile ? 100 : 150,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: Theme.of(context).colorScheme.outline,
                     ),
+                    shape:
+                        widget.isProfile ? BoxShape.circle : BoxShape.rectangle,
+                    borderRadius:
+                        !widget.isProfile ? BorderRadius.circular(10) : null,
+                  ),
+                  child: widget.isProfile
+                      ? ClipOval(
+                          child: widget._image != null
+                              ? Image.file(
+                                  widget._image!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Center(
+                                  child: Text(
+                                  'no_image'.i18n(),
+                                  textAlign: TextAlign.center,
+                                )),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: widget._image != null
+                              ? Image.file(
+                                  widget._image!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Center(child: Text('no_image'.i18n())),
+                        ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget._image = null;
+                      });
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

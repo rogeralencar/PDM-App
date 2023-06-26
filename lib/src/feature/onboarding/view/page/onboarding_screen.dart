@@ -80,7 +80,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
       if (auth.isAuth) {
         await Modular.to.pushReplacementNamed('/home/');
       } else {
-        await Modular.to.pushReplacementNamed('/auth/');
+        await Modular.to.pushReplacementNamed('/auth/', arguments: false);
       }
     }
     setState(() {

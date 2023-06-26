@@ -111,9 +111,9 @@
     "email_exists": "E-mail já cadastrado",
     "operation_not_allowed": "Operação não permitida!",
     "too_many_attemps": "Acesso bloqueado temporariamente. Tente mais tarde",
-    "email_not_found": "E-mail não encontrado.",
-    "invalid_password": "Senha informada não confere.",
-    "user_disabled": "A conta do usuário foi desabilitada.",
+    "email_not_found": "E-mail não encontrado",
+    "invalid_password": "Senha informada não confere",
+    "user_disabled": "A conta do usuário foi desabilitada",
     "authentication_error": "Ocorreu um erro no processo de autenticação!",
 
     "price_field": "Preço",
@@ -154,10 +154,10 @@
     "see_all": "Ver tudo",
 
     "products": "Produtos",
-    "product_form": "Formulário Produto"
+    "product_form": "Formulário Produto",
 
     "success_message": "Produto adicionado com sucesso!",
-    "no_product_found.": "Nenhum produto encontrado",
+    "no_product_found": "Nenhum produto encontrado",
     "info_message_no_product": "Você ainda não adicionou nenhum produto!",
     "error_message_product_delete": "Não foi possível excluir o produto",
     "delete_product": "Excluir Produto",
@@ -176,7 +176,7 @@
     "error_message_order": "Não foi possível fazer o pedido",
 
     "profile": "Perfil",
-    "profile_form": "Formulário Perfil"
+    "profile_form": "Formulário Perfil",
 
     "hello": "Olá",
     "no_additional_information": "Sem informações adicionais",
@@ -187,6 +187,8 @@
     "contact_me": "Entre em contato comigo:",
     "email": "E-mail:",
     "number": "Telefone:",
+
+    "delete_account": "Excluir conta",
 
     "cart": "Carrinho",
 

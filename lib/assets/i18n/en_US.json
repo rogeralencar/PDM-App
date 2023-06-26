@@ -6,7 +6,7 @@
     "onboard_title2" : "Have an app made just for you",
     "onboard_sub_title2" : "Here at Snap, you have several options for shopping, where one of these options could even be yours!",
     "onboard_title3" : "Start now!",
-    "onboard_sub_title3" : "Create your profile and start making your purchases or sales; the Snap app is entirely made for and by our users.",
+    "onboard_sub_title3" : "Create your profile and start making your purchases or sales; the Snap app is entirely made for and by our users",
 
     "promotion_title1": "Welcome to our store!",
     "promotion_content1": "\tWe are an online store specialized in selling various products. We offer a wide variety of items, from electronics and furniture to clothing and accessories. With guaranteed quality and competitive prices, we have what you're looking for. Take advantage of our promotions and make your purchases with complete convenience!",
@@ -50,6 +50,9 @@
     "login": "Log In",
     "sign_up": "Sign up",
     "sign_in": "Sign in",
+
+    "logout": "Logout",
+    "disconnected_mensage": "You have been disconnected. Please log in again",
 
     "without_account": "Don't have an account ? ",
     "with_account": "Already have an account ? ",
@@ -111,9 +114,9 @@
     "email_exists": "E-mail already registered",
     "operation_not_allowed": "Operation not allowed!",
     "too_many_attemps": "Access temporarily blocked. Please try again later",
-    "email_not_found": "E-mail not found.",
-    "invalid_password": "Invalid password.",
-    "user_disabled": "The user account has been disabled.",
+    "email_not_found": "E-mail not found",
+    "invalid_password": "Invalid password",
+    "user_disabled": "The user account has been disabled",
     "authentication_error": "An error occurred during the authentication process!",
 
     "price_field": "Price",
@@ -154,10 +157,10 @@
     "see_all": "See all",
 
     "products": "Products",
-    "product_form": "Product Form"
+    "product_form": "Product Form",
 
     "success_message": "Product added successfully!",
-    "no_product_found.": "No product found",
+    "no_product_found": "No product found",
     "info_message_no_product": "You haven't added any products yet!",
     "error_message_product_delete": "Failed to delete the product",
     "delete_product": "Delete Product",
@@ -187,6 +190,8 @@
     "contact_me": "Contact me:",
     "email": "E-mail:",
     "number": "Phone number:",
+
+    "delete_account": "Delete account",
 
     "cart": "Cart",
 

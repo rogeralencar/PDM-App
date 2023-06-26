@@ -13,15 +13,15 @@ import '../../../../common/utils/location_util.dart';
 import '../widget/image_input.dart';
 import '../widget/location_input.dart';
 
-class ProductsFormScreen extends StatefulWidget {
+class ProductFormScreen extends StatefulWidget {
   final Product? product;
-  const ProductsFormScreen({super.key, this.product});
+  const ProductFormScreen({super.key, this.product});
 
   @override
-  State<ProductsFormScreen> createState() => _ProductsFormScreenState();
+  State<ProductFormScreen> createState() => _ProductFormScreenState();
 }
 
-class _ProductsFormScreenState extends State<ProductsFormScreen> {
+class _ProductFormScreenState extends State<ProductFormScreen> {
   File? _pickedImage;
 
   final _imageUrlFocus = FocusNode();
@@ -368,27 +368,59 @@ class _ProductsFormScreenState extends State<ProductsFormScreen> {
                               },
                             ),
                           ),
-                          Container(
-                              height: 100,
-                              width: 100,
-                              margin: const EdgeInsets.only(
-                                top: 10,
-                                left: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.outline,
-                                  width: 1,
+                          Stack(
+                            children: [
+                              Container(
+                                height: 100,
+                                width: 100,
+                                margin: const EdgeInsets.only(
+                                  top: 10,
+                                  left: 10,
                                 ),
-                                borderRadius: BorderRadius.circular(10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                    width: 1,
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                                alignment: Alignment.center,
+                                child: ClipOval(
+                                  child: _imageUrlController.text.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'no_url'.i18n(),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        )
+                                      : Image.network(_imageUrlController.text),
+                                ),
                               ),
-                              alignment: Alignment.center,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: _imageUrlController.text.isEmpty
-                                    ? Text('no_url'.i18n())
-                                    : Image.network(_imageUrlController.text),
-                              )),
+                              Positioned(
+                                top: 4,
+                                right: 4,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _formData['imageUrl'] = '';
+                                      _imageUrlController.text = '';
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     const Divider(),

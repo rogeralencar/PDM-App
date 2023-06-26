@@ -3,11 +3,11 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'view/page/cart_screen.dart';
 import 'view/page/category_selector_screen.dart';
 import 'view/page/home_screen.dart';
-import 'view/page/products_detail_screen.dart';
-import 'view/page/products_overview_screen.dart';
+import 'view/page/product_detail_screen.dart';
+import 'view/page/product_overview_screen.dart';
 import 'view/page/profile_screen.dart';
 import 'view/page/promotion_details_screen.dart';
-//import 'viewmodel/navegation_module.dart';
+import 'viewmodel/navegation_module.dart';
 
 class HomeModule extends Module {
   @override
@@ -20,7 +20,7 @@ class HomeModule extends Module {
           child: (_, __) => const HomeScreen(),
           transition: TransitionType.fadeIn,
         ),
-//        ModuleRoute('/navegation', module: NavegationModule()),
+        ModuleRoute('/navegation', module: NavegationModule()),
         ChildRoute(
           '/cart',
           child: (_, __) => const CartScreen(),
@@ -35,7 +35,9 @@ class HomeModule extends Module {
         ),
         ChildRoute(
           '/productDetails/',
-          child: (_, args) => const ProductsDetailScreen(),
+          child: (_, args) => ProductDetailScreen(
+            product: args.data,
+          ),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(
@@ -48,7 +50,7 @@ class HomeModule extends Module {
         ),
         ChildRoute(
           '/productOverview/',
-          child: (_, args) => ProductsOverviewScreen(
+          child: (_, args) => ProductOverviewScreen(
             selectedCategoriesNames: args.data['selectedCategoriesNames'],
             search: args.data['search'],
           ),

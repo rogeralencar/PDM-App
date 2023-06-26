@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:provider/provider.dart';
-
-import '../../../auth/view/widget/auth.dart';
 import 'orders_screen.dart';
-import 'products_screen.dart';
+import 'product_screen.dart';
 import 'profile_screen.dart';
 
 class NavegationScreen extends StatefulWidget {
@@ -18,12 +13,6 @@ class NavegationScreen extends StatefulWidget {
 class NavegationScreenState extends State<NavegationScreen> {
   late PageController pageViewController;
   int currentPageIndex = 0;
-
-  final List<String> _titles = [
-    'Perfil',
-    'Produtos',
-    'Pedidos',
-  ];
 
   final List<Widget> _screens = const [
     ProfileScreen(),
@@ -51,29 +40,6 @@ class NavegationScreenState extends State<NavegationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titles[currentPageIndex]),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              Provider.of<Auth>(
-                context,
-                listen: false,
-              ).logout();
-              Modular.to.navigate('/auth/');
-            },
-          ),
-          if (currentPageIndex == 1)
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                Modular.to.pushNamed('productForm/');
-              },
-            ),
-        ],
-      ),
       body: PageView(
         controller: pageViewController,
         children: _screens,

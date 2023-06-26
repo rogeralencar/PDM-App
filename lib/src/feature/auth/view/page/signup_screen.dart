@@ -81,7 +81,6 @@ class SignupScreenState extends State<SignupScreen> {
         name: _nameController.text,
         email: _authData['email']!,
       );
-
       await _save(user);
 
       Modular.to.navigate('/home/');
