@@ -3,7 +3,7 @@ SnapStore
 ## A Flutter Project for PDM
 
 <p float="middle">
-  <img src="lib/assets/images/snap_CARRINHO_GIF.gif" width="28%" /><img src="lib/assets/images/SNAP_LOGO.PNG.png" width="28%" /><img src="lib/assets/images/snap_MAO.SELL.BUY_GIF.gif" width="28%" />
+  <img src="lib/assets/images/snap_cart.gif" width="28%" /><img src="lib/assets/images/snap_logo.png" width="28%" /><img src="lib/assets/images/snap_sell_buy.gif" width="28%" />
 </p>
 
 # Index
