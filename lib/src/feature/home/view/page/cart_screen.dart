@@ -95,7 +95,10 @@ class _CartButtonState extends State<CartButton> {
         content: Text('error_getting_cep_data'.i18n()),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() => _isLoading = false);
+            },
             child: Text('close'.i18n()),
           ),
         ],
@@ -106,8 +109,9 @@ class _CartButtonState extends State<CartButton> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductList>(context);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user!;
+
     return _isLoading
         ? const CircularProgressIndicator()
         : TextButton(

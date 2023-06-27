@@ -45,6 +45,7 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: isForm ? text : null,
         hintText: text,
+        errorMaxLines: 3,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),

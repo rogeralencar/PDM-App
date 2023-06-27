@@ -116,7 +116,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               Consumer<Cart>(
                 child: IconButton(
                   onPressed: () {
-                    Modular.to.pushNamed('cart');
+                    Modular.to.pushNamed('/home/cart');
                   },
                   icon: const Icon(Icons.shopping_cart),
                 ),

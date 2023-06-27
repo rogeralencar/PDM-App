@@ -61,7 +61,11 @@ class _CepWidgetState extends State<CepWidget> {
       setState(() {
         isLoading = true;
       });
-      await fetchCepData(value, user);
+      if (value.isEmpty) {
+        clearCep();
+      } else {
+        await fetchCepData(value, user);
+      }
 
       userProvider.setUser(user);
     } catch (e) {
@@ -74,21 +78,31 @@ class _CepWidgetState extends State<CepWidget> {
   }
 
   Future<void> fetchCepData(String value, User user) async {
-    if (value.isEmpty) return;
     try {
       final response =
           await http.get(Uri.parse('https://viacep.com.br/ws/$value/json/'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        user.cep = value;
-        user.city = data['localidade'];
-        await userProvider.saveUserInfo(user);
+        if (data.containsKey('erro')) {
+          clearCep();
+        } else {
+          user.cep = value;
+          user.city = data['localidade'];
+          await userProvider.saveUserInfo(user);
+        }
       } else {
         _showErrorDialog();
       }
     } catch (e) {
       _showErrorDialog();
     }
+  }
+
+  void clearCep() {
+    cepController.text = '';
+    cep = '';
+    user.cep = '';
+    user.city = '';
   }
 
   void _showErrorDialog() {

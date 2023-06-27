@@ -299,7 +299,11 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   String? _validateAge(String? value) {
     if (value != null && value.isNotEmpty) {
       final age = double.tryParse(value);
-      if (age == null || age.isNaN || age.isNegative || age.remainder(1) != 0) {
+      if (age == null ||
+          age.isNaN ||
+          age.isNegative ||
+          age.remainder(1) != 0 ||
+          age > 120) {
         return 'age_invalid'.i18n();
       } else if (age < 18) {
         return 'age_requirement'.i18n();
@@ -456,7 +460,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     CustomTextField(
                       text: 'name_field'.i18n(),
                       controller: _nameController,
-                      initialValue: _formData['name']?.toString(),
+                      initialValue: _nameController.text == ''
+                          ? _formData['name']?.toString()
+                          : _nameController.text,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value!.trim().isEmpty) {
@@ -473,7 +479,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     CustomTextField(
                       text: 'social_name_field'.i18n(),
                       controller: _socialNameController,
-                      initialValue: _formData['socialName']?.toString(),
+                      initialValue: _socialNameController.text == ''
+                          ? _formData['socialName']?.toString()
+                          : _socialNameController.text,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value != null && value.isNotEmpty) {
@@ -489,7 +497,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     CustomTextField(
                       text: 'email_field'.i18n(),
                       controller: _emailController,
-                      initialValue: _formData['email']?.toString(),
+                      initialValue: _emailController.text == ''
+                          ? _formData['email']?.toString()
+                          : _emailController.text,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
@@ -506,7 +516,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     CustomTextField(
                       text: 'number_field'.i18n(),
                       controller: _phoneNumberController,
-                      initialValue: _formData['phoneNumber']?.toString(),
+                      initialValue: _phoneNumberController.text == ''
+                          ? _formData['phoneNumber']?.toString()
+                          : _phoneNumberController.text,
                       keyboardType: TextInputType.phone,
                       validator: _validatePhoneNumber,
                       onSaved: (number) =>
@@ -520,9 +532,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     CustomTextField(
                       text: 'age_field'.i18n(),
                       controller: _ageController,
-                      initialValue: _formData['age'] == 0
-                          ? ''
-                          : _formData['age'].toString(),
+                      initialValue: _ageController.text == ''
+                          ? _formData['age'].toString()
+                          : _ageController.text,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       validator: _validateAge,
@@ -530,13 +542,16 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                           int.tryParse(age ?? '0')?.round() ?? 0,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
+                        MaskTextInputFormatter(mask: '###'),
                       ],
                     ),
                     const Divider(),
                     CustomTextField(
                       text: 'bio_field'.i18n(),
                       controller: _bioController,
-                      initialValue: _formData['bio']?.toString(),
+                      initialValue: _bioController.text == ''
+                          ? _formData['bio']?.toString()
+                          : _bioController.text,
                       maxLines: 3,
                       keyboardType: TextInputType.multiline,
                       textInputAction: TextInputAction.next,
@@ -616,7 +631,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                     CustomTextField(
                       text: 'cpf_field'.i18n(),
                       controller: _cpfController,
-                      initialValue: _formData['cpf']?.toString(),
+                      initialValue: _cpfController.text == ''
+                          ? _formData['cpf']?.toString()
+                          : _cpfController.text,
                       keyboardType: TextInputType.number,
                       validator: _validateCpf,
                       onSaved: (cpf) => _formData['cpf'] = cpf ?? '',

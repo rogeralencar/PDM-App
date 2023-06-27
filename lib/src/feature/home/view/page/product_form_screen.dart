@@ -92,11 +92,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   void _selectCategory() async {
-    final selectedCategoriesNames =
-        (_formData['categories'] as List<String>?)?.toList();
+    final List<String> selectedCategoriesNames =
+        (_formData['categories'] as List<String>?)?.toList() ?? [];
 
     final updatedCategories = await Modular.to
-        .pushNamed('categories', arguments: selectedCategoriesNames ?? []);
+        .pushNamed('categories', arguments: selectedCategoriesNames);
 
     if (updatedCategories != null) {
       List<Category> selectedCategories = categoryList
