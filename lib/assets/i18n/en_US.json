@@ -89,6 +89,7 @@
     "invalid_password": "Invalid password",
     "user_disabled": "The user account has been disabled",
     "authentication_error": "An error occurred during the authentication process!",
+    "gif_error": "Failed to load GIF",
 
     "price_field": "Price",
     "price_invalid": "Enter a valid price",

@@ -171,7 +171,8 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                                 ),
                                 onPressed: () {
                                   prefs.setBool('onboardingCompleted', true);
-                                  Modular.to.pushNamed('/auth/');
+                                  Modular.to.pushReplacementNamed('/auth/',
+                                      arguments: false);
                                 },
                                 child: Text(
                                   'skip'.i18n(),
@@ -199,7 +200,8 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                                   curve: Curves.ease);
                             } else {
                               prefs.setBool('onboardingCompleted', true);
-                              Modular.to.pushNamed('/auth/');
+                              Modular.to.pushReplacementNamed('/auth/',
+                                  arguments: false);
                             }
                           },
                           child: Text(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gif/gif.dart';
+import 'package:localization/localization.dart';
 
 class OnBoardingDetails extends StatefulWidget {
   final String title;
@@ -22,11 +24,17 @@ class OnBoardingDetails extends StatefulWidget {
 class OnBoardingDetailsState extends State<OnBoardingDetails>
     with TickerProviderStateMixin {
   late GifController _controller;
+  late Future<void> _gifLoadingFuture;
 
   @override
   void initState() {
     super.initState();
     _controller = GifController(vsync: this);
+    _gifLoadingFuture = loadGif(widget.imagePath);
+  }
+
+  Future<void> loadGif(String gifPath) async {
+    await precacheImage(CachedNetworkImageProvider(gifPath), context);
   }
 
   @override
@@ -35,15 +43,11 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
     super.dispose();
   }
 
-  void loadGifs() {}
-
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final double screenWidth = screenSize.width;
     final double screenHeight = screenSize.height;
-
-    GifController controller = GifController(vsync: this);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -80,21 +84,34 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
                   ),
                 ],
               ),
-        Gif(
-          image: AssetImage(widget.imagePath),
-          controller: controller,
-          autostart: Autostart.loop,
-          duration: const Duration(seconds: 3),
-          placeholder: (context) => CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.outline,
-          ),
-          onFetchCompleted: () {
-            controller.reset();
-            controller.forward();
+        FutureBuilder<void>(
+          future: _gifLoadingFuture,
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.outline,
+              );
+            } else if (snapshot.hasError) {
+              return Text('gif_error'.i18n());
+            } else {
+              return Gif(
+                image: CachedNetworkImageProvider(widget.imagePath),
+                controller: _controller,
+                autostart: Autostart.loop,
+                duration: const Duration(seconds: 3),
+                placeholder: (context) => CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                onFetchCompleted: () {
+                  _controller.reset();
+                  _controller.forward();
+                },
+                width: screenWidth * 0.9,
+                height: screenHeight * 0.4,
+                fit: BoxFit.cover,
+              );
+            }
           },
-          width: screenWidth * 0.9,
-          height: screenHeight * 0.4,
-          fit: BoxFit.cover,
         ),
         if (widget.isTitle)
           Column(
@@ -108,7 +125,7 @@ class OnBoardingDetailsState extends State<OnBoardingDetails>
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: screenHeight * 0.04),
+              SizedBox(height: screenHeight * 0.03),
               Text(
                 widget.subtitle,
                 style: TextStyle(

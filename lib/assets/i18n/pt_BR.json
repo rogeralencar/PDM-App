@@ -89,6 +89,7 @@
     "invalid_password": "Senha informada não confere",
     "user_disabled": "A conta do usuário foi desabilitada",
     "authentication_error": "Ocorreu um erro no processo de autenticação!",
+    "gif_error": "Erro ao carregar o GIF",
 
     "price_field": "Preço",
     "price_invalid": "Informe um preço válido",

@@ -17,6 +17,8 @@ class ProductList with ChangeNotifier {
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
+  List<Product> get myProducts =>
+      _items.where((product) => product.userId == _userId).toList();
 
   ProductList([
     this._token = '',
