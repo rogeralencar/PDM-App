@@ -23,7 +23,7 @@ class PromotionDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
+            Image.asset(
               promotion.image,
               fit: BoxFit.cover,
             ),

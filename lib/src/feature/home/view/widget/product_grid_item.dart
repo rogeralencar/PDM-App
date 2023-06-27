@@ -69,13 +69,13 @@ class ProductGridItem extends StatelessWidget {
                 child: startsWithFile
                     ? FadeInImage(
                         placeholder: const AssetImage(
-                            'lib/assets/images/product-placeholder.png'),
+                            'lib/assets/images/product_placeholder.png'),
                         image: NetworkImage(product.image),
                         fit: BoxFit.cover,
                       )
                     : FadeInImage(
                         placeholder: const AssetImage(
-                            'lib/assets/images/product-placeholder.png'),
+                            'lib/assets/images/product_placeholder.png'),
                         image: FileImage(File(product.image)),
                         fit: BoxFit.cover,
                       ),

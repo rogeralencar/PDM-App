@@ -24,6 +24,38 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
+  Future<void> _showConfirmationDialog() async {
+    final authProvider = Provider.of<Auth>(context, listen: false);
+    bool confirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('logout_account'.i18n()),
+          content: Text('are_you_sure'.i18n()),
+          actions: [
+            TextButton(
+              child: Text('no'.i18n()),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('yes'.i18n()),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed) {
+      authProvider.logout();
+      Modular.to.navigate('/auth/', arguments: false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -40,11 +72,11 @@ class ProfileScreenState extends State<ProfileScreen> {
     bool startsWithHttp =
         user.image.toString().toLowerCase().startsWith('https://');
     final String? image = user.image!.isEmpty
-        ? 'lib/assets/images/profile_image.png'
+        ? 'lib/assets/images/profile_placeholder.png'
         : user.image;
 
     const ImageProvider placeholderImage =
-        AssetImage('lib/assets/images/profile_image.png');
+        AssetImage('lib/assets/images/profile_placeholder.png');
     final ImageProvider<Object> mainImage = startsWithHttp
         ? NetworkImage(image!) as ImageProvider<Object>
         : FileImage(File(image!));
@@ -59,13 +91,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           if (widget.isYourProfile)
             IconButton(
               icon: const Icon(Icons.exit_to_app),
-              onPressed: () {
-                Provider.of<Auth>(
-                  context,
-                  listen: false,
-                ).logout();
-                Modular.to.navigate('/auth/', arguments: false);
-              },
+              onPressed: () => _showConfirmationDialog(),
             ),
         ],
       ),

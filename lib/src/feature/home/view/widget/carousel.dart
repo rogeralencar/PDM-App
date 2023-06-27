@@ -19,20 +19,17 @@ class _CarouselState extends State<Carousel> {
     Promotion(
       title: 'promotion_title1'.i18n(),
       content: 'promotion_content1'.i18n(),
-      image:
-          'https://cdn.awsli.com.br/1101/1101329/produto/155685739/fc8ff2c15a.jpg',
+      image: 'lib/assets/images/welcome.png',
     ),
     Promotion(
       title: 'promotion_title2'.i18n(),
       content: 'promotion_content2'.i18n(),
-      image:
-          'https://ajuda.simplo7.com.br/hc/article_attachments/7681169045659/225edfb8a33c5a100cce5e21a13fe102.jpg',
+      image: 'lib/assets/images/free_shipping.png',
     ),
     Promotion(
       title: 'promotion_title3'.i18n(),
       content: 'promotion_content3'.i18n(),
-      image:
-          'https://static.vecteezy.com/system/resources/previews/013/553/618/original/winter-sale-promotion-banner-winter-special-offers-square-banner-social-media-post-advertising-winter-background-free-vector.jpg',
+      image: 'lib/assets/images/winter_sale.jpg',
     ),
   ];
 
@@ -96,7 +93,7 @@ class _CarouselState extends State<Carousel> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
+                child: Image.asset(
                   promotion.image,
                   fit: BoxFit.cover,
                 ),

@@ -121,10 +121,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     return categories.map((category) => category.name).join(',');
   }
 
-  void _selectImage(File pickedImage) {
+  void _selectImage(String imagePath) {
     setState(() {
-      _pickedImage = pickedImage;
-      _formData['image'] = pickedImage;
+      _pickedImage = File(imagePath);
+      _formData['image'] = _pickedImage!;
     });
   }
 

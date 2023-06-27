@@ -135,7 +135,7 @@ class LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Image.asset(
-                      'lib/assets/images/SNAP_LOGO.PNG.png',
+                      'lib/assets/images/snap_icon.png',
                       height: screenSize.height * 0.2,
                     ),
                     Text(

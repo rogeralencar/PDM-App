@@ -191,23 +191,54 @@ class ProductList with ChangeNotifier {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      final product = _items[index];
-      _items.remove(product);
+      final removedProduct = _items[index];
+      _items.remove(removedProduct);
       notifyListeners();
 
-      final response1 = await http.delete(
+      final response = await http.delete(
         Uri.parse(
-            '${Constants.productBaseUrl}/${product.id}.json?auth=$_token'),
+            '${Constants.productBaseUrl}/${removedProduct.id}.json?auth=$_token'),
       );
 
-      if (response1.statusCode >= 400) {
-        _items.insert(index, product);
+      if (response.statusCode >= 400) {
+        _items.insert(index, removedProduct);
         notifyListeners();
         throw HttpException(
           msg: 'error_message_product_delete'.i18n(),
-          statusCode: response1.statusCode,
+          statusCode: response.statusCode,
         );
       }
+
+      await _removeProductFromFavorites(removedProduct.id);
+    }
+  }
+
+  Future<void> _removeProductFromFavorites(String productId) async {
+    final List<Product> favoriteProductsToRemove =
+        _items.where((product) => product.id == productId).toList();
+
+    for (final product in favoriteProductsToRemove) {
+      product.isFavorite = false;
+
+      final response = await http.delete(
+        Uri.parse(
+          '${Constants.userFavoritesUrl}/${product.userId}/$productId.json?auth=$_token',
+        ),
+      );
+
+      if (response.statusCode >= 400) {
+        product.isFavorite = true;
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteUserProducts(String userId) async {
+    final List<Product> productsToDelete =
+        _items.where((product) => product.userId == userId).toList();
+
+    for (final product in productsToDelete) {
+      await removeProduct(product);
     }
   }
 }

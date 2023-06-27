@@ -25,19 +25,19 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
     OnBoardingDetails(
       title: 'onboard_title1'.i18n(),
       subtitle: 'onboard_sub_title1'.i18n(),
-      imagePath: 'lib/assets/images/onboarding1.gif',
+      imagePath: 'lib/assets/images/snap_logo.gif',
       isTitle: true,
     ),
     OnBoardingDetails(
       title: 'onboard_title2'.i18n(),
       subtitle: 'onboard_sub_title2'.i18n(),
-      imagePath: 'lib/assets/images/onboarding2.gif',
+      imagePath: 'lib/assets/images/snap_cart.gif',
       isTitle: false,
     ),
     OnBoardingDetails(
       title: 'onboard_title3'.i18n(),
       subtitle: 'onboard_sub_title3'.i18n(),
-      imagePath: 'lib/assets/images/onboarding3.gif',
+      imagePath: 'lib/assets/images/snap_sell_buy.gif',
       isTitle: false,
     ),
   ];
@@ -171,8 +171,8 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                                 ),
                                 onPressed: () {
                                   prefs.setBool('onboardingCompleted', true);
-                                  Modular.to.pushReplacementNamed('/auth/',
-                                      arguments: false);
+                                  Modular.to
+                                      .navigate('/auth/', arguments: false);
                                 },
                                 child: Text(
                                   'skip'.i18n(),
@@ -200,8 +200,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                                   curve: Curves.ease);
                             } else {
                               prefs.setBool('onboardingCompleted', true);
-                              Modular.to.pushReplacementNamed('/auth/',
-                                  arguments: false);
+                              Modular.to.navigate('/auth/', arguments: false);
                             }
                           },
                           child: Text(

@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 
 // ignore: must_be_immutable
 class ImageInput extends StatefulWidget {
-  final Function onSelectImage;
+  final Function(String) onSelectImage;
   final bool isProfile;
   File? _image;
 
@@ -24,23 +24,28 @@ class ImageInput extends StatefulWidget {
 }
 
 class ImageInputState extends State<ImageInput> {
+  Future<String> saveImage(File image) async {
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+    final fileName = path.basename(image.path);
+    final savedImage = await image.copy('${appDir.path}/$fileName');
+    return savedImage.path;
+  }
+
   _takePicture() async {
     final ImagePicker picker = ImagePicker();
-    XFile imageFile = await picker.pickImage(
+    final XFile imageFile = await picker.pickImage(
       source: ImageSource.camera,
       maxWidth: 600,
     ) as XFile;
 
+    final image = File(imageFile.path);
+    final imagePath = await saveImage(image);
+
     setState(() {
-      widget._image = File(imageFile.path);
+      widget._image = image;
     });
 
-    final appDir = await syspaths.getApplicationDocumentsDirectory();
-    String fileName = path.basename(widget._image!.path);
-    final savedImage = await widget._image!.copy(
-      '${appDir.path}/$fileName',
-    );
-    widget.onSelectImage(savedImage);
+    widget.onSelectImage(imagePath);
   }
 
   Future<void> pickImage() async {
@@ -52,11 +57,14 @@ class ImageInputState extends State<ImageInput> {
     );
 
     if (pickedImage != null) {
+      final image = File(pickedImage.path);
+      final imagePath = await saveImage(image);
+
       setState(() {
-        widget._image = File(pickedImage.path);
+        widget._image = image;
       });
 
-      widget.onSelectImage(widget._image);
+      widget.onSelectImage(imagePath);
     }
   }
 

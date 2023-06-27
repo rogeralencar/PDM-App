@@ -111,7 +111,7 @@ class UserProvider with ChangeNotifier {
     return null;
   }
 
-  Future<void> deleteUser() async {
+  Future<void> deleteUserInfo() async {
     try {
       final response = await http.delete(
         Uri.parse('${Constants.userInfo}/$_userId.json?auth=$_token'),

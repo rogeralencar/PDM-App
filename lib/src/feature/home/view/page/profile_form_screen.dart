@@ -10,6 +10,7 @@ import '../../../auth/repository/user_model.dart';
 import '../../../auth/repository/user_provider.dart';
 import '../../../../common/widgets/custom_text_field.dart';
 import '../../../auth/view/widget/auth.dart';
+import '../../repository/product_list.dart';
 import '../widget/image_input.dart';
 
 class ProfileFormScreen extends StatefulWidget {
@@ -51,10 +52,10 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   bool _isLoading = false;
   bool _isImageUrl = false;
 
-  void _selectImage(File pickedImage) {
+  void _selectImage(String imagePath) {
     setState(() {
-      _pickedImage = pickedImage;
-      _formData['image'] = pickedImage;
+      _pickedImage = File(imagePath);
+      _formData['image'] = _pickedImage!;
     });
   }
 
@@ -164,14 +165,14 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
       user.gender = _formData['gender'] as String;
       user.image = _formData['image'];
 
-      await userProvider.saveUserInfo(user, isImageUrl: _isImageUrl);
+      await userProvider.saveUserInfo(user);
       userProvider.setUser(user);
     } catch (error) {
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text('error_occurred'.i18n()),
-          content: Text('error_saving_user'.i18n()),
+          content: Text(error.toString()),
           actions: [
             TextButton(
               child: Text('ok'.i18n()),
@@ -264,14 +265,21 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
 
   Future<void> _performDeleteUser() async {
     setState(() => _isLoading = true);
+    Auth auth = Provider.of(context, listen: false);
+
     try {
-      await Provider.of<UserProvider>(
+      await Provider.of<ProductList>(
         context,
         listen: false,
-      ).deleteUser().then((value) => Provider.of<Auth>(
-            context,
-            listen: false,
-          ).deleteUser());
+      )
+          .deleteUserProducts(auth.userId!)
+          .then((value) => Provider.of<UserProvider>(
+                context,
+                listen: false,
+              ).deleteUserInfo().then((value) => Provider.of<Auth>(
+                    context,
+                    listen: false,
+                  ).deleteUserAuth()));
     } catch (error) {
       _showErrorDialog('unexpected_error'.i18n());
     }

@@ -145,7 +145,7 @@ class Auth with ChangeNotifier {
     );
   }
 
-  Future<void> deleteUser() async {
+  Future<void> deleteUserAuth() async {
     if (!isAuth) {
       throw AuthException('User is not authenticated.');
     }
