@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +10,9 @@ import '../../../../common/exceptions/auth_exception.dart';
 import '../widget/auth.dart';
 
 class LoginScreen extends StatefulWidget {
-  final bool disconnected;
-  const LoginScreen({Key? key, required this.disconnected}) : super(key: key);
+  const LoginScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   LoginScreenState createState() => LoginScreenState();
@@ -23,25 +23,11 @@ class LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  bool _wasDisconnected = false;
 
   final Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (widget.disconnected && !_wasDisconnected) {
-      _wasDisconnected = true;
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        _showLogoutDialog(context);
-      });
-    } else {
-      _wasDisconnected = widget.disconnected;
-    }
-  }
 
   @override
   void dispose() {
@@ -63,26 +49,6 @@ class LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('logout'.i18n()),
-          content: Text('disconnected_mensage'.i18n()),
-          actions: [
-            ElevatedButton(
-              child: Text('ok'.i18n()),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 

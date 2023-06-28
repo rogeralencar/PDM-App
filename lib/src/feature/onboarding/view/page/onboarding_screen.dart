@@ -80,7 +80,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
       if (auth.isAuth) {
         await Modular.to.pushReplacementNamed('/home/');
       } else {
-        await Modular.to.pushReplacementNamed('/auth/', arguments: false);
+        await Modular.to.pushReplacementNamed('/auth/');
       }
     }
     setState(() {
@@ -171,8 +171,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                                 ),
                                 onPressed: () {
                                   prefs.setBool('onboardingCompleted', true);
-                                  Modular.to
-                                      .navigate('/auth/', arguments: false);
+                                  Modular.to.navigate('/auth/');
                                 },
                                 child: Text(
                                   'skip'.i18n(),
@@ -200,7 +199,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                                   curve: Curves.ease);
                             } else {
                               prefs.setBool('onboardingCompleted', true);
-                              Modular.to.navigate('/auth/', arguments: false);
+                              Modular.to.navigate('/auth/');
                             }
                           },
                           child: Text(

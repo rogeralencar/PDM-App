@@ -158,15 +158,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
+    if (_isImageUrl) {
+      _formData['image'] = _imageUrlController.text;
+    }
+
     if (!isValid ||
         _formData['image'] == null ||
         _formData['address'] == null ||
         _formData['categories'] == null) {
       return;
-    }
-
-    if (_isImageUrl) {
-      _formData['image'] = _imageUrlController.text;
     }
 
     _formKey.currentState?.save();

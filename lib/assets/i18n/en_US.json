@@ -22,8 +22,8 @@
     "sign_up": "SIGN UP",
     "sign_in": "SIGN IN",
 
-    "logout": "Logout",
-    "disconnected_mensage": "You have been disconnected. Please log in again",
+    "success_email_send": "Email sent successfully",
+    "forgot_password_mensage": "Check the email sent to proceed with password recovery",
 
     "without_account": "Don't have an account ? ",
     "with_account": "Already have an account ? ",
@@ -89,6 +89,7 @@
     "invalid_password": "Invalid password",
     "user_disabled": "The user account has been disabled",
     "authentication_error": "An error occurred during the authentication process!",
+    "token_refresh_error": "User can't refresh the token",
     "gif_error": "Failed to load GIF",
 
     "price_field": "Price",

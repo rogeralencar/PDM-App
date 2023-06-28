@@ -19,6 +19,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool _isEmailSent = false;
 
   void _showErrorDialog(String msg) {
     showDialog(
@@ -30,6 +31,25 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text('close'.i18n()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('success_email_send'.i18n()),
+        content: Text('forgot_password_mensage'.i18n()),
+        actions: [
+          ElevatedButton(
+            child: Text('ok'.i18n()),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Modular.to.pop();
+            },
           ),
         ],
       ),
@@ -52,13 +72,19 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     try {
       await auth.resetPassword(_emailController.text);
 
-      Modular.to.pop();
+      setState(() {
+        _isEmailSent = true;
+        _isLoading = false;
+      });
+
+      _showSuccessDialog();
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
+      setState(() => _isLoading = false);
     } catch (error) {
       _showErrorDialog('unexpected_error'.i18n());
+      setState(() => _isLoading = false);
     }
-    setState(() => _isLoading = false);
   }
 
   bool isValidEmail(String email) {
@@ -138,7 +164,8 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           )
                         : CustomButton(
                             size: screenSize,
-                            onPressed: _submit,
+                            onPressed:
+                                _isEmailSent ? _showSuccessDialog : _submit,
                             buttonText: 'send'.i18n(),
                           ),
                     SizedBox(height: screenSize.height * 0.12),

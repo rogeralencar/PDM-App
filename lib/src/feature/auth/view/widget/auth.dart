@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
+import 'package:localization/localization.dart';
 
 import '../../repository/user_store.dart';
 import '../../../../common/exceptions/auth_exception.dart';
@@ -13,7 +14,8 @@ class Auth with ChangeNotifier {
   String? _email;
   String? _userId;
   DateTime? _expiryDate;
-  Timer? _logoutTimer;
+  Timer? _refreshTimer;
+  String? _refreshToken;
 
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
@@ -53,6 +55,7 @@ class Auth with ChangeNotifier {
       _token = body['idToken'];
       _email = body['email'];
       _userId = body['localId'];
+      _refreshToken = body['refreshToken'];
 
       _expiryDate = DateTime.now().add(
         Duration(
@@ -64,10 +67,11 @@ class Auth with ChangeNotifier {
         'token': _token,
         'email': _email,
         'userId': _userId,
+        'refreshToken': _refreshToken,
         'expiryDate': _expiryDate!.toIso8601String(),
       });
 
-      _autoLogout();
+      _autoRefreshToken();
       notifyListeners();
     }
   }
@@ -111,9 +115,10 @@ class Auth with ChangeNotifier {
     _token = userData['token'];
     _email = userData['email'];
     _userId = userData['userId'];
+    _refreshToken = userData['refreshToken'];
     _expiryDate = expiryDate;
 
-    _autoLogout();
+    _autoRefreshToken();
     notifyListeners();
   }
 
@@ -122,32 +127,67 @@ class Auth with ChangeNotifier {
     _email = null;
     _userId = null;
     _expiryDate = null;
-    _clearLogoutTimer();
+    _refreshToken = null;
+    _clearRefreshTimer();
     UserStore.remove('userData').then((_) {
       notifyListeners();
     });
   }
 
-  void _clearLogoutTimer() {
-    _logoutTimer?.cancel();
-    _logoutTimer = null;
+  void _autoRefreshToken() {
+    if (_expiryDate == null || _refreshToken == null) return;
+
+    final refreshDuration =
+        _expiryDate!.difference(DateTime.now()) - const Duration(minutes: 5);
+
+    _clearRefreshTimer();
+    _refreshTimer = Timer(refreshDuration, () async {
+      try {
+        final refreshResponse = await http.post(
+          Uri.parse(
+              'https://securetoken.googleapis.com/v1/token?key=${Constants.webApiKey}'),
+          body: {
+            'grant_type': 'refresh_token',
+            'refresh_token': _refreshToken!,
+          },
+        );
+
+        final refreshData = jsonDecode(refreshResponse.body);
+
+        if (refreshData['error'] != null) {
+          throw AuthException(refreshData['error']['message']);
+        } else {
+          _token = refreshData['id_token'];
+          _expiryDate = DateTime.now().add(
+            Duration(seconds: int.parse(refreshData['expires_in'])),
+          );
+
+          UserStore.saveMap('userData', {
+            'token': _token,
+            'email': _email,
+            'userId': _userId,
+            'refreshToken': _refreshToken,
+            'expiryDate': _expiryDate!.toIso8601String(),
+          });
+
+          _autoRefreshToken();
+          notifyListeners();
+        }
+      } catch (error) {
+        Modular.to.navigate('/auth/');
+        throw AuthException('token_refresh_error'.i18n());
+      }
+    });
   }
 
-  void _autoLogout() {
-    _clearLogoutTimer();
-    final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
-    _logoutTimer = Timer(
-      Duration(seconds: timeToLogout ?? 0),
-      () {
-        logout();
-        Modular.to.navigate('/auth/', arguments: true);
-      },
-    );
+  void _clearRefreshTimer() {
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
   }
 
   Future<void> deleteUserAuth() async {
     if (!isAuth) {
-      throw AuthException('User is not authenticated.');
+      throw AuthException('authentication_error'.i18n());
     }
 
     const url =

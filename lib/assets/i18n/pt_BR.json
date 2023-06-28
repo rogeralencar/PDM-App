@@ -22,8 +22,8 @@
     "sign_up": "CADASTRAR",
     "sign_in": "CRIAR",
 
-    "logout": "Logout",
-    "disconnected_mensage": "Você foi desconectado. Faça login novamente",
+    "success_email_send": "E-mail enviado com sucesso",
+    "forgot_password_mensage": "Verifique o e-mail enviado para prosseguir com a recuperação de senha",
 
     "without_account": "Não tem uma conta ? ",
     "with_account": "Já tem uma conta ? ",
@@ -89,6 +89,7 @@
     "invalid_password": "Senha informada não confere",
     "user_disabled": "A conta do usuário foi desabilitada",
     "authentication_error": "Ocorreu um erro no processo de autenticação!",
+    "token_refresh_error": "Usuário não pode atualizar o token",
     "gif_error": "Erro ao carregar o GIF",
 
     "price_field": "Preço",

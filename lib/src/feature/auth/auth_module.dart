@@ -13,7 +13,7 @@ class AuthModule extends Module {
   List<ModularRoute> get routes => [
         ChildRoute(
           '/',
-          child: (_, __) => LoginScreen(disconnected: Modular.args.data),
+          child: (_, __) => const LoginScreen(),
         ),
         ChildRoute(
           '/signup',

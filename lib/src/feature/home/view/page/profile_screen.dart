@@ -52,7 +52,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
     if (confirmed) {
       authProvider.logout();
-      Modular.to.navigate('/auth/', arguments: false);
+      Modular.to.navigate('/auth/');
     }
   }
 
